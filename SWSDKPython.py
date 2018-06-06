@@ -28,7 +28,7 @@ class SWSDKPython:
         return response.text
 
     @staticmethod
-    def issue(self, url, token, xml, version, b64=False):
+    def issue(url, token, xml, version, b64=False):
         if b64 is True:
             bs64 = "/b64"
         else:
@@ -46,7 +46,7 @@ class SWSDKPython:
         return response.text
 
     @staticmethod
-    def cancel_by_xml(self, url, token, xmlCancelacion):
+    def cancel_by_xml(url, token, xmlCancelacion):
         boundary = "----=_Part_11_11939969.1490230712432"
         payload = "--" + boundary + "\r\nContent-Type: text/xml\r\nContent-Transfer-Encoding: binary\r\nContent-Disposition: " \
                                     "form-data; name=\"xml\"; filename=\"xml\"\r\n\r\n" + str(
@@ -59,7 +59,7 @@ class SWSDKPython:
         return response.text
 
     @staticmethod
-    def cancel_by_csd(self, url, token, rfc, uuid, b64cert, b64key, password):
+    def cancel_by_csd(url, token, rfc, uuid, b64cert, b64key, password):
         payload = "{ \"uuid\": \"" + uuid + "\",  \"password\": \"" + password + "\"," \
                                                                                  "  \"rfc\": \"" + rfc + "\",    \"b64Cer\": \"" + b64cert + "\",  \"b64Key\": \"" + b64key + "\"}"
         headers = {
@@ -70,7 +70,7 @@ class SWSDKPython:
         return response.text
 
     @staticmethod
-    def cancel_by_pfx(self, url, token, rfc, uuid, b64Pfx, password):
+    def cancel_by_pfx(url, token, rfc, uuid, b64Pfx, password):
         payload = "{ \"uuid\": \"" + uuid + "\",  \"password\": \"" + password + "\"," \
                                                                                  "  \"rfc\": \"" + rfc + "\",    \"b64Pfx\": \"" + b64Pfx + "\" }"
         headers = {
@@ -81,7 +81,7 @@ class SWSDKPython:
         return response.text
 
     @staticmethod
-    def cancel_by_uuid(self, url, token, rfc, uuid):
+    def cancel_by_uuid(url, token, rfc, uuid):
         headers = {
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
@@ -90,16 +90,7 @@ class SWSDKPython:
         return response.text
 
     @staticmethod
-    def account_balance(self, url, token):
-        headers = {
-            'Authorization': "bearer " + token,
-            'Content-Type': "application/json"
-        }
-        response = requests.request("GET", url + "/account/balance", headers=headers)
-        return response.text
-
-    @staticmethod
-    def validate_lrfc(self, url, token, lrfc):
+    def validate_lrfc(url, token, lrfc):
         headers = {
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
@@ -108,7 +99,7 @@ class SWSDKPython:
         return response.text
 
     @staticmethod
-    def validate_lco(self, url, token, lco):
+    def validate_lco(url, token, lco):
         headers = {
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
@@ -116,14 +107,40 @@ class SWSDKPython:
         response = requests.request("GET", url + "/lco/" + lco, headers=headers)
         return response.text
 
+    @staticmethod
+    def account_balance(url, token):
+        headers = {
+            'Authorization': "bearer " + token,
+            'Content-Type': "application/json"
+        }
+        response = requests.request("GET", url + "/account/balance", headers=headers)
+        return response.text
 
-def generate_token(self, uri, user, password):
-    self.uri = uri
-    self.user = user
-    self.password = password
+    @staticmethod
+    def validate(url, token, xml, b64=False):
+        if b64 is True:
+            bs64 = "/b64"
+        else:
+            bs64 = ""
+        boundary = "----=_Part_11_11939969.1490230712432"
+        payload = "--" + boundary + "\r\nContent-Type: text/xml\r\nContent-Transfer-Encoding: binary\r\nContent-Disposition: " \
+                                    "form-data; name=\"xml\"; filename=\"xml\"\r\n\r\n" + str(
+            xml) + "\r\n--" + boundary + "-- "
+        headers = {
+            'Authorization': "bearer " + token,
+            'Content-Type': "multipart/form-data; boundary=\"" + boundary + "\""
+        }
+        response = requests.request("POST", url + "/validate/cfdi33/" + bs64, data=payload,
+                                    headers=headers)
+        return response.text
 
-    if self.user is None or self.password is None:
-        raise Exception('Hace falta el usuario y/o contraseña')
-    headers = {'user': self.user, 'password': self.password, 'Cache-Control': "no-cache"}
-    response = requests.request("POST", self.uri + "/security/authenticate", headers=headers)
-    return response
+    def generate_token(self, uri, user, password):
+        self.uri = uri
+        self.user = user
+        self.password = password
+
+        if self.user is None or self.password is None:
+            raise Exception('Hace falta el usuario y/o contraseña')
+        headers = {'user': self.user, 'password': self.password, 'Cache-Control': "no-cache"}
+        response = requests.request("POST", self.uri + "/security/authenticate", headers=headers)
+        return response
