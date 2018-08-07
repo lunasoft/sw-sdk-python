@@ -5,8 +5,6 @@ from Issue.Issue import Issue
 from Balance.Balance import Balance
 from Cancelation.Cancelation import Cancelation
 from Validate.Validate import Validate
-import os
-os.chdir("C:\\out\\Python\\SW_SDK_Python")#path to proyect, to use relative paths to resources
 
 def open_file(pathFile):
     out = open(pathFile,"r", encoding='ansi', errors='ignore').read()
@@ -68,6 +66,7 @@ class MyTest(unittest.TestCase):
         objResponseValidateRFC = objValidate.ValidateLrfc("LAN7008173R5")
         self.assertTrue(self.expected == objResponseValidateRFC.getStatus())
 
+
 Test = MyTest()
 Test.testAuth()
 Test.testStamp()
@@ -80,3 +79,6 @@ Test.testCancelUuid()
 Test.testValidateXml()
 Test.testValidateLco()
 Test.testValidateLrfc()
+
+
+

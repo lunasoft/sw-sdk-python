@@ -1,5 +1,5 @@
 from Issue.IssueRequest import IssueRequest
-from Utils.Services import Services#Package.File import class
+from Utils.Services import Services
 
 class Issue(Services):
     def __init__(self, url, token, user=None, password=None):

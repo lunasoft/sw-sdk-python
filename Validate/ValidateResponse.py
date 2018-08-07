@@ -1,5 +1,5 @@
 import json
-from Utils.Response import Response#Package.File import class
+from Utils.Response import Response
 
 class ValidateResponse(Response):
     def __init__(self, cResponse):

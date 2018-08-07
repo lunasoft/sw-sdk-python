@@ -1,5 +1,5 @@
 import json
-from Utils.Response import Response#Package.File import class
+from Utils.Response import Response
 class CancelationResponse(Response):
     def __init__(self, cResponse):
         try:

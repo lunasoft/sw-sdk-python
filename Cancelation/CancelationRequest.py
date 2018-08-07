@@ -1,10 +1,13 @@
 import requests
+import string
+import random
 from Cancelation.CancelationResponse import CancelationResponse
 
 class CancelationRequest:
     @staticmethod
     def cancel_by_xml(url, token, xmlCancelacion):
-        boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW"
+        lst = [random.choice(string.ascii_letters + string.digits) for n in range(30)]
+        boundary = "".join(lst)
         payload = "--" + boundary + "\r\nContent-Type: text/xml\r\nContent-Transfer-Encoding: binary\r\nContent-Disposition: form-data; name=\"xml\"; filename=\"xml\"\r\n\r\n" + str(xmlCancelacion) + "\r\n--" + boundary + "-- "
         headers = {
             'Authorization': "bearer " + token,
