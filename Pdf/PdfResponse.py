@@ -1,19 +1,19 @@
 import json
 from Utils.Response import Response
 
-class StampResponse(Response):
+class PdfResponse(Response):
     uuid = None
-    qrCode = None
-    cfdi = None
+    pdfb64 = None
+    sizeBytes = None
     def __init__(self,cResponse):
         try:
             self.statusCode = cResponse.status_code
             self.response = json.loads(cResponse.text)
             self.data = self.response["data"]
-            self.status = self.response["status"]
             self.uuid = self.data["uuid"]
-            self.qrCode = self.data["qrCode"]
-            self.cfdi = self.data["cfdi"]
+            self.pdfb64 = self.data["contentB64"]
+            self.sizeBytes = self.response["contentSizeBytes"]
+            self.status = self.response["status"]
         except:
             self.message = self.response["message"]
             self.messageDetail = self.response["messageDetail"]
@@ -22,8 +22,8 @@ class StampResponse(Response):
     def getUuid(self):
         return self.uuid
 
-    def getQrCode(self):
-        return self.qrCode
+    def getPdfB64(self):
+        return self.pdfb64
 
-    def getCfdi(self):
-        return self.cfdi
+    def getSizeBytes(self):
+        return self.sizeBytes

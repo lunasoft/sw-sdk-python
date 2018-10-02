@@ -7,6 +7,7 @@ from Utils.Response import Response
 class AuthResponse(Response):
     def __init__(self,cResponse):
         try:
+            self.statusCode = cResponse.status_code
             self.response = json.loads(cResponse.text)
             self.data = self.response["data"]
             self.status = self.response["status"]
