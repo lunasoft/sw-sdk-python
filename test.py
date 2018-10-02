@@ -38,6 +38,13 @@ class MyTest(unittest.TestCase):
             self.assertTrue(self.message == objResponseIssue.getMessage())
         else:
             self.assertTrue(self.expected == objResponseIssue.getStatus())
+    def testIssueJson(self):
+        objIssue = Issue("http://services.test.sw.com.mx", None, "demo", "123456789")
+        objResponseIssue = objIssue.IssueJsonV4(open_file("resources\\cfdi.json"))
+        if objResponseIssue.getStatus() == "error":
+            self.assertTrue(self.message == objResponseIssue.getMessage())
+        else:
+            self.assertTrue(self.expected == objResponseIssue.getStatus())
     def testBalance(self):
         objBal = Balance("http://services.test.sw.com.mx", None, "demo", "123456789")
         objResponseBal = objBal.AccountBalance()
@@ -109,17 +116,13 @@ class MyTest(unittest.TestCase):
         self.assertTrue(self.expected == objResponse.getStatus())
     def testStatusCfdi(self):
         objStatus = StatusCfdi.status("LAN8507268IA", "LAN7008173R5", "5800.00", "6caed040-2f24-4b15-9927-975c2a76fb83", "https://consultaqrfacturaelectronicatest.sw.com.mx/ConsultaCFDIService.svc", "http://tempuri.org/IConsultaCFDIService/Consulta")
-        print(objStatus.esCancelable)
-        print(objStatus.estado)
-        print(objStatus.estatusCancelacion)
-        print(objStatus.statusCode)
-        print(objStatus.codigoEstatus)
         self.assertTrue(objStatus.statusCode==200)
 
 Test = MyTest()
 Test.testAuth()
 Test.testStamp()
 Test.testIssue()
+Test.testIssueJson()
 Test.testBalance()
 Test.testCancelXml()
 Test.testCancelCsd()

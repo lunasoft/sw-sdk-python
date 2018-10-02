@@ -13,3 +13,11 @@ class Issue(Services):
         return IssueRequest.issue(self.url, self.token, xml, "v3", b64)
     def IssueV4(self,xml,b64=False):
         return IssueRequest.issue(self.url, self.token, xml, "v4", b64)
+    def IssueJsonV1(self,json):
+        return IssueRequest.issueJSON(self.url, self.token, json, "v1")
+    def IssueJsonV2(self,json):
+        return IssueRequest.issueJSON(self.url, self.token, json, "v2")
+    def IssueJsonV3(self,json):
+        return IssueRequest.issueJSON(self.url, self.token, json, "v3")
+    def IssueJsonV4(self,json):
+        return IssueRequest.issueJSON(self.url, self.token, json, "v4")
