@@ -13,17 +13,17 @@ class RelationsRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "multipart/form-data; boundary=\"" + boundary + "\""
         }
-        response = requests.request("POST", url + "/relations/xml", data=payload, headers=headers)
+        response = requests.request("POST", url + "/relations/xml", data=payload, headers=headers, verify = True, timeout = 300)
         return RelationsResponse(response)
 
     @staticmethod
-    def relations_by_csd(url, token, rfc, uuid, b64cert, b64key, password):
+    def relations_by_csd(url, token, rfc, uuid, b64cert, b64key, password, verify = True, timeout = 300):
         payload = "{ \"uuid\": \"" + uuid + "\",  \"password\": \"" + password + "\", \"rfc\": \"" + rfc + "\",    \"b64Cer\": \"" + b64cert + "\",  \"b64Key\": \"" + b64key + "\"}"
         headers = {
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
         }
-        response = requests.request("POST", url + "/relations/csd", data=payload, headers=headers)
+        response = requests.request("POST", url + "/relations/csd", data=payload, headers=headers, verify = True, timeout = 300)
         return RelationsResponse(response)
 
     @staticmethod
@@ -33,7 +33,7 @@ class RelationsRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
         }
-        response = requests.request("POST", url + "/relations/pfx", data=payload, headers=headers)
+        response = requests.request("POST", url + "/relations/pfx", data=payload, headers=headers, verify = True, timeout = 300)
         return RelationsResponse(response)
 
     @staticmethod
@@ -42,5 +42,5 @@ class RelationsRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
         }
-        response = requests.request("POST", url + "/relations/" + rfc + "/" + uuid, headers=headers)
+        response = requests.request("POST", url + "/relations/" + rfc + "/" + uuid, headers=headers, verify = True, timeout = 300)
         return RelationsResponse(response)

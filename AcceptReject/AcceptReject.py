@@ -14,5 +14,5 @@ class AcceptReject(Services):
     def AcceptRejectPfx(self, rfc, uuids, b64Pfx, cPassword):
         return AcceptRejectRequest.AcceptReject_by_pfx(self.url, self.token, rfc, uuids, b64Pfx, cPassword)
 
-    def AcceptRejectUuid(self, rfc, uuid):
-        return AcceptRejectRequest.AcceptReject_by_uuid(self.url, self.token, rfc, uuid)
+    def AcceptRejectUuid(self, rfc, uuid, accion):
+        return AcceptRejectRequest.AcceptReject_by_uuid(self.url, self.token, rfc, uuid, accion)

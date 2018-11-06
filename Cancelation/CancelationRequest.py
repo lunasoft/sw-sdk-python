@@ -13,7 +13,7 @@ class CancelationRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "multipart/form-data; boundary=\"" + boundary + "\""
         }
-        response = requests.request("POST", url + "/cfdi33/cancel/xml", data=payload, headers=headers)
+        response = requests.request("POST", url + "/cfdi33/cancel/xml", data=payload, headers=headers, verify = True, timeout = 300)
         return CancelationResponse(response)
 
     @staticmethod
@@ -23,7 +23,7 @@ class CancelationRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
         }
-        response = requests.request("POST", url + "/cfdi33/cancel/csd", data=payload, headers=headers)
+        response = requests.request("POST", url + "/cfdi33/cancel/csd", data=payload, headers=headers, verify = True, timeout = 300)
         return CancelationResponse(response)
 
     @staticmethod
@@ -33,7 +33,7 @@ class CancelationRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
         }
-        response = requests.request("POST", url + "/cfdi33/cancel/pfx", data=payload, headers=headers)
+        response = requests.request("POST", url + "/cfdi33/cancel/pfx", data=payload, headers=headers, verify = True, timeout = 300)
         return CancelationResponse(response)
 
     @staticmethod
@@ -42,5 +42,5 @@ class CancelationRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
         }
-        response = requests.request("POST", url + "/cfdi33/cancel/" + rfc + "/" + uuid, headers=headers)
+        response = requests.request("POST", url + "/cfdi33/cancel/" + rfc + "/" + uuid, headers=headers, verify = True, timeout = 300)
         return CancelationResponse(response)

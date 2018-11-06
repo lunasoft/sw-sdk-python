@@ -10,7 +10,7 @@ class ValidateRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
         }
-        response = requests.request("GET", url + "/lrfc/" + lrfc, headers=headers)
+        response = requests.request("GET", url + "/lrfc/" + lrfc, headers=headers, verify = True, timeout = 300)
         return ValidateResponse(response)
 
     @staticmethod
@@ -19,7 +19,7 @@ class ValidateRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
         }
-        response = requests.request("GET", url + "/lco/" + lco, headers=headers)
+        response = requests.request("GET", url + "/lco/" + lco, headers=headers, verify = True, timeout = 300)
         return ValidateResponse(response)
 
     @staticmethod
@@ -34,5 +34,5 @@ class ValidateRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "multipart/form-data; boundary=\"" + boundary + "\""
         }
-        response = requests.request("POST", url + "/validate/cfdi33/" + bs64, data=payload, headers=headers)
+        response = requests.request("POST", url + "/validate/cfdi33/" + bs64, data=payload, headers=headers, verify = True, timeout = 300)
         return ValidateResponse(response)

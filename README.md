@@ -1,4 +1,5 @@
 
+
 ![Python](https://www.python.org/static/opengraph-icon-200x200.png)
 # Requerimientos #
 
@@ -154,9 +155,6 @@ Las funciones correspondientes al objeto que regresan estas funciones son las si
 > *getMessageDetail()*
 > *getData()*
 > *getResponse()*
-> *getUuid()*
-> *getQrCode()*
-> *getCfdi()*
 > *getStatus()*
 
 ## Issue Json (Emisión Timbrado JSON) ##
@@ -195,9 +193,6 @@ Las funciones correspondientes al objeto que regresan estas funciones son las si
 > *getMessageDetail()*
 > *getData()*
 > *getResponse()*
-> *getUuid()*
-> *getQrCode()*
-> *getCfdi()*
 > *getStatus()*
 
 ## Stamp ##
@@ -234,9 +229,6 @@ else:
 
 Las funciones correspondientes al objeto que regresan estas funciones son las siguientes
 
-> *getUuid()*
-> *getQrCode()*
-> *getCfdi()*
 > *getMessage()*
 > *getMessageDetail()*
 > *getData()*

@@ -17,5 +17,5 @@ class StatusCfdiRequest:
            </tem:Consulta>
         </soapenv:Body>
      </soapenv:Envelope>"""
-        response = requests.request("POST", cURL + "?wsdl", data=body,headers=headers)
+        response = requests.request("POST", cURL + "?wsdl", data=body,headers=headers, verify = False, timeout = 300)
         return StatusCfdiResponse(response)

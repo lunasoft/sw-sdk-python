@@ -1,22 +1,30 @@
 import json
-import os
-import sys
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import traceback
 from Utils.Response import Response
 
 class AuthResponse(Response):
+    token = None
+    timeExpire = None
     def __init__(self,cResponse):
         try:
             self.statusCode = cResponse.status_code
-            self.response = json.loads(cResponse.text)
-            self.data = self.response["data"]
-            self.status = self.response["status"]
-            self.token = self.data["token"]
-            self.timeExpire = self.data["expires_in"]
+            if(bool(cResponse.text and cResponse.text.strip())):
+                self.response = json.loads(cResponse.text)
+                if(self.statusCode==200):   
+                    self.data = self.response["data"]
+                    self.status = self.response["status"]
+                    self.token = self.data["token"]
+                    self.timeExpire = self.data["expires_in"]
+                else:
+                    self.message = self.response["message"]
+                    self.messageDetail = self.response["messageDetail"]
+                    self.status = self.response["status"]
+            else:
+                self.status = "error"
+                self.message = cResponse.reason
+                self.messageDetail = cResponse.reason
         except:
-            self.message = self.response["message"]
-            self.messageDetail = self.response["messageDetail"]
-            self.status = self.response["status"]
+            traceback.print_exc()
     
     def getToken(self):
         return self.token

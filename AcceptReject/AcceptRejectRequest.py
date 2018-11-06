@@ -14,36 +14,36 @@ class AcceptRejectRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "multipart/form-data; boundary=\"" + boundary + "\""
         }
-        response = requests.request("POST", url + "/acceptreject/xml", data=payload, headers=headers)
+        response = requests.request("POST", url + "/acceptreject/xml", data=payload, headers=headers, verify = True, timeout = 300)
         return AcceptRejectResponse(response)
 
     @staticmethod
     def AcceptReject_by_csd(url, token, rfc, uuids, b64cert, b64key, password):
         uuid = json.dumps(uuids)
-        payload = "{ \"uuids\": \"" + uuid + "\",  \"password\": \"" + password + "\", \"rfc\": \"" + rfc + "\",    \"b64Cer\": \"" + b64cert + "\",  \"b64Key\": \"" + b64key + "\"}"
+        payload = "{ \"uuids\": " + uuid + ",  \"password\": \"" + password + "\", \"rfc\": \"" + rfc + "\",    \"b64Cer\": \"" + b64cert + "\",  \"b64Key\": \"" + b64key + "\"}"
         headers = {
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
         }
-        response = requests.request("POST", url + "/acceptreject/csd", data=payload, headers=headers)
+        response = requests.request("POST", url + "/acceptreject/csd", data=payload, headers=headers, verify = True, timeout = 300)
         return AcceptRejectResponse(response)
 
     @staticmethod
     def AcceptReject_by_pfx(url, token, rfc, uuids, b64Pfx, password):
         uuid = json.dumps(uuids)
-        payload = "{ \"uuids\": \"" + uuid + "\",  \"password\": \"" + password + "\", \"rfc\": \"" + rfc + "\",    \"b64Pfx\": \"" + b64Pfx + "\" }"
+        payload = "{ \"uuids\": " + uuid + ",  \"password\": \"" + password + "\", \"rfc\": \"" + rfc + "\",    \"b64Pfx\": \"" + b64Pfx + "\" }"
         headers = {
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
         }
-        response = requests.request("POST", url + "/acceptreject/pfx", data=payload, headers=headers)
+        response = requests.request("POST", url + "/acceptreject/pfx", data=payload, headers=headers, verify = True, timeout = 300)
         return AcceptRejectResponse(response)
 
     @staticmethod
-    def AcceptReject_by_uuid(url, token, rfc, uuid):
+    def AcceptReject_by_uuid(url, token, rfc, uuid, accion):
         headers = {
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
         }
-        response = requests.request("POST", url + "/acceptreject/" + rfc + "/" + uuid, headers=headers)
+        response = requests.request("POST", url + "/acceptreject/" + rfc + "/" + uuid + "/" + accion, headers=headers, verify = True, timeout = 300)
         return AcceptRejectResponse(response)

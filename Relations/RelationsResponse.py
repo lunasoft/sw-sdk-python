@@ -1,4 +1,5 @@
 import json
+import traceback
 from Utils.Response import Response
 class RelationsResponse(Response):
     codStatus = None
@@ -9,17 +10,29 @@ class RelationsResponse(Response):
     def __init__(self, cResponse):
         try:
             self.statusCode = cResponse.status_code
-            self.response = json.loads(cResponse.text)
-            self.data = self.response["data"]
-            self.status = self.response["status"]
-            self.uuidConsultado = self.data["uuidConsultado"]
-            self.resultado = self.data["resultado"]
-            self.message = self.response["message"]
-            self.uuidsRelacionadosPadres = self.data["uuidsRelacionadosPadres"]
-            self.uuidsRelacionadosHijos = self.data["uuidsRelacionadosHijos"]
-            self.messageDetail = self.response["messageDetail"]
+            if(bool(cResponse.text and cResponse.text.strip())):
+                self.response = json.loads(cResponse.text)
+                if(self.statusCode==200):
+                    self.data = self.response["data"]
+                    self.status = self.response["status"]
+                    self.uuidConsultado = self.data["uuidConsultado"]
+                    self.resultado = self.data["resultado"]
+                    self.message = self.response["message"]
+                    self.uuidsRelacionadosPadres = self.data["uuidsRelacionadosPadres"]
+                    self.uuidsRelacionadosHijos = self.data["uuidsRelacionadosHijos"]
+                else:
+                    self.status = self.response["status"]
+                    self.message = self.response["message"]
+                    try:
+                        self.messageDetail = self.response["messageDetail"]
+                    except:
+                        pass
+            else:
+                self.status = "error"
+                self.message = cResponse.reason
+                self.messageDetail = cResponse.reason
         except:
-            self.status = self.response["status"]
+            traceback.print_exc()
 
     def getCodStatus(self):
         return self.codStatus

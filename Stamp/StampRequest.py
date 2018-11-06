@@ -17,5 +17,5 @@ class StampRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "multipart/form-data; boundary=\"" + boundary + "\""
         }
-        response = requests.request("POST", url + "/cfdi33/stamp/" + version + "/" + bs64, data=payload, headers=headers)
+        response = requests.request("POST", url + "/cfdi33/stamp/" + version + "/" + bs64, data=payload, headers=headers, verify = True, timeout = 300)
         return StampResponse(response)
