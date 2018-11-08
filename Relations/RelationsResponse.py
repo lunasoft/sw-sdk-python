@@ -30,7 +30,7 @@ class RelationsResponse(Response):
             else:
                 self.status = "error"
                 self.message = cResponse.reason
-                self.messageDetail = cResponse.reason
+                self.messageDetail = cResponse.request
         except:
             traceback.print_exc()
 
