@@ -4,7 +4,7 @@ import base64
 import unittest
 
 def open_file(pathFile):
-    out = open(pathFile,"r", encoding='ansi', errors='ignore').read()
+    out = open(pathFile,"r", encoding='latin_1', errors='ignore').read()
     return out
 class MyTest(unittest.TestCase):
     def __init__(self):
