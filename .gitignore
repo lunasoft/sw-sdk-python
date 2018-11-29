@@ -1,3 +1,5 @@
 *.pyc
 dist/
 MANIFEST
+build/
+sw_sdk_python.egg-info/
