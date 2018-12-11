@@ -1,5 +1,5 @@
 import requests
-from Balance.BalanceResponse import BalanceResponse
+from balance.balance_response import BalanceResponse
 class BalanceRequest:
     @staticmethod
     def account_balance(url, token):
@@ -7,5 +7,5 @@ class BalanceRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
         }
-        response = requests.request("GET", url + "/account/balance", headers=headers, verify = True, timeout=300)
+        response = requests.request("GET", url + "/account/balance", headers = headers, verify = True, timeout=300)
         return BalanceResponse(response)

@@ -1,14 +1,14 @@
 import json
 import traceback
-from Utils.Response import Response
+from utils.response import Response
 
-class StampResponse(Response):
-    def __init__(self,cResponse):
+class IssueResponse(Response):
+    def __init__(self, response):
         try:
-            self.statusCode = cResponse.status_code
-            if(bool(cResponse.text and cResponse.text.strip())):
-                self.response = json.loads(cResponse.text)
-                if(self.statusCode==200):
+            self.status_code = response.status_code
+            if(bool(response.text and response.text.strip())):
+                self.response = json.loads(response.text)
+                if(self.status_code == 200):
                     self.data = self.response["data"]
                     self.status = self.response["status"]
                 else:
@@ -17,7 +17,8 @@ class StampResponse(Response):
                     self.messageDetail = self.response["messageDetail"]
             else:
                 self.status = "error"
-                self.message = cResponse.reason
-                self.messageDetail = cResponse.request
+                self.message = response.reason
+                self.messageDetail = response.request
+
         except:
             traceback.print_exc()

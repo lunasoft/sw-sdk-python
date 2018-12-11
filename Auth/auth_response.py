@@ -1,33 +1,33 @@
 import json
 import traceback
-from Utils.Response import Response
+from utils.response import Response
 
 class AuthResponse(Response):
     token = None
-    timeExpire = None
-    def __init__(self,cResponse):
+    time_expire = None
+    def __init__(self, response):
         try:
-            self.statusCode = cResponse.status_code
-            if(bool(cResponse.text and cResponse.text.strip())):
-                self.response = json.loads(cResponse.text)
-                if(self.statusCode==200):   
+            self.status_code = response.status_code
+            if(bool(response.text and response.text.strip())):
+                self.response = json.loads(response.text)
+                if(self.status_code == 200):   
                     self.data = self.response["data"]
                     self.status = self.response["status"]
                     self.token = self.data["token"]
-                    self.timeExpire = self.data["expires_in"]
+                    self.time_expire = self.data["expires_in"]
                 else:
                     self.message = self.response["message"]
                     self.messageDetail = self.response["messageDetail"]
                     self.status = self.response["status"]
             else:
                 self.status = "error"
-                self.message = cResponse.reason
-                self.messageDetail = cResponse.request
+                self.message = response.reason
+                self.messageDetail = response.request
         except:
             traceback.print_exc()
     
-    def getToken(self):
+    def get_token(self):
         return self.token
 
-    def getTimeExpire(self):
-        return self.timeExpire
+    def get_time_expire(self):
+        return self.time_expire

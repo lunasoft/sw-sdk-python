@@ -1,5 +1,4 @@
-from Auth.Auth import Auth
-from Issue.Issue import Issue
+from issue.issue import Issue
 import base64
 import unittest
 
@@ -14,18 +13,18 @@ class MyTest(unittest.TestCase):
         xml = open_file("resources/xml33.xml")
         encoded = base64.b64encode(xml.encode('utf-8'))
         objIssue = Issue("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponseIssue = objIssue.IssueV4(encoded.decode(),True)
-        self.assertTrue(self.message == objResponseIssue.getMessage())
+        objResponseIssue = objIssue.issue_v4(encoded.decode(),True)
+        self.assertTrue(self.message == objResponseIssue.get_message())
     def testIssue(self):
         xml = open_file("resources/xml33.xml")
         objIssue = Issue("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponseIssue = objIssue.IssueV4(xml)
-        self.assertTrue(self.message == objResponseIssue.getMessage())
+        objResponseIssue = objIssue.issue_v4(xml)
+        self.assertTrue(self.message == objResponseIssue.get_message())
     def testIssueJson(self):
         jsontxt = open_file("resources/cfdi.json")
         objIssue = Issue("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponseIssue = objIssue.IssueJsonV4(jsontxt)
-        self.assertTrue(self.message == objResponseIssue.getMessage())
+        objResponseIssue = objIssue.issue_json_v4(jsontxt)
+        self.assertTrue(self.message == objResponseIssue.get_message())
 
 Test = MyTest()
 Test.testIssue()

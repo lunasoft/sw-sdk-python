@@ -1,7 +1,7 @@
 import requests
 import string
 import random
-from Issue.IssueResponse import IssueResponse
+from issue.issue_response import IssueResponse
 
 class IssueRequest:
     @staticmethod
@@ -19,7 +19,7 @@ class IssueRequest:
         response = requests.request("POST", url + "/cfdi33/issue/" + version + "/" + bs64, data=payload, headers=headers, verify = True, timeout = 300)
         return IssueResponse(response)
     @staticmethod
-    def issueJSON(url, token, json, version):
+    def issue_json(url, token, json, version):
         headers = {
             'Authorization': "bearer " + token,
             'Content-Type': "application/jsontoxml"

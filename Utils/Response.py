@@ -1,20 +1,20 @@
 
 class Response:
     status = None
-    statusCode = None
+    status_code = None
     message = None
     messageDetail = None
     data = None
     response = None
-    def getStatus(self):
+    def get_status(self):
         return self.status
-    def getMessage(self):
+    def get_message(self):
         return self.message
-    def getMessageDetail(self):
+    def get_messageDetail(self):
         return self.messageDetail
-    def getData(self):
+    def get_data(self):
         return self.data
-    def getResponse(self):
+    def get_response(self):
         return self.response
-    def getStatusCode(self):
-        return self.statusCode
+    def get_status_code(self):
+        return self.status_code

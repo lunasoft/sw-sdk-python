@@ -1,10 +1,10 @@
-from Auth.Auth import Auth
-from Stamp.Stamp import Stamp
+from auth.auth import Auth
+from stamp.stamp import Stamp
 import base64
 import unittest
 
 def open_file(pathFile):
-    out = open(pathFile,"r", encoding='latin_1', errors='ignore').read()
+    out = open(pathFile, "r", encoding='latin_1', errors='ignore').read()
     return out
 class MyTest(unittest.TestCase):
     def __init__(self):
@@ -14,13 +14,13 @@ class MyTest(unittest.TestCase):
         xml = open_file("resources/xml33.xml")
         encoded = base64.b64encode(xml.encode('utf-8'))
         obj = Stamp("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponse = obj.StampV4(encoded.decode(),True)
-        self.assertTrue(self.message == objResponse.getMessage())
+        objResponse = obj.stamp_v4(encoded.decode(),True)
+        self.assertTrue(self.message == objResponse.get_message())
     def testStamp(self):
         xml = open_file("resources/xml33.xml")
         obj = Stamp("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponse = obj.StampV4(xml)
-        self.assertTrue(self.message == objResponse.getMessage())
+        objResponse = obj.stamp_v4(xml)
+        self.assertTrue(self.message == objResponse.get_message())
 
 Test = MyTest()
 Test.testStampb64()

@@ -1,18 +1,18 @@
 import json
-from Utils.Response import Response
+from utils.response import Response
 
 class PdfResponse(Response):
     uuid = None
-    pdfb64 = None
-    sizeBytes = None
-    def __init__(self,cResponse):
+    pdf_b64 = None
+    size_bytes = None
+    def __init__(self, response):
         try:
-            self.statusCode = cResponse.status_code
-            self.response = json.loads(cResponse.text)
+            self.status_code = response.status_code
+            self.response = json.loads(response.text)
             self.data = self.response["data"]
             self.uuid = self.data["uuid"]
-            self.pdfb64 = self.data["contentB64"]
-            self.sizeBytes = self.response["contentSizeBytes"]
+            self.pdf_b64 = self.data["contentB64"]
+            self.size_bytes = self.response["contentSizeBytes"]
             self.status = self.response["status"]
         except:
             self.message = self.response["message"]
@@ -23,7 +23,7 @@ class PdfResponse(Response):
         return self.uuid
 
     def getPdfB64(self):
-        return self.pdfb64
+        return self.pdf_b64
 
     def getSizeBytes(self):
-        return self.sizeBytes
+        return self.size_bytes

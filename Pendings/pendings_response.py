@@ -1,17 +1,17 @@
 import json
 import traceback
-from Utils.Response import Response
+from utils.response import Response
 
 class PendingsResponse(Response):
-    UUID = None
-    def __init__(self, cResponse):
+    uuid = None
+    def __init__(self, response):
         try:
-            self.statusCode = cResponse.status_code
-            if(bool(cResponse.text and cResponse.text.strip())):
-                self.response = json.loads(cResponse.text)
-                if(self.statusCode==200):
+            self.status_code = response.status_code
+            if(bool(response.text and response.text.strip())):
+                self.response = json.loads(response.text)
+                if(self.status_code == 200):
                     self.data = self.response["data"]
-                    self.UUID = self.data["uuid"]
+                    self.uuid = self.data["uuid"]
                     self.status = self.response["status"]
                 else:
                     self.status = self.response["status"]
@@ -19,10 +19,10 @@ class PendingsResponse(Response):
                     self.messageDetail = self.response["messageDetail"]
             else:
                 self.status = "error"
-                self.message = cResponse.reason
-                self.messageDetail = cResponse.request
+                self.message = response.reason
+                self.messageDetail = response.request
         except:
             traceback.print_exc()
 
-    def getUUIDs(self):
-        return self.UUID
+    def get_uuids(self):
+        return self.uuid

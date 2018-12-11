@@ -1,18 +1,18 @@
-from Relations.RelationsRequest import RelationsRequest
-from Utils.Services import Services
+from relations.relations_request import RelationsRequest
+from utils.services import Services
 
 class Relations(Services):
     def __init__(self, url, token = None, user = None, password = None):
-        super(Relations,self).__init__(url, token, user, password)
+        super(Relations, self).__init__(url, token, user, password)
     
-    def RelationsXml(self, xmlCancel):
-        return RelationsRequest.relations_by_xml(self.url, self.token, xmlCancel)
+    def relations_xml(self, xml_cancel):
+        return RelationsRequest.relations_xml(self.url, self.token, xml_cancel)
 
-    def RelationsCsd(self, rfc, uuid, b64cert, b64key, cPassword):
-        return RelationsRequest.relations_by_csd(self.url, self.token, rfc, uuid, b64cert, b64key, cPassword)
+    def relations_csd(self, rfc, uuid, b64_cert, b64_key, password):
+        return RelationsRequest.relations_csd(self.url, self.token, rfc, uuid, b64_cert, b64_key, password)
     
-    def RelationsPfx(self, rfc, uuid, b64Pfx, cPassword):
-        return RelationsRequest.relations_by_pfx(self.url, self.token, rfc, uuid, b64Pfx, cPassword)
+    def relations_pfx(self, rfc, uuid, b64_pfx, password):
+        return RelationsRequest.relations_pfx(self.url, self.token, rfc, uuid, b64_pfx, password)
 
-    def RelationsUuid(self, rfc, uuid):
-        return RelationsRequest.relations_by_uuid(self.url, self.token, rfc, uuid)
+    def relations_uuid(self, rfc, uuid):
+        return RelationsRequest.relations_uuid(self.url, self.token, rfc, uuid)

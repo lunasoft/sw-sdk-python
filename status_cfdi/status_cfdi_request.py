@@ -1,11 +1,12 @@
 import requests
-from StatusCfdi.StatusCfdiResponse import StatusCfdiResponse
+from xml.sax.saxutils import escape
+from status_cfdi.status_cfdi_response import StatusCfdiResponse
 class StatusCfdiRequest:
     @staticmethod
-    def status(cRFCEmisor, cRFCReceptor, cTotal, cUUID, cURL, cAction):
+    def status(rfc_emisor, rfc_receptor, total, uuid, url, action):
         headers = {
             'Content-Type': "text/xml; charset=utf-8",
-            'SOAPAction': cAction
+            'SOAPAction': action
         }
         body = """<?xml version="1.0" encoding="UTF-8"?>
          <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
@@ -13,9 +14,9 @@ class StatusCfdiRequest:
         <soapenv:Body>
            <tem:Consulta>
               <!--Optional:-->
-              <tem:expresionImpresa><![CDATA[?re="""+cRFCEmisor.replace("&", "&amp;")+'&rr='+cRFCReceptor.replace("&", "&amp;")+'&tt='+cTotal+'&id='+cUUID+"""]]></tem:expresionImpresa>
+              <tem:expresionImpresa><![CDATA[?re=""" + escape(rfc_emisor) + '&rr=' + escape(rfc_receptor) + '&tt=' + total + '&id=' + uuid + """]]></tem:expresionImpresa>
            </tem:Consulta>
         </soapenv:Body>
      </soapenv:Envelope>"""
-        response = requests.request("POST", cURL + "?wsdl", data=body,headers=headers, verify = False, timeout = 300)
+        response = requests.request("POST", url, data = body, headers = headers, verify = False, timeout = 300)
         return StatusCfdiResponse(response)
