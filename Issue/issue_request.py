@@ -16,7 +16,7 @@ class IssueRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "multipart/form-data; boundary=\"" + boundary + "\""
         }
-        response = requests.request("POST", url + "/cfdi33/issue/" + version + "/" + bs64, data=payload, headers=headers, verify = True, timeout = 300)
+        response = requests.request("POST", url + "/cfdi33/issue/" + version + "/" + bs64, data = payload, headers = headers, verify = True, timeout = 300)
         return IssueResponse(response)
     @staticmethod
     def issue_json(url, token, json, version):
@@ -24,5 +24,5 @@ class IssueRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "application/jsontoxml"
         }
-        response = requests.request("POST", url + "/v3/cfdi33/issue/json/" + version, data=json, headers=headers, verify = True, timeout = 300)
+        response = requests.request("POST", url + "/v3/cfdi33/issue/json/" + version, data = json, headers = headers, verify = True, timeout = 300)
         return IssueResponse(response)

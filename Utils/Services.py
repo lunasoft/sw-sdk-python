@@ -29,12 +29,12 @@ class Services(object):
             self.token = auth_obj.get_token()
             self.expiration_date = int(auth_obj.get_time_expire())
         return self.token
-    @staticmethod
+
     def get_url(self):
         return self.url
-    @staticmethod
+
     def get_user(self):
         return self.user
-    @staticmethod
+        
     def get_password(self):
         return self.password

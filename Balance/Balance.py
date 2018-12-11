@@ -6,4 +6,4 @@ class Balance(Services):
         super(Balance, self).__init__(url, token, user, password)
     
     def account_balance(self):
-        return BalanceRequest.account_balance(self.url, self.token)
+        return BalanceRequest.account_balance(self.get_url(), self.get_token())

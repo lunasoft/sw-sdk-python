@@ -6,4 +6,4 @@ class Pendings(Services):
         super(Pendings, self).__init__(url, token, user, password)
     
     def pendings(self, rfc):
-        return PendingsRequest.pendings_rfc(self.url, self.token, rfc)
+        return PendingsRequest.pendings_rfc(self.get_url(), self.get_token(), rfc)

@@ -6,10 +6,10 @@ class Validate(Services):
         super(Validate, self).__init__(url, token, user, password)
 
     def validate_lrfc(self, lrfc):
-        return ValidateRequest.validate_lrfc(self.url, self.token, lrfc)
+        return ValidateRequest.validate_lrfc(self.get_url(), self.get_token(), lrfc)
 
     def validate_lco(self, lco):
-        return ValidateRequest.validate_lco(self.url, self.token, lco)
+        return ValidateRequest.validate_lco(self.get_url(), self.get_token(), lco)
 
     def validate_xml(self, xml):
-        return ValidateRequest.validate_xml(self.url, self.token, xml)
+        return ValidateRequest.validate_xml(self.get_url(), self.get_token(), xml)
