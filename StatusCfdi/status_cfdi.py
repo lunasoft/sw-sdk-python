@@ -1,4 +1,4 @@
-from status_cfdi.status_cfdi_request import StatusCfdiRequest
+from StatusCfdi.status_cfdi_request import StatusCfdiRequest
 from utils.services import Services
 
 class StatusCfdi:
