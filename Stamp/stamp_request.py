@@ -1,7 +1,7 @@
 import requests
 import string
 import random
-from stamp.stamp_response import StampResponse
+from Stamp.stamp_response import StampResponse
 
 class StampRequest:
     @staticmethod

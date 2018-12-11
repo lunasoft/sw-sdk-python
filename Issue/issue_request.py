@@ -1,7 +1,7 @@
 import requests
 import string
 import random
-from issue.issue_response import IssueResponse
+from Issue.issue_response import IssueResponse
 
 class IssueRequest:
     @staticmethod

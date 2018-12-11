@@ -1,4 +1,4 @@
-from issue.issue import Issue
+from Issue.issue import Issue
 import base64
 import unittest
 

@@ -1,5 +1,5 @@
-from validate.validate_request import ValidateRequest
-from utils.services import Services
+from Validate.validate_request import ValidateRequest
+from Utils.services import Services
 
 class Validate(Services):
     def __init__(self, url, token = None, user = None, password = None):

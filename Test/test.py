@@ -1,15 +1,15 @@
 import unittest
 import json
-from auth.auth import Auth
-from stamp.stamp import Stamp
-from issue.issue import Issue
-from balance.balance import Balance
-from cancelation.cancelation import Cancelation
-from validate.validate import Validate
-from relations.relations import Relations
-from accept_reject.accept_reject import AcceptReject
-from pendings.pendings import Pendings
-from status_cfdi.status_cfdi import StatusCfdi
+from Auth.auth import Auth
+from Stamp.stamp import Stamp
+from Issue.issue import Issue
+from Balance.balance import Balance
+from Cancelation.cancelation import Cancelation
+from Validate.validate import Validate
+from Relations.relations import Relations
+from AcceptReject.accept_reject import AcceptReject
+from Pendings.pendings import Pendings
+from StatusCfdi.status_cfdi import StatusCfdi
 
 def open_file(pathFile):
     out = open(pathFile, "r", encoding='ansi', errors='ignore').read()

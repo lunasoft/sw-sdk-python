@@ -1,7 +1,7 @@
 import requests
 import string
 import random
-from cancelation.cancelation_response import CancelationResponse
+from Cancelation.cancelation_response import CancelationResponse
 
 class CancelationRequest:
     @staticmethod

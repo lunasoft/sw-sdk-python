@@ -1,5 +1,4 @@
-from auth.auth import Auth
-from stamp.stamp import Stamp
+from Stamp.stamp import Stamp
 import base64
 import unittest
 

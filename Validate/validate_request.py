@@ -1,7 +1,7 @@
 import requests
 import string
 import random
-from validate.validate_response import ValidateResponse
+from Validate.validate_response import ValidateResponse
 
 class ValidateRequest:
     @staticmethod

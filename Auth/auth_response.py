@@ -1,6 +1,6 @@
 import json
 import traceback
-from utils.response import Response
+from Utils.response import Response
 
 class AuthResponse(Response):
     token = None

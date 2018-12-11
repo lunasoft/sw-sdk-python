@@ -1,5 +1,5 @@
-from issue.issue_request import IssueRequest
-from utils.services import Services
+from Issue.issue_request import IssueRequest
+from Utils.services import Services
 
 class Issue(Services):
     def __init__(self, url, token, user = None, password = None):

@@ -1,5 +1,5 @@
-from cancelation.cancelation_request import CancelationRequest
-from utils.services import Services
+from Cancelation.cancelation_request import CancelationRequest
+from Utils.services import Services
 
 class Cancelation(Services):
     def __init__(self, url, token = None, user = None, password = None):

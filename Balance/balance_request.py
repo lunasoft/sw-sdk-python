@@ -1,5 +1,5 @@
 import requests
-from balance.balance_response import BalanceResponse
+from Balance.balance_response import BalanceResponse
 class BalanceRequest:
     @staticmethod
     def account_balance(url, token):

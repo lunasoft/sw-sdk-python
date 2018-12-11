@@ -1,5 +1,5 @@
 import requests
-from auth.auth_response import AuthResponse
+from Auth.auth_response import AuthResponse
 class AuthRequest:
     @staticmethod
     def authenticate(url, user, password):

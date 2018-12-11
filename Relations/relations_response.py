@@ -1,6 +1,6 @@
 import json
 import traceback
-from utils.response import Response
+from Utils.response import Response
 class RelationsResponse(Response):
     codStatus = None
     uuid_consultado = None

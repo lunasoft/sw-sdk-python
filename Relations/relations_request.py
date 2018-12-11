@@ -1,7 +1,7 @@
 import requests
 import string
 import random
-from relations.relations_response import RelationsResponse
+from Relations.relations_response import RelationsResponse
 
 class RelationsRequest:
     @staticmethod

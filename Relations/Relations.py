@@ -1,5 +1,5 @@
-from relations.relations_request import RelationsRequest
-from utils.services import Services
+from Relations.relations_request import RelationsRequest
+from Utils.services import Services
 
 class Relations(Services):
     def __init__(self, url, token = None, user = None, password = None):

@@ -1,5 +1,5 @@
-from accept_reject.accept_reject_request import AcceptRejectRequest
-from utils.services import Services
+from AcceptReject.accept_reject_request import AcceptRejectRequest
+from Services import Services
 
 class AcceptReject(Services):
     def __init__(self, url, token = None, user = None, password = None):

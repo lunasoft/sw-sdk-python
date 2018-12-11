@@ -1,6 +1,6 @@
 import time
 import datetime
-from auth.auth_request import AuthRequest
+from Auth.auth_request import AuthRequest
 class Services(object):
     url = None
     user = None

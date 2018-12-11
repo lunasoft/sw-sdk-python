@@ -1,5 +1,5 @@
 import requests
-from pendings.pendings_response import PendingsResponse
+from Pendings.pendings_response import PendingsResponse
 class PendingsRequest:
     @staticmethod
     def pendings_rfc(url, token, rfc):
