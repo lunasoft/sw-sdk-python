@@ -1,32 +1,36 @@
 from Issue.issue import Issue
 import base64
+import json
+import datetime
 import unittest
 
-def open_file(pathFile):
-    out = open(pathFile,"r", encoding='latin_1', errors='ignore').read()
-    return out
-class MyTest(unittest.TestCase):
-    def __init__(self):
-        self.expected = "success"
-        self.message = "401 - El rango de la fecha de generación no debe de ser mayor a 72 horas para la emisión del timbre."
-    def testIssueb64(self):
-        xml = open_file("resources/xml33.xml")
+class TestIssue(unittest.TestCase):
+    expected = "success"
+    message = "401 - El rango de la fecha de generación no debe de ser mayor a 72 horas para la emisión del timbre."
+    @staticmethod
+    def open_file(pathFile):
+        out = open(pathFile,"r", encoding='latin_1', errors='ignore').read()
+        return out
+    def test_issue_b64(self):
+        xml = TestIssue.open_file("resources/xml33.xml")
         encoded = base64.b64encode(xml.encode('utf-8'))
-        objIssue = Issue("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponseIssue = objIssue.issue_v4(encoded.decode(),True)
-        self.assertTrue(self.message == objResponseIssue.get_message())
-    def testIssue(self):
-        xml = open_file("resources/xml33.xml")
-        objIssue = Issue("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponseIssue = objIssue.issue_v4(xml)
-        self.assertTrue(self.message == objResponseIssue.get_message())
-    def testIssueJson(self):
-        jsontxt = open_file("resources/cfdi.json")
-        objIssue = Issue("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponseIssue = objIssue.issue_json_v4(jsontxt)
-        self.assertTrue(self.message == objResponseIssue.get_message())
+        issue = Issue("http://services.test.sw.com.mx", None, "demo", "123456789")
+        response = issue.issue_v4(encoded.decode(),True)
+        self.assertTrue(response.get_status() == self.expected or self.message == response.get_message())
+    def test_issue(self):
+        xml = TestIssue.open_file("resources/xml33.xml")
+        issue = Issue("http://services.test.sw.com.mx", None, "demo", "123456789")
+        response = issue.issue_v4(xml)
+        self.assertTrue(response.get_status() == self.expected or self.message == response.get_message())
+    def test_issue_json(self):
+        jsontxt = TestIssue.open_file("resources/cfdi.json")
+        JSON = json.loads(jsontxt)
+        fecha = (datetime.datetime.now()-datetime.timedelta(days = 1)).strftime('%Y-%m-%dT%H:%M:%S')
+        JSON['Fecha'] = fecha
+        jsontxt = json.dumps(JSON)
+        issue = Issue("http://services.test.sw.com.mx", None, "demo", "123456789")
+        response = issue.issue_json_v4(jsontxt)
+        self.assertTrue(response.get_status() == self.expected or self.message == response.get_message())
 
-Test = MyTest()
-Test.testIssue()
-Test.testIssueb64()
-Test.testIssueJson()
+suite = unittest.TestLoader().loadTestsFromTestCase(TestIssue)
+unittest.TextTestRunner(verbosity=2).run(suite)

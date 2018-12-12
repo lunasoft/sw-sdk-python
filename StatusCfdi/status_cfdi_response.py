@@ -37,3 +37,21 @@ class StatusCfdiResponse:
         string = response.split("<a:EstatusCancelacion>", 2)
         string2 = string[1].split("</a:EstatusCancelacion>", 2)
         return string2[0]
+        
+    def get_status_code(self):
+        return self.status_code
+
+    def get_response(self):
+        return self.response
+
+    def get_codigoEstatus(self):
+        return self.codigoEstatus
+
+    def get_esCancelable(self):
+        return self.esCancelable
+
+    def get_estado(self):
+        return self.estado
+
+    def get_estatusCancelacion(self):
+        return self.estatusCancelacion

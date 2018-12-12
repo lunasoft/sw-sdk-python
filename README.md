@@ -1,5 +1,6 @@
 
 
+
 ![Python](https://www.python.org/static/opengraph-icon-200x200.png)
 # Requerimientos #
 
@@ -35,20 +36,21 @@ Ejemplo de uso
 
 ```py
 objAuth = Auth("http://services.test.sw.com.mx", None ,"demo","123456789")
-objResponseAuth = objAuth.Authentication()
-print(objResponseAuth.getToken()+"\nStatus: "+objResponseAuth.getStatus())
+objResponseAuth = objAuth.authentication()
+print(objResponseAuth.get_token()+"\nStatus: "+objResponseAuth.get_status())
 ```
 > Cabe aclarar que Auth recibe un valor "None" en el lugar de donde iría el token para las demás funciones de consumo.
 
 Las funciones utilizables para el objeto obtenido son las siguientes
 
- > *getTimeExpire()*
- > *getToken()*
- > *getMessage()*
-> *getMessageDetail()*
-> *getData()*
-> *getResponse()*
-> *getStatus()*
+>- *get_time_expire()*
+>- *get_token()*
+>- *get_message()*
+>- *get_messageDetail()*
+>- *get_data()*
+>- *get_response()*
+>- *get_status()*
+>- *get_status_code()*
 
 ## Balance ##
 
@@ -66,17 +68,18 @@ Ejemplo de uso
 
 ```py
 objBal = Balance("http://services.test.sw.com.mx", token)
-objResponseBal = objBal.AccountBalance()
+objResponseBal = objBal.account_balance()
 print(objResponseBal.data)
 ```
 
 Las funciones utilizables para el objeto obtenido son las siguientes
 
-> *getMessage()*
-> *getMessageDetail()*
-> *getData()*
-> *getResponse()*
-> *getStatus()*
+>- *get_message()*
+>- *get_messageDetail()*
+>- *get_data()*
+>- *get_response()*
+>- *get_status()*
+>- *get_status_code()*
 
 ## Cancelation ##
 
@@ -85,38 +88,39 @@ Parámetros necesarios: [url, user y password] o [url y token]. Además de los p
 La clase de Cancelation nos servirá para cancelar algún comprobante anteriormente ya timbrado, teniendo diversas opciones para poder cancelar dicho documento.
 
 **Funciones disponibles**
- - cancelUuid(rfc, uuid)
- - cancelCsd(rfc, uuid, b64Csd, b64Key, passwordCsd)
- - cancelPfx(rfc, uuid, b64Pfx, passwordCsd)
- - cancelXml(xml)
+ - cancel_uuid(rfc, uuid)
+ - cancel_csd(rfc, uuid, b64_cert, b64_key, password)
+ - cancel_pfx(rfc, uuid, b64_pfx, password)
+ - cancel_xml(xml)
 
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from Cancelation.Cancelation import Cancelation
+from Cancelation.cancelation import Cancelation
 ```
 
 Ejemplo de uso
 
 ```py
-objCancel = Cancelation("http://services.test.sw.com.mx", token)
-objResponseCancelCsd = objCancel.CancelCsd(rfc, uuid, b64Csd, b64Key, passwordCsd)
-objResponseCancelUuid = objCancel.CancelUuid(rfc, uuid)
-objResponseCancelPfx = objCancel.CancelPfx(rfc, uuid, b64Pfx, passwordCsd)
-objResponseCancelXml = objCancel.CancelXml(xmlCancel)
-print(objResponseCancelUuid.getStatus())
-print(objResponseCancelCsd.getStatus())
-print(objResponseCancelPfx.getStatus())
-print(objResponseCancelXml.getStatus())
+cancel = Cancelation("http://services.test.sw.com.mx", token)
+response_csd = cancel.cancel_csd(rfc, uuid, b64_csd, b64_key, password_csd)
+response_uuid = cancel.cancel_uuid(rfc, uuid)
+response_pfx = cancel.cancel_pfx(rfc, uuid, b64_pfx, password_csd)
+response_xml = cancel.cancel_xml(xml_cancel)
+print(response_csd.get_status())
+print(response_uuid.get_status())
+print(response_pfx.get_status())
+print(response_xml.get_status())
 ```
 
 Las funciones utilizables para estos objetos de cancelación son los siguientes
 
-> *getMessage()*
-> *getMessageDetail()*
-> *getData()*
-> *getResponse()*
-> *getStatus()*
+>- *get_message()*
+>- *get_messageDetail()*
+>- *get_data()*
+>- *get_response()*
+>- *get_status()*
+>- *get_status_code()*
 
 ## Issue (Emisión Timbrado) ##
 
@@ -125,37 +129,38 @@ Parámetros necesarios: [user, password y url] o [token y url], así como el XML
 La clase Issue nos ayudará a timbrar nuestros documentos XML por medio de emisión-timbrado. A diferencia de la clase Stamp, esta clase además de timbrar el documento le pondrá el sello.
 
 **Funciones disponibles**
-- issueV1(xml, b64)
-- issueV2(xml, b64)
-- issueV3(xml, b64)
-- issueV4(xml, b64)
+- issue_v1(xml, b64)
+- issue_v2(xml, b64)
+- issue_v3(xml, b64)
+- issue_v4(xml, b64)
 > **b64** es un parámetro opcional y se debe indicar en *true* si el XML va encodeado en base64. De no indicarse, por defecto se tomará el valor de *false*
 
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from Issue.Issue import Issue
+from Issue.issue import Issue
 ```
 
 Ejemplo de uso
 
 ```py
-objIssue = Issue("http://services.test.sw.com.mx", token)
-objResponseIssue = objIssue.IssueV4(xml,True)#XML en Base64
-if objResponseIssue.status ==  "error":
-	print(objResponseIssue.getMessage())
-	print(objResponseIssue.getMessageDetail())
+issue = Issue("http://services.test.sw.com.mx", token)
+response = issue.issue_v4(xml, True)#XML en Base64
+if response.status ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
 else:
-	print(objResponseIssue.getData())
+	print(response.get_data())
 ```
 
 Las funciones correspondientes al objeto que regresan estas funciones son las siguientes
 
-> *getMessage()*
-> *getMessageDetail()*
-> *getData()*
-> *getResponse()*
-> *getStatus()*
+>- *get_message()*
+>- *get_messageDetail()*
+>- *get_data()*
+>- *get_response()*
+>- *get_status()*
+>- *get_status_code()*
 
 ## Issue Json (Emisión Timbrado JSON) ##
 
@@ -164,36 +169,37 @@ Parámetros necesarios: [user, password y url] o [token y url], así como el JSO
 La clase Issue nos ayudará a timbrar nuestros documentos JSON por medio de emisión-timbrado. A diferencia de la clase Stamp, esta clase además generar el XML y timbrarlo, le pondrá el sello.
 
 **Funciones disponibles**
-- IssueJsonV1(json)
-- IssueJsonV2(json)
-- IssueJsonV3(json)
-- IssueJsonV4(json)
+- issue_json_v1(json)
+- issue_json_v2(json)
+- issue_json_v3(json)
+- issue_json_v4(json)
 
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from Issue.Issue import Issue
+from Issue.issue import Issue
 ```
 
 Ejemplo de uso
 
 ```py
-objIssue = Issue("http://services.test.sw.com.mx", token)
-objResponseIssue = objIssue.IssueJsonV4(open_file("resources\\cfdi.json"))
-if objResponseIssue.status ==  "error":
-	print(objResponseIssue.getMessage())
-	print(objResponseIssue.getMessageDetail())
+issue = Issue("http://services.test.sw.com.mx", token)
+response = issue.issue_json_v4(open_file("resources\\cfdi.json"))
+if response.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
 else:
-	print(objResponseIssue.getData())
+	print(response.get_data())
 ```
 
 Las funciones correspondientes al objeto que regresan estas funciones son las siguientes
 
-> *getMessage()*
-> *getMessageDetail()*
-> *getData()*
-> *getResponse()*
-> *getStatus()*
+>- *get_message()*
+>- *get_messageDetail()*
+>- *get_data()*
+>- *get_response()*
+>- *get_status()*
+>- *get_status_code()*
 
 ## Stamp ##
 
@@ -202,38 +208,39 @@ Parámetros necesarios: [user, password y url] o [token y url], así como el XML
 La clase Stamp se utiliza para el timbrado de documentos XML. El documento deberá venir ya con el sello.
 
 **Funciones disponibles**
-- stampV1(xml, b64)
-- stampV2(xml, b64)
-- stampV3(xml, b64)
-- stampV4(xml, b64)
+- stamp_v1(xml, b64)
+- stamp_v2(xml, b64)
+- stamp_v3(xml, b64)
+- stamp_v4(xml, b64)
 
 > **b64** es un parámetro opcional y se debe indicar en *true* si el XML va encodeado en base 64. De no indicarse por defecto se tomará el valor de *false*
 
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from Stamp.Stamp import Stamp
+from Stamp.stamp import Stamp
 ```
 
 Ejemplo de uso
 
 ```py
-objStamp = Stamp("http://services.test.sw.com.mx", token)
-objResponseStamp = objStamp.StampV4(open_file("resources\\xml33.xml"))
-if objResponseStamp.getStatus() ==  "error":
-	print(objResponseStamp.getMessage())
-	print(objResponseStamp.getMessageDetail())
+stamp = Stamp("http://services.test.sw.com.mx", token)
+response = stamp.StampV4(open_file("resources\\xml33.xml"))
+if response.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
 else:
-	print(objResponseStamp.getData())
+	print(response.get_data())
 ```
 
 Las funciones correspondientes al objeto que regresan estas funciones son las siguientes
 
-> *getMessage()*
-> *getMessageDetail()*
-> *getData()*
-> *getResponse()*
-> *getStatus()*
+>- *get_message()*
+>- *get_messageDetail()*
+>- *get_data()*
+>- *get_response()*
+>- *get_status()*
+>- *get_status_code()*
 
 ## Validation ##
 
@@ -242,36 +249,36 @@ Parámetros necesarios: [user, password y url] o [token y url]. Además de pará
 La clase Validation servirá para validar que algunas cosas se encuentren de manera correcta antes de proceder al timbrado del mismo. Por ejemplo, nos pueden ayudar a decir si nuestro XML no tiene algún error, o consultar algún RFC de la lista de contribuyentes obligados.
 
 **Funciones disponibles**
-- validateXml(xml)
-- validateLrfc(rfc)
-- validateLco(noCert)
+- validate_xml(xml)
+- validate_lrfc(rfc)
+- validate_lco(noCert)
 
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from Validate.Validate import Validate
+from Validate.validate import Validate
 ```
 
 Ejemplo de uso
 
 ```py
-objValidate = Validate("http://services.test.sw.com.mx", token)
-objResponseValidateRFC = objValidate.ValidateLrfc("LAN7008173R5")
-print(objResponseValidateRFC.getData())
-objResponseValidateNoCert = objValidate.ValidateLco("20001000000300022815")
-print(objResponseValidateNoCert.getData())
-objResponseValidateXml = objValidate.ValidateXml(open_file("resources\\xml33.xml"))
-print(objResponseValidateXml.response)
+validate = Validate("http://services.test.sw.com.mx", token)
+response_rfc = validate.Validate_lrfc("LAN7008173R5")
+print(response_rfc.get_data())
+response_lco = validate.Validate_lco("20001000000300022815")
+print(response_lco.get_data())
+response_xml = validate.Validate_xml(open_file("resources\\xml33.xml"))
+print(response_xml.get_response())
 ```
 
 Las funciones correspondientes al objeto que regresan estas funciones son las siguientes
 
-> *getStatus()*
-> *getMessage()*
-> *getMessageDetail()*
-> *getData()*
-> *getResponse()*
-> *getStatus()*
+>- *get_message()*
+>- *get_messageDetail()*
+>- *get_data()*
+>- *get_response()*
+>- *get_status()*
+>- *get_status_code()*
 
 >La validación del Xml al no tener "data", ni tampoco "message" obtenemos la response que viene en formato de array asociativo.
 
@@ -282,7 +289,7 @@ Parámetros necesarios: [rfcEmisor, rfcReceptor, total, uuid, URL del SOAP, Acti
 La clase Estatus CFDI servirá para verificar el estatus de algún comprobante directamente en el SAT. Este servicio será necesario en el nuevo esquema de cancelación.
 
 **Funciones disponibles**
-- status(rfcEmisor, rfcReceptor, total, uuid, URL, Action)
+- status(rfc_emisor, rfc_receptor, total, uuid, url, soap_action)
 
 
 Importar la clase al comienzo de nuestro programa de la siguiente manera
@@ -294,17 +301,17 @@ from StatusCfdi.StatusCfdi import StatusCfdi
 Ejemplo de uso
 
 ```py
-objStatus = StatusCfdi.status("LAN8507268IA", "LAN7008173R5", "5800.00", "6caed040-2f24-4b15-9927-975c2a76fb83", "https://consultaqrfacturaelectronicatest.sw.com.mx/ConsultaCFDIService.svc", "http://tempuri.org/IConsultaCFDIService/Consulta")
+status = StatusCfdi.status("LAN8507268IA", "LAN7008173R5", "5800.00", "eb978000-95c7-4513-8d97-4b59434da45f", "https://pruebacfdiconsultaqr.cloudapp.net/ConsultaCFDIService.svc", "http://tempuri.org/IConsultaCFDIService/Consulta")
 ```
 
 Las funciones correspondientes al objeto que regresan estas funciones son las siguientes
 
-> *statusCode*
-> *response*
-> *codigoEstatus*
-> *esCancelable*
-> *estado*
-> *estatusCancelacion*
+>- *get_status_code()*
+>- *get_response()*
+>- *get_codigoEstatus()*
+>- *get_esCancelable()*
+>- *get_estado()*
+>- *get_estatusCancelacion()*
 
 ## Consulta Documentos Relacionados ##
 Parámetros necesarios: [url, user y password] o [url y token]. Además de los parámetros que nos sean necesarios dependiendo del tipo de método a usar.
@@ -312,38 +319,39 @@ Parámetros necesarios: [url, user y password] o [url y token]. Además de los p
 La clase de Relations nos servirá para consultar los documentos que existen haciendo relación al documento consultado.
 
 **Funciones disponibles**
- - RelationsUuid(rfc, uuid)
- - RelationsCsd(rfc, uuid, b64Csd, b64Key, passwordCsd)
- - RelationsPfx(rfc, uuid, b64Pfx, passwordCsd)
- - RelationsXml(xml)
+ - relations_uuid(rfc, uuid)
+ - relations_csd(rfc, uuid, b64_csd, b64_key, password_csd)
+ - relations_pfx(rfc, uuid, b64_pfx, password_csd)
+ - relations_xml(xml)
 
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from Relations.Relations import Relations
+from Relations.relations import Relations
 ```
 
 Ejemplo de uso
 
 ```py
-objrelations = Relations("http://services.test.sw.com.mx", token)
-objResponseRelationsCSD = objrelations.RelationsCsd(rfc, uuid, b64Csd, b64Key, passwordCsd)
-objResponseRelationsUuid = objrelations.RelationsUuid(rfc, uuid)
-objResponseRelationsPfx = objrelations.RelationsPfx(rfc, uuid, b64Pfx, passwordCsd)
-objResponseRelationsXml = objrelations.RelationsXml(xmlRelations)
-print(objResponseRelationsUuid.getStatus())
-print(objResponseCancelCSD.getStatus())
-print(objResponseRelationsPfx.getStatus())
-print(objResponseRelationsXml.getStatus())
+relations = Relations("http://services.test.sw.com.mx", None, "demo", "123456789")
+response_csd = relations.relations_csd(rfc, uuid, b64_csd, b64_key, password_csd)
+response_uuid = relations.relations_uuid(rfc, uuid)
+response_pfx = relations.relations_pfx(rfc, uuid, b64_pfx, password_csd)
+response_xml = relations.relations_xml(xml_relations)
+print(response_csd.get_status())
+print(response_uuid.get_status())
+print(response_pfx.get_status())
+print(response_xml.get_status())
 ```
 
 Las funciones utilizables para estos objetos de relacionados son los siguientes
 
-> *getMessage()*
-> *getMessageDetail()*
-> *getData()*
-> *getResponse()*
-> *getStatus()*
+>- *get_message()*
+>- *get_messageDetail()*
+>- *get_data()*
+>- *get_response()*
+>- *get_status()*
+>- *get_status_code()*
 
 ## Consulta Solicitudes Pendientes ##
 Parámetros necesarios: [url, user y password] o [url y token]. Además del RFC del cual obtendremos la lista de uuid que tiene pendiente por Aceptar o Rechazar.
@@ -355,15 +363,15 @@ La clase de Pendings nos servirá para conocer la lista de uuids que un RFC como
 
 importar la clase al inicio de nuestro programa de la siguiente manera:
 ```py
-from Pendings.Pendings import Pendings
+from Pendings.pendings import Pendings
 ```
 
 Ejemplo de uso
 
 ```py
-objPendings = Pendings("http://services.test.sw.com.mx", token)
-objResponse = objPendings.pendings("LAN7008173R5")
-print(objResponse.getStatus())
+pendings = Pendings("http://services.test.sw.com.mx", token)
+response = pendings.pendings("LAN7008173R5")
+print(response.get_status())
 ```
 
 ##  Aceptar/Rechazar Cancelación ##
@@ -372,41 +380,42 @@ Parámetros necesarios: [url, user y password] o [url y token]. Además de los p
 La clase de AcceptReject nos servirá para cancelar algún comprobante pendiente, teniendo diversas opciones para poder cancelar dicho documento.
 
 **Funciones disponibles**
- - AcceptRejectUuid(rfc, uuid)
- - AcceptRejectCsd(rfc, uuids, b64Csd, b64Key, passwordCsd)
- - AcceptRejectPfx(rfc, uuids, b64Pfx, passwordCsd)
- - AcceptRejectXml(xml)
+ - accept_reject_uuid(rfc, uuid)
+ - accept_reject_csd(rfc, uuids, b64_csd, b64_key, password_csd)
+ - accept_reject_pfx(rfc, uuids, b64_pfx, password_csd)
+ - accept_reject_xml(xml)
 > Tener en cuenta que los métodos que se consumen por CSD o PFX se envía un JSON Array como el siguiente:
 >  - uuids = [{"uuid":"fd74d156-b9b0-44a5-9906-e08182e8363e", "action":"Aceptacion"},{"uuid":"26cccb5b-7742-4c54-a031-245a23b8a429", "action":"Rechazo"}]
 
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from AcceptReject.AcceptReject import AcceptReject
+from AcceptReject.accept_reject import AcceptReject
 ```
 
 Ejemplo de uso
 
 ```py
-objAcceptReject = AcceptReject("http://services.test.sw.com.mx", token)
+accept_reject = AcceptReject("http://services.test.sw.com.mx", token)
 uuids = [{"uuid":"fd74d156-b9b0-44a5-9906-e08182e8363e", "action":"Aceptacion"}]
-objResponseCsd = objAcceptReject.AcceptRejectCsd(rfc,uuids,b64CSD), b64Key,"12345678a")
-objResponseUuid = objAcceptReject.AcceptRejectUuid(rfc, uuid)
-objResponsePfx = objAcceptReject.AcceptRejectPfx(rfc, uuid, b64Pfx, passwordCsd)
-objResponseXml = objAcceptReject.AcceptRejectXml(xmlAcceptReject)
-print(objResponseUuid.getStatus())
-print(objResponseCsd.getStatus())
-print(objResponsePfx.getStatus())
-print(objResponseXml.getStatus())
+response_csd = accept_reject.accept_reject_csd(rfc, uuids, b64_csd, b64_key, password_csd)
+response_uuid = accept_reject.accept_reject_uuid(rfc, uuid)
+response_pfx = accept_reject.accept_reject_pfx(rfc, uuid, b64_pfx, password_csd)
+response_xml = accept_reject.accept_reject_xml(xml_accept_reject)
+print(response_uuid.get_status())
+print(response_csd.get_status())
+print(response_pfx.get_status())
+print(response_xml.get_status())
 ```
 
 Las funciones utilizables para estos objetos de accept/reject son los siguientes
 
-> *getMessage()*
-> *getMessageDetail()*
-> *getData()*
-> *getResponse()*
-> *getStatus()*
+>- *get_message()*
+>- *get_messageDetail()*
+>- *get_data()*
+>- *get_response()*
+>- *get_status()*
+>- *get_status_code()*
 
 
 ## Procesamiento de las respuestas ##
@@ -414,11 +423,11 @@ Cuando obtenemos un "data", éste viene en formato array asociativo. A continuac
 
 **Ejemplo 1:**
 
-Tratamiento de los datos de la validación de Xml aquí un ejemplo.
+Tratamiento de los datos de la validación de xml aquí un ejemplo.
 ```py
-objValidate = Validate("http://services.test.sw.com.mx", token)
-objResponseValidateXml = objValidate.ValidateXml(open_file("resources\\xml33.xml"))
-for d in objResponseValidateXml.response["detail"]:
+validate = Validate("http://services.test.sw.com.mx", token)
+response_xml = validate.Validate_xml(open_file("resources\\xml33.xml"))
+for d in response_xml.response["detail"]:
 	print("Detail:")
 	for detail in d["detail"]:
 		print("\tmessage: "+detail["message"])
@@ -440,12 +449,12 @@ for d in objResponseValidateXml.response["detail"]:
 
 **Ejemplo 2:**
 
-Tratamiento de los datos de la validación de Lco
+Tratamiento de los datos de la validación de lco
 
 ```py
-objValidate = Validate("http://services.test.sw.com.mx", token)
-objResponseValidateNoCert = objValidate.ValidateLco("20001000000300022815")
-respuesta = objResponseValidateNoCert.getData()
+validate = Validate("http://services.test.sw.com.mx", token)
+response_lco = validate.ValidateLco("20001000000300022815")
+respuesta = response_lco.get_data()
 numeroCertificado = respuesta["noCertificado"] #contiene 20001000000300022815
 rfc = respuesta["rfc"] #contiene LAN7008173R5
 #fechas de validez del certificado

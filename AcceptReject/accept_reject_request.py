@@ -20,7 +20,7 @@ class AcceptRejectRequest:
     @staticmethod
     def accept_reject_csd(url, token, rfc, uuids, b64_cert, b64_key, password):
         uuid = json.dumps(uuids)
-        payload = "{ \"uuids\": " + uuid + ",  \"password\": \"" + password + "\", \"rfc\": \"" + rfc + "\",    \"b64Cer\": \"" + b64_key + "\",  \"b64Key\": \"" + password + "\"}"
+        payload = "{ \"uuids\": " + uuid + ",  \"password\": \"" + password + "\", \"rfc\": \"" + rfc + "\",    \"b64Cer\": \"" + b64_cert + "\",  \"b64Key\": \"" + b64_key + "\"}"
         headers = {
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"

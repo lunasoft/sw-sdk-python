@@ -1,6 +1,6 @@
 import json
 import traceback
-from Utils.Response import Response
+from Utils.response import Response
 
 class ValidateResponse(Response):
     def __init__(self, response):
