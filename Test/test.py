@@ -10,6 +10,7 @@ from Relations.relations import Relations
 from AcceptReject.accept_reject import AcceptReject
 from Pendings.pendings import Pendings
 from StatusCfdi.status_cfdi import StatusCfdi
+from Csd.csd import Csd
 
 class MyTest(unittest.TestCase):
     expected = "success"
@@ -115,6 +116,10 @@ class MyTest(unittest.TestCase):
     def testAcceptRejectUuid(self):
         accept_reject = AcceptReject("http://services.test.sw.com.mx", None, "demo", "123456789")
         response = accept_reject.accept_reject_uuid("LAN7008173R5","baf029f3-93ea-4267-a76c-1958d69bd4d8", "Rechazo")
+        self.assertTrue(self.expected == response.get_status())
+    def testUploadCsd(self):
+        csd_obj = Csd("http://services.test.sw.com.mx", None, "demo", "123456789")
+        response = csd_obj.upload_csd("True","stamp",MyTest.open_file("resources\\b64CSD.txt"), MyTest.open_file("resources\\b64Key.txt"),"12345678a")
         self.assertTrue(self.expected == response.get_status())
 
 suite = unittest.TestLoader().loadTestsFromTestCase(MyTest)
