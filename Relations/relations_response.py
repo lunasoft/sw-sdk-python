@@ -11,15 +11,16 @@ class RelationsResponse(Response):
         try:
             self.status_code = response.status_code
             if(bool(response.text and response.text.strip())):
-                self.response = json.loads(response.text)
+                self.response = json.loads(response.text, encoding='utf-8')
                 if(self.status_code == 200):
                     self.data = self.response["data"]
                     self.status = self.response["status"]
-                    self.uuid_consultado = self.data["uuidConsultado"]
-                    self.resultado = self.data["resultado"]
                     self.message = self.response["message"]
-                    self.uuids_relacionados_padres = self.data["uuidsRelacionadosPadres"]
-                    self.uuids_relacionados_hijos = self.data["uuidsRelacionadosHijos"]
+                    if(self.response["codStatus"] == "2000"):
+                        self.uuid_consultado = self.data["uuidConsultado"]
+                        self.resultado = self.data["resultado"]
+                        self.uuids_relacionados_padres = self.data["uuidsRelacionadosPadres"]
+                        self.uuids_relacionados_hijos = self.data["uuidsRelacionadosHijos"]
                 else:
                     self.status = self.response["status"]
                     self.message = self.response["message"]

@@ -7,7 +7,7 @@ class BalanceResponse(Response):
         try:
             self.status_code = response.status_code
             if(bool(response.text and response.text.strip())):
-                self.response = json.loads(response.text)
+                self.response = json.loads(response.text, encoding='utf-8')
                 if(self.status_code == 200):
                     self.data = self.response["data"]
                     self.status = self.response["status"]

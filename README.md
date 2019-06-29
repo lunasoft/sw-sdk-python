@@ -1,6 +1,7 @@
 
 
 
+
 ![Python](https://www.python.org/static/opengraph-icon-200x200.png)
 # Requerimientos #
 
@@ -24,12 +25,12 @@ La clase de authentication, nos sirve para obtener un token de 2 hrs de duració
 
 **Funciones disponibles**
 
-- Authentication()
+- authentication()
 
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from Auth.Auth import Auth
+from Auth.auth import Auth
 ```
 
 Ejemplo de uso
@@ -61,7 +62,7 @@ La clase de Balance nos ayuda a obtener información referente a nuestra cuenta.
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from Balance.Balance import Balance
+from Balance.balance import Balance
 ```
 
 Ejemplo de uso
@@ -295,7 +296,7 @@ La clase Estatus CFDI servirá para verificar el estatus de algún comprobante d
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from StatusCfdi.StatusCfdi import StatusCfdi
+from StatusCfdi.status_cfdi import StatusCfdi
 ```
 
 Ejemplo de uso
@@ -426,7 +427,7 @@ Cuando obtenemos un "data", éste viene en formato array asociativo. A continuac
 Tratamiento de los datos de la validación de xml aquí un ejemplo.
 ```py
 validate = Validate("http://services.test.sw.com.mx", token)
-response_xml = validate.Validate_xml(open_file("resources\\xml33.xml"))
+response_xml = validate.validate_xml(open_file("resources\\xml33.xml"))
 for d in response_xml.response["detail"]:
 	print("Detail:")
 	for detail in d["detail"]:
@@ -453,7 +454,7 @@ Tratamiento de los datos de la validación de lco
 
 ```py
 validate = Validate("http://services.test.sw.com.mx", token)
-response_lco = validate.ValidateLco("20001000000300022815")
+response_lco = validate.validate_lco("20001000000300022815")
 respuesta = response_lco.get_data()
 numeroCertificado = respuesta["noCertificado"] #contiene 20001000000300022815
 rfc = respuesta["rfc"] #contiene LAN7008173R5

@@ -5,11 +5,11 @@ from Csd.csd_response import CsdResponse
 
 class CsdRequest:
     @staticmethod
-    def upload_csd(url, token, is_active, certificate_type, b64_cert, b64_key, password):
-        payload = "{ \"is_active\": \"" + str(is_active) + "\",  \"password\": \"" + password + "\", \"certificate_type\": \"" + certificate_type + "\",    \"b64Cer\": \"" + b64_cert + "\",  \"b64Key\": \"" + b64_key + "\"}"
+    def upload_csd(url, token, certificate_type, b64_cert, b64_key, password):
+        payload = "{ \"password\": \"" + password + "\", \"type\": \"" + certificate_type + "\", \"b64Cer\": \"" + b64_cert + "\",  \"b64Key\": \"" + b64_key + "\"}"
         headers = {
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
         }
-        response = requests.request("POST", url + "/csd/save", data = payload, headers = headers, verify = True, timeout = 300)
+        response = requests.request("POST", url + "/certificates/save", data = payload.encode('utf-8'), headers = headers, verify = True, timeout = 300)
         return CsdResponse(response)

@@ -13,7 +13,7 @@ class RelationsRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "multipart/form-data; boundary=\"" + boundary + "\""
         }
-        response = requests.request("POST", url + "/relations/xml", data = payload, headers = headers, verify = True, timeout = 300)
+        response = requests.request("POST", url + "/relations/xml", data = payload.encode('utf-8'), headers = headers, verify = True, timeout = 300)
         return RelationsResponse(response)
 
     @staticmethod
@@ -23,7 +23,7 @@ class RelationsRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
         }
-        response = requests.request("POST", url + "/relations/csd", data = payload, headers = headers, verify = True, timeout = 300)
+        response = requests.request("POST", url + "/relations/csd", data = payload.encode('utf-8'), headers = headers, verify = True, timeout = 300)
         return RelationsResponse(response)
 
     @staticmethod
@@ -33,7 +33,7 @@ class RelationsRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
         }
-        response = requests.request("POST", url + "/relations/pfx", data = payload, headers = headers, verify = True, timeout = 300)
+        response = requests.request("POST", url + "/relations/pfx", data = payload.encode('utf-8'), headers = headers, verify = True, timeout = 300)
         return RelationsResponse(response)
 
     @staticmethod
