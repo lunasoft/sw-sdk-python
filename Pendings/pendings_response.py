@@ -16,7 +16,8 @@ class PendingsResponse(Response):
                 else:
                     self.status = self.response["status"]
                     self.message = self.response["message"]
-                    self.messageDetail = self.response["messageDetail"]
+                    if "messageDetail" in self.response: 
+                        self.messageDetail = self.response["messageDetail"]
             else:
                 self.status = "error"
                 self.message = response.reason

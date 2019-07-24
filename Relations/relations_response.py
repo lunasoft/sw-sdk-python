@@ -24,10 +24,8 @@ class RelationsResponse(Response):
                 else:
                     self.status = self.response["status"]
                     self.message = self.response["message"]
-                    try:
+                    if "messageDetail" in self.response: 
                         self.messageDetail = self.response["messageDetail"]
-                    except:
-                        pass
             else:
                 self.status = "error"
                 self.message = response.reason

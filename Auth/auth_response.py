@@ -17,7 +17,8 @@ class AuthResponse(Response):
                     self.time_expire = self.data["expires_in"]
                 else:
                     self.message = self.response["message"]
-                    self.messageDetail = self.response["messageDetail"]
+                    if "messageDetail" in self.response: 
+                        self.messageDetail = self.response["messageDetail"]
                     self.status = self.response["status"]
             else:
                 self.status = "error"

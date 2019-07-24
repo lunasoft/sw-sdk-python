@@ -17,7 +17,8 @@ class AcceptRejectResponse(Response):
                     self.codStatus = self.response["codStatus"]
                 else:
                     self.message = self.response["message"]
-                    self.messageDetail = self.response["messageDetail"]
+                    if "messageDetail" in self.response: 
+                        self.messageDetail = self.response["messageDetail"]
                     self.status = self.response["status"]
             else:
                 self.status = "error"
