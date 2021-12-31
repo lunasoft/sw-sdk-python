@@ -8,11 +8,11 @@ class Cancelation(Services):
     def CancelXml(self, xmlCancel):
         return CancelationRequest.cancel_by_xml(self.url, self.token, xmlCancel)
 
-    def CancelCsd(self, rfc, uuid, b64cert, b64key, cPassword):
-        return CancelationRequest.cancel_by_csd(self.url, self.token, rfc, uuid, b64cert, b64key, cPassword)
+    def CancelCsd(self, uuid, cPassword, rfc, motivo,foliosustitucion, b64cert, b64key):
+        return CancelationRequest.cancel_by_csd(self.url, self.token, rfc, uuid, b64cert, b64key, cPassword, motivo, foliosustitucion)
     
-    def CancelPfx(self, rfc, uuid, b64Pfx, cPassword):
-        return CancelationRequest.cancel_by_pfx(self.url, self.token, rfc, uuid, b64Pfx, cPassword)
+    def CancelPfx(self, uuid, cPassword, rfc, motivo, foliosustitucion,  b64Pfx):
+        return CancelationRequest.cancel_by_pfx(self.url, self.token, rfc, uuid, b64Pfx, cPassword, motivo, foliosustitucion)
 
-    def CancelUuid(self, rfc, uuid):
-        return CancelationRequest.cancel_by_uuid(self.url, self.token, rfc, uuid)
+    def CancelUuid(self, rfc, uuid, motivo, foliosustitucion):
+        return CancelationRequest.cancel_by_uuid(self.url, self.token, rfc, uuid, motivo, foliosustitucion)

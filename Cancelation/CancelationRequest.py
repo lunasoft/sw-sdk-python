@@ -17,8 +17,8 @@ class CancelationRequest:
         return CancelationResponse(response)
 
     @staticmethod
-    def cancel_by_csd(url, token, rfc, uuid, b64cert, b64key, password):
-        payload = "{ \"uuid\": \"" + uuid + "\",  \"password\": \"" + password + "\", \"rfc\": \"" + rfc + "\",    \"b64Cer\": \"" + b64cert + "\",  \"b64Key\": \"" + b64key + "\"}"
+    def cancel_by_csd(url, token, rfc, uuid, b64cert, b64key, password, motivo, foliosustitucion):
+        payload = "{ \"uuid\": \"" + uuid + "\",  \"password\": \"" + password + "\", \"rfc\": \"" + rfc + "\", \"motivo\": \"" + motivo + "\", \"foliosustitucion\": \"" + foliosustitucion + "\",\"b64Cer\": \"" + b64cert + "\",\"b64Key\": \"" + b64key + "\"}"
         headers = {
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
@@ -27,8 +27,8 @@ class CancelationRequest:
         return CancelationResponse(response)
 
     @staticmethod
-    def cancel_by_pfx(url, token, rfc, uuid, b64Pfx, password):
-        payload = "{ \"uuid\": \"" + uuid + "\",  \"password\": \"" + password + "\", \"rfc\": \"" + rfc + "\",    \"b64Pfx\": \"" + b64Pfx + "\" }"
+    def cancel_by_pfx(url, token, rfc, uuid, b64Pfx, password, motivo, foliosustitucion):
+        payload = "{ \"uuid\": \"" + uuid + "\",  \"password\": \"" + password + "\", \"rfc\": \"" + rfc  + "\", \"motivo\": \"" + motivo + "\", \"foliosustitucion\": \"" + foliosustitucion + "\",\"b64Pfx\": \"" + b64Pfx + "\" }"
         headers = {
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
@@ -37,10 +37,10 @@ class CancelationRequest:
         return CancelationResponse(response)
 
     @staticmethod
-    def cancel_by_uuid(url, token, rfc, uuid):
+    def cancel_by_uuid(url, token, rfc, uuid, motivo, foliosustitucion):
         headers = {
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
         }
-        response = requests.request("POST", url + "/cfdi33/cancel/" + rfc + "/" + uuid, headers=headers)
+        response = requests.request("POST", url + "/cfdi33/cancel/" + rfc + "/" + uuid + "/" + motivo + "/" + foliosustitucion , headers=headers)
         return CancelationResponse(response)
