@@ -33,7 +33,7 @@ from Auth.Auth import Auth
 Ejemplo de uso
 
 ```py
-objAuth = Auth("http://services.test.sw.com.mx", None ,"demo","123456789")
+objAuth = Auth("http://services.test.sw.com.mx", None ,"usuario","contraseña")
 objResponseAuth = objAuth.Authentication()
 print(objResponseAuth.getToken()+"\nStatus: "+objResponseAuth.getStatus())
 ```
@@ -83,9 +83,9 @@ La clase de Cancelation nos servirá para cancelar algún comprobante anteriorme
 
 Funciones disponibles
 
- - cancelUuid(rfc, uuid)
- - cancelCsd(rfc, uuid, b64Csd, b64Key, passwordCsd)
- - cancelPfx(rfc, uuid, b64Pfx, passwordCsd)
+ - cancelUuid(rfc, uuid, motivo, foliosustitucion)
+ - cancelCsd(uuid, passwordCsd, rfc, motivo, foliosustitucion, b64Csd, b64Key)
+ - cancelPfx(uuid, passwordCsd, rfc, motivo, foliosustitucion, b64Pfx)
  - cancelXml(xml)
 
 Importar la clase al comienzo de nuestro programa de la siguiente manera
@@ -98,9 +98,9 @@ Ejemplo de uso
 
 ```py
 objCancel = Cancelation("http://services.test.sw.com.mx", token)
-objResponseCancelCSD = objCancel.CancelCsd(rfc, uuid, b64Csd, b64Key, passwordCsd)
-objResponseCancelUuid  = objCancel.CancelUuid(rfc, uuid)
-objResponseCancelPfx  = objCancel.CancelPfx(rfc, uuid, b64Pfx, passwordCsd)
+objResponseCancelCSD = objCancel.CancelCsd(uuid, passwordCsd, rfc, motivo, foliosust, b64Csd, b64Key)
+objResponseCancelUuid  = objCancel.CancelUuid(rfc, uuid, motivo, foliosust)
+objResponseCancelPfx  = objCancel.CancelPfx(uuid, passwordCsd, rfc, motivo, foliosust, b64Pfx)
 objResponseCancelXml  = objCancel.CancelCsd(xmlCancel)
 print(objResponseCancelUUID.getStatus())
 print(objResponseCancelCSD.getStatus())
