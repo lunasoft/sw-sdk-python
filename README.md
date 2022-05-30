@@ -36,9 +36,9 @@ from Auth.auth import Auth
 Ejemplo de uso
 
 ```py
-objAuth = Auth("http://services.test.sw.com.mx", None ,"demo","123456789")
-objResponseAuth = objAuth.authentication()
-print(objResponseAuth.get_token()+"\nStatus: "+objResponseAuth.get_status())
+objAuth = Auth("http://services.test.sw.com.mx", None ,"usuario","contraseña")
+objResponseAuth = objAuth.Authentication()
+print(objResponseAuth.getToken()+"\nStatus: "+objResponseAuth.getStatus())
 ```
 > Cabe aclarar que Auth recibe un valor "None" en el lugar de donde iría el token para las demás funciones de consumo.
 
@@ -88,11 +88,12 @@ Parámetros necesarios: [url, user y password] o [url y token]. Además de los p
 
 La clase de Cancelation nos servirá para cancelar algún comprobante anteriormente ya timbrado, teniendo diversas opciones para poder cancelar dicho documento.
 
-**Funciones disponibles**
- - cancel_uuid(rfc, uuid)
- - cancel_csd(rfc, uuid, b64_cert, b64_key, password)
- - cancel_pfx(rfc, uuid, b64_pfx, password)
- - cancel_xml(xml)
+Funciones disponibles
+
+ - cancelUuid(rfc, uuid, motivo, foliosustitucion)
+ - cancelCsd(uuid, passwordCsd, rfc, motivo, foliosustitucion, b64Csd, b64Key)
+ - cancelPfx(uuid, passwordCsd, rfc, motivo, foliosustitucion, b64Pfx)
+ - cancelXml(xml)
 
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
@@ -103,15 +104,15 @@ from Cancelation.cancelation import Cancelation
 Ejemplo de uso
 
 ```py
-cancel = Cancelation("http://services.test.sw.com.mx", token)
-response_csd = cancel.cancel_csd(rfc, uuid, b64_csd, b64_key, password_csd)
-response_uuid = cancel.cancel_uuid(rfc, uuid)
-response_pfx = cancel.cancel_pfx(rfc, uuid, b64_pfx, password_csd)
-response_xml = cancel.cancel_xml(xml_cancel)
-print(response_csd.get_status())
-print(response_uuid.get_status())
-print(response_pfx.get_status())
-print(response_xml.get_status())
+objCancel = Cancelation("http://services.test.sw.com.mx", token)
+objResponseCancelCSD = objCancel.CancelCsd(uuid, passwordCsd, rfc, motivo, foliosust, b64Csd, b64Key)
+objResponseCancelUuid  = objCancel.CancelUuid(rfc, uuid, motivo, foliosust)
+objResponseCancelPfx  = objCancel.CancelPfx(uuid, passwordCsd, rfc, motivo, foliosust, b64Pfx)
+objResponseCancelXml  = objCancel.CancelCsd(xmlCancel)
+print(objResponseCancelUUID.getStatus())
+print(objResponseCancelCSD.getStatus())
+print(objResponseCancelPFX.getStatus())
+print(objResponseCancelXML.getStatus())
 ```
 
 Las funciones utilizables para estos objetos de cancelación son los siguientes
@@ -247,12 +248,11 @@ Las funciones correspondientes al objeto que regresan estas funciones son las si
 
 Parámetros necesarios: [user, password y url] o [token y url]. Además de parámetros adicionales según sea el caso.
 
-La clase Validation servirá para validar que algunas cosas se encuentren de manera correcta antes de proceder al timbrado del mismo. Por ejemplo, nos pueden ayudar a decir si nuestro XML no tiene algún error, o consultar algún RFC de la lista de contribuyentes obligados.
+La clase Validation servirá para validar que algunas cosas se encuentren de manera correcta antes de proceder al timbrado del mismo. Por ejemplo, nos pueden ayudar a decir si nuestro XML no tiene algún error.
 
-**Funciones disponibles**
-- validate_xml(xml)
-- validate_lrfc(rfc)
-- validate_lco(noCert)
+Funciones disponibles
+
+- validateXml(xml)
 
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
@@ -263,13 +263,9 @@ from Validate.validate import Validate
 Ejemplo de uso
 
 ```py
-validate = Validate("http://services.test.sw.com.mx", token)
-response_rfc = validate.Validate_lrfc("LAN7008173R5")
-print(response_rfc.get_data())
-response_lco = validate.Validate_lco("20001000000300022815")
-print(response_lco.get_data())
-response_xml = validate.Validate_xml(open_file("resources\\xml33.xml"))
-print(response_xml.get_response())
+objValidate = Validate("http://services.test.sw.com.mx", token)
+objResponseValidateXml = objValidate.ValidateXml(open_file("resources\\xml33.xml"))
+print(objResponseValidateXml.response)
 ```
 
 Las funciones correspondientes al objeto que regresan estas funciones son las siguientes
@@ -446,21 +442,3 @@ for d in response_xml.response["detail"]:
 >         message: OK
 >         messageDetail: Validaciones Proveedor Comprobante ( CFDI33 ) Correcta
 >         Type: 1 Section: CFDI33 - Validaciones Proveedor Comprobante  ( CFDI33 )
-
-
-**Ejemplo 2:**
-
-Tratamiento de los datos de la validación de lco
-
-```py
-validate = Validate("http://services.test.sw.com.mx", token)
-response_lco = validate.validate_lco("20001000000300022815")
-respuesta = response_lco.get_data()
-numeroCertificado = respuesta["noCertificado"] #contiene 20001000000300022815
-rfc = respuesta["rfc"] #contiene LAN7008173R5
-#fechas de validez del certificado
-fechaInicio = respuesta["fechaInicio"]#contiene '2016-10-25T04:52:11'
-fechaFin = respuesta["fechaFinal"]#contiene '2020-10-25T03:52:11'
-```
-
-Con esto podemos tratar los datos de manera interna a nuestra conveniencia.
