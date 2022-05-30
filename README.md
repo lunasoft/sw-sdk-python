@@ -204,13 +204,11 @@ Las funciones correspondientes al objeto que regresan estas funciones son las si
 
 Parámetros necesarios: [user, password y url] o [token y url]. Además de parámetros adicionales según sea el caso.
 
-La clase Validation servirá para validar que algunas cosas se encuentren de manera correcta antes de proceder al timbrado del mismo. Por ejemplo, nos pueden ayudar a decir si nuestro XML no tiene algún error, o consultar algún RFC de la lista de contribuyentes obligados.
+La clase Validation servirá para validar que algunas cosas se encuentren de manera correcta antes de proceder al timbrado del mismo. Por ejemplo, nos pueden ayudar a decir si nuestro XML no tiene algún error.
 
 Funciones disponibles
 
 - validateXml(xml)
-- validateLrfc(rfc)
-- validateLco(noCert)
 
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
@@ -222,10 +220,6 @@ Ejemplo de uso
 
 ```py
 objValidate = Validate("http://services.test.sw.com.mx", token)
-objResponseValidateRFC = objValidate.ValidateLrfc("LAN7008173R5")
-print(objResponseValidateRFC.getData())
-objResponseValidateNoCert = objValidate.ValidateLco("20001000000300022815")
-print(objResponseValidateNoCert.getData())
 objResponseValidateXml = objValidate.ValidateXml(open_file("resources\\xml33.xml"))
 print(objResponseValidateXml.response)
 ```
@@ -268,21 +262,3 @@ Output
 >         message: OK
 >         messageDetail: Validaciones Proveedor Comprobante ( CFDI33 ) Correcta
 >         Type: 1 Section: CFDI33 - Validaciones Proveedor Comprobante  ( CFDI33 )
-
-
-**Ejemplo 2:**
-
-Tratamiento de los datos de la validación de Lco
-
-```py
-objValidate = Validate("http://services.test.sw.com.mx", token)
-objResponseValidateNoCert = objValidate.ValidateLco("20001000000300022815")
-respuesta = objResponseValidateNoCert.getData()
-numeroCertificado = respuesta["noCertificado"] #contiene 20001000000300022815
-rfc = respuesta["rfc"] #contiene LAN7008173R5
-#fechas de validez del certificado
-fechaInicio = respuesta["fechaInicio"]#contiene '2016-10-25T04:52:11'
-fechaFin = respuesta["fechaFinal"]#contiene '2020-10-25T03:52:11'
-```
-
-Con esto podemos tratar los datos de manera interna a nuestra conveniencia.

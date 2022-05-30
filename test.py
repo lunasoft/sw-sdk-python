@@ -57,15 +57,6 @@ class MyTest(unittest.TestCase):
         objValidate = Validate("http://services.test.sw.com.mx", None, "demo", "123456789")
         objResponseValidateXml = objValidate.ValidateXml(open_file("resources\\xml33.xml"))
         self.assertTrue(self.expected == objResponseValidateXml.getStatus())
-    def testValidateLco(self):
-        objValidate = Validate("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponseValidateNoCert = objValidate.ValidateLco("20001000000300022815")
-        self.assertTrue(self.expected == objResponseValidateNoCert.getStatus())
-    def testValidateLrfc(self):
-        objValidate = Validate("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponseValidateRFC = objValidate.ValidateLrfc("LAN7008173R5")
-        self.assertTrue(self.expected == objResponseValidateRFC.getStatus())
-
 
 Test = MyTest()
 Test.testAuth()
@@ -77,8 +68,3 @@ Test.testCancelCsd()
 Test.testCancelPfx()
 Test.testCancelUuid()
 Test.testValidateXml()
-Test.testValidateLco()
-Test.testValidateLrfc()
-
-
-
