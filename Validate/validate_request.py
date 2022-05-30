@@ -5,24 +5,6 @@ from Validate.validate_response import ValidateResponse
 
 class ValidateRequest:
     @staticmethod
-    def validate_lrfc(url, token, lrfc):
-        headers = {
-            'Authorization': "bearer " + token,
-            'Content-Type': "application/json"
-        }
-        response = requests.request("GET", url + "/lrfc/" + lrfc, headers = headers, verify = True, timeout = 300)
-        return ValidateResponse(response)
-
-    @staticmethod
-    def validate_lco(url, token, lco):
-        headers = {
-            'Authorization': "bearer " + token,
-            'Content-Type': "application/json"
-        }
-        response = requests.request("GET", url + "/lco/" + lco, headers = headers, verify = True, timeout = 300)
-        return ValidateResponse(response)
-
-    @staticmethod
     def validate_xml(url, token, xml, base64=False):
         bs64 = ""
         if base64:

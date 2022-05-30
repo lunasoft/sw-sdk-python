@@ -68,14 +68,6 @@ class MyTest(unittest.TestCase):
         validate = Validate("http://services.test.sw.com.mx", None, "demo", "123456789")
         response = validate.validate_xml(MyTest.open_file("resources\\xml33.xml"))
         self.assertTrue(self.expected == response.get_status())
-    def testValidateLco(self):
-        validate = Validate("http://services.test.sw.com.mx", None, "demo", "123456789")
-        response = validate.validate_lco("20001000000300022815")
-        self.assertTrue(self.expected == response.get_status())
-    def testValidateLrfc(self):
-        validate = Validate("http://services.test.sw.com.mx", None, "demo", "123456789")
-        response = validate.validate_lrfc("LAN7008173R5")
-        self.assertTrue(self.expected == response.get_status())
     def testRelationsCsd(self):
         relations = Relations("http://services.test.sw.com.mx", None, "demo", "123456789")
         response = relations.relations_csd("LAN7008173R5","a618ea43-28a8-48b6-8f2a-6c8c6702445c",MyTest.open_file("resources\\b64CSD.txt"), MyTest.open_file("resources\\b64Key.txt"),"12345678a")

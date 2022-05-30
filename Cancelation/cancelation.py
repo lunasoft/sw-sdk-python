@@ -1,18 +1,18 @@
-from Cancelation.cancelation_request import CancelationRequest
-from Utils.services import Services
+from Cancelation.CancelationRequest import CancelationRequest
+from Utils.Services import Services
 
 class Cancelation(Services):
     def __init__(self, url, token = None, user = None, password = None):
-        super(Cancelation, self).__init__(url, token, user, password)
+        super(Cancelation,self).__init__(url, token, user, password)
     
-    def cancel_xml(self, xml_cancel):
-        return CancelationRequest.cancel_xml(self.get_url(), self.get_token(), xml_cancel)
+    def CancelXml(self, xmlCancel):
+        return CancelationRequest.cancel_by_xml(self.url, self.token, xmlCancel)
 
-    def cancel_csd(self, rfc, uuid, b64_cert, b64_key, password):
-        return CancelationRequest.cancel_csd(self.get_url(), self.get_token(), rfc, uuid, b64_cert, b64_key, password)
+    def CancelCsd(self, uuid, cPassword, rfc, motivo,foliosustitucion, b64cert, b64key):
+        return CancelationRequest.cancel_by_csd(self.url, self.token, rfc, uuid, b64cert, b64key, cPassword, motivo, foliosustitucion)
     
-    def cancel_pfx(self, rfc, uuid, b64_pfx, password):
-        return CancelationRequest.cancel_pfx(self.get_url(), self.get_token(), rfc, uuid, b64_pfx, password)
+    def CancelPfx(self, uuid, cPassword, rfc, motivo, foliosustitucion,  b64Pfx):
+        return CancelationRequest.cancel_by_pfx(self.url, self.token, rfc, uuid, b64Pfx, cPassword, motivo, foliosustitucion)
 
-    def cancel_uuid(self, rfc, uuid):
-        return CancelationRequest.cancel_uuid(self.get_url(), self.get_token(), rfc, uuid)
+    def CancelUuid(self, rfc, uuid, motivo, foliosustitucion):
+        return CancelationRequest.cancel_by_uuid(self.url, self.token, rfc, uuid, motivo, foliosustitucion)
