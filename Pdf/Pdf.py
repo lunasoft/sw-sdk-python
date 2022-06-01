@@ -1,5 +1,5 @@
-from Pdf.pdf_request import PdfRequest
-from Utils.services import Services
+from Pdf.PdfRequest import PdfRequest
+from Utils.Services import Services
 
 class Pdf(Services):
     def __init__(self, url, token, user = None, password = None):

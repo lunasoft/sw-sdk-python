@@ -1,5 +1,5 @@
-from StatusCfdi.status_cfdi_request import StatusCfdiRequest
-from Utils.services import Services
+from StatusCfdi.StatusCfdiRequest import StatusCfdiRequest
+from Utils.Services import Services
 
 class StatusCfdi:
     @staticmethod

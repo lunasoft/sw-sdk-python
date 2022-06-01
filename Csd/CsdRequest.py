@@ -1,7 +1,7 @@
 import requests
 import string
 import random
-from Csd.csd_response import CsdResponse
+from Csd.CsdResponse import CsdResponse
 
 class CsdRequest:
     @staticmethod

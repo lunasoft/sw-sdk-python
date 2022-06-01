@@ -7,7 +7,7 @@ class ValidateResponse(Response):
         try:
             self.statusCode = response.status_code
             if(bool(response.text and response.text.strip())):
-                self.response = json.loads(response.text, encoding='utf-8')
+                self.response = json.loads(response.text.encode().decode('utf8'))
                 if(self.statusCode == 200):
                     try:
                         self.data = self.response["data"]

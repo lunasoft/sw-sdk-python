@@ -1,5 +1,5 @@
-from Balance.balance_request import BalanceRequest
-from Utils.services import Services
+from Balance.BalanceRequest import BalanceRequest
+from Utils.Services import Services
 
 class Balance(Services):
     def __init__(self, url, token = None, user = None, password = None):

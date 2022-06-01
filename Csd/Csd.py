@@ -1,5 +1,5 @@
-from Csd.csd_request import CsdRequest
-from Utils.services import Services
+from Csd.CsdRequest import CsdRequest
+from Utils.Services import Services
 
 class Csd(Services):
     def __init__(self, url, token = None, user = None, password = None):

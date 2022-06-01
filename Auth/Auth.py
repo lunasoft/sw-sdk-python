@@ -1,5 +1,5 @@
-from Auth.auth_request import AuthRequest 
-from Utils.services import Services
+from Auth.AuthRequest import AuthRequest
+from Utils.Services import Services
 
 class Auth(Services):
     def __init__(self, url, token, user, password):

@@ -1,7 +1,7 @@
 import requests
 import string
 import random
-from Validate.validate_response import ValidateResponse
+from Validate.ValidateResponse import ValidateResponse
 
 class ValidateRequest:
     @staticmethod
@@ -16,5 +16,5 @@ class ValidateRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "multipart/form-data; boundary=\"" + boundary + "\""
         }
-        response = requests.request("POST", url + "/validate/cfdi33/" + bs64, data = payload.encode('utf-8'), headers = headers, verify = True, timeout = 300)
+        response = requests.request("POST", url + "/validate/cfdi/" + bs64, data = payload.encode('utf-8'), headers = headers, verify = True, timeout = 300)
         return ValidateResponse(response)

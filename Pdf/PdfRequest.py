@@ -1,7 +1,7 @@
 import requests
 import string
 import random
-from Pdf.pdf_response import PdfResponse
+from Pdf.PdfResponse import PdfResponse
 
 class PdfRequest:
     @staticmethod

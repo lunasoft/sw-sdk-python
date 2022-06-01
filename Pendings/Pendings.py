@@ -1,5 +1,5 @@
-from Pendings.pendings_request import PendingsRequest
-from Utils.services import Services
+from Pendings.PendingsRequest import PendingsRequest
+from Utils.Services import Services
 
 class Pendings(Services):
     def __init__(self, url, token = None, user = None, password = None):

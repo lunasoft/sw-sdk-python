@@ -1,5 +1,5 @@
-from Stamp.stamp_request import StampRequest
-from Utils.services import Services
+from Stamp.StampRequest import StampRequest
+from Utils.Services import Services
 
 class Stamp(Services):
     def __init__(self, url, token, user = None, password = None):

@@ -1,6 +1,6 @@
 import requests
 from xml.sax.saxutils import escape
-from StatusCfdi.status_cfdi_response import StatusCfdiResponse
+from StatusCfdi.StatusCfdiResponse import StatusCfdiResponse
 class StatusCfdiRequest:
     @staticmethod
     def status(rfc_emisor, rfc_receptor, total, uuid, url, action):

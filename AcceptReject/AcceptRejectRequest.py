@@ -2,7 +2,7 @@ import requests
 import string
 import random
 import json
-from AcceptReject.accept_reject_response import AcceptRejectResponse
+from AcceptReject.AcceptRejectResponse import AcceptRejectResponse
 
 class AcceptRejectRequest:
     @staticmethod
