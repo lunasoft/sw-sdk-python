@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="239a6b05-eac7-4cb6-a8a1-dd4d3b93c864" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AcceptReject/AcceptReject.py" beforeDir="false" afterPath="$PROJECT_DIR$/AcceptReject/AcceptReject.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AcceptReject/AcceptRejectRequest.py" beforeDir="false" afterPath="$PROJECT_DIR$/AcceptReject/AcceptRejectRequest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auth/Auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/Auth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auth/AuthRequest.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/AuthRequest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auth/AuthResponse.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auth/AuthResponse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Balance/Balance.py" beforeDir="false" afterPath="$PROJECT_DIR$/Balance/Balance.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Balance/BalanceRequest.py" beforeDir="false" afterPath="$PROJECT_DIR$/Balance/BalanceRequest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Balance/BalanceResponse.py" beforeDir="false" afterPath="$PROJECT_DIR$/Balance/BalanceResponse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cancelation/Cancelation.py" beforeDir="false" afterPath="$PROJECT_DIR$/Cancelation/Cancelation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cancelation/CancelationRequest.py" beforeDir="false" afterPath="$PROJECT_DIR$/Cancelation/CancelationRequest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cancelation/CancelationResponse.py" beforeDir="false" afterPath="$PROJECT_DIR$/Cancelation/CancelationResponse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Csd/Csd.py" beforeDir="false" afterPath="$PROJECT_DIR$/Csd/Csd.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Csd/CsdRequest.py" beforeDir="false" afterPath="$PROJECT_DIR$/Csd/CsdRequest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Csd/CsdResponse.py" beforeDir="false" afterPath="$PROJECT_DIR$/Csd/CsdResponse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Issue/Issue.py" beforeDir="false" afterPath="$PROJECT_DIR$/Issue/Issue.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Issue/IssueRequest.py" beforeDir="false" afterPath="$PROJECT_DIR$/Issue/IssueRequest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Issue/IssueResponse.py" beforeDir="false" afterPath="$PROJECT_DIR$/Issue/IssueResponse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pdf/Pdf.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pdf/Pdf.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pdf/PdfRequest.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pdf/PdfRequest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pendings/Pendings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pendings/Pendings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pendings/PendingsRequest.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pendings/PendingsRequest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pendings/PendingsResponse.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pendings/PendingsResponse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Relations/Relations.py" beforeDir="false" afterPath="$PROJECT_DIR$/Relations/Relations.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Relations/RelationsRequest.py" beforeDir="false" afterPath="$PROJECT_DIR$/Relations/RelationsRequest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Relations/RelationsResponse.py" beforeDir="false" afterPath="$PROJECT_DIR$/Relations/RelationsResponse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stamp/Stamp.py" beforeDir="false" afterPath="$PROJECT_DIR$/Stamp/Stamp.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stamp/StampRequest.py" beforeDir="false" afterPath="$PROJECT_DIR$/Stamp/StampRequest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stamp/StampResponse.py" beforeDir="false" afterPath="$PROJECT_DIR$/Stamp/StampResponse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StatusCfdi/StatusCfdi.py" beforeDir="false" afterPath="$PROJECT_DIR$/StatusCfdi/StatusCfdi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StatusCfdi/StatusCfdiRequest.py" beforeDir="false" afterPath="$PROJECT_DIR$/StatusCfdi/StatusCfdiRequest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/Test/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/test_issue.py" beforeDir="false" afterPath="$PROJECT_DIR$/Test/test_issue.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/test_stamp.py" beforeDir="false" afterPath="$PROJECT_DIR$/Test/test_stamp.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utils/Services.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/Services.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Validate/Validate.py" beforeDir="false" afterPath="$PROJECT_DIR$/Validate/Validate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Validate/ValidateRequest.py" beforeDir="false" afterPath="$PROJECT_DIR$/Validate/ValidateRequest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Validate/ValidateResponse.py" beforeDir="false" afterPath="$PROJECT_DIR$/Validate/ValidateResponse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/b64CSD.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/b64CSD.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/b64Key.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/b64Key.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/b64Pfx.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/b64Pfx.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/cfdi.json" beforeDir="false" afterPath="$PROJECT_DIR$/resources/cfdi.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/fileAcceptReject.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/fileAcceptReject.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/xml33.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="29wsJZ7JOQJ6ixL7jSHIPKNmHFY" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+  </component>
+  <component name="RunManager" selected="Python tests.Python tests in test.py">
+    <configuration name="Python tests for test.MyTest" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="sw-sdk-python" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test.MyTest&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests in test.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="sw-sdk-python" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/test.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unittests for test.MyTest.testIssue" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <module name="sw-sdk-python" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="C:\Python3\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test.MyTest.testIssue&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unittests for test.MyTest.testStamp" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <module name="sw-sdk-python" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="C:\Python3\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test.MyTest.testStamp&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unittests for test.MyTest.testValidateXml" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <module name="sw-sdk-python" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="C:\Python3\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test.MyTest.testValidateXml&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python tests.Python tests in test.py" />
+        <item itemvalue="Python tests.Unittests for test.MyTest.testValidateXml" />
+        <item itemvalue="Python tests.Python tests for test.MyTest" />
+        <item itemvalue="Python tests.Unittests for test.MyTest.testStamp" />
+        <item itemvalue="Python tests.Unittests for test.MyTest.testIssue" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="239a6b05-eac7-4cb6-a8a1-dd4d3b93c864" name="Changes" comment="" />
+      <created>1654035413736</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1654035413736</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/feature/0.0.0.3" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Cancelation/CancelationRequest.py</url>
+          <line>21</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Validate/ValidateRequest.py</url>
+          <line>18</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

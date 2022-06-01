@@ -1,28 +1,24 @@
 import json
-from Utils.Response import Response
+import traceback
+from Utils.response import Response
 
 class StampResponse(Response):
-    uuid = None
-    qrCode = None
-    cfdi = None
-    def __init__(self,cResponse):
+    def __init__(self, response):
         try:
-            self.response = json.loads(cResponse.text)
-            self.data = self.response["data"]
-            self.status = self.response["status"]
-            self.uuid = self.data["uuid"]
-            self.qrCode = self.data["qrCode"]
-            self.cfdi = self.data["cfdi"]
+            self.status_code = response.status_code
+            if(bool(response.text and response.text.strip())):
+                self.response = json.loads(response.text.encode().decode('utf8'))
+                if(self.status_code == 200):
+                    self.data = self.response["data"]
+                    self.status = self.response["status"]
+                else:
+                    self.status = self.response["status"]
+                    self.message = self.response["message"]
+                    if "messageDetail" in self.response: 
+                        self.messageDetail = self.response["messageDetail"]
+            else:
+                self.status = "error"
+                self.message = response.reason
+                self.messageDetail = response.request
         except:
-            self.message = self.response["message"]
-            self.messageDetail = self.response["messageDetail"]
-            self.status = self.response["status"]
-
-    def getUuid(self):
-        return self.uuid
-
-    def getQrCode(self):
-        return self.qrCode
-
-    def getCfdi(self):
-        return self.cfdi
+            traceback.print_exc()

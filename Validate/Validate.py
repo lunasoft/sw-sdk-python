@@ -6,4 +6,4 @@ class Validate(Services):
         super(Validate,self).__init__(url, token, user, password)
 
     def ValidateXml(self, xml):
-        return ValidateRequest.validate_xml(self.url, self.token, xml)
+        return ValidateRequest.validate_xml(self.get_url(), self.get_token(), xml)
