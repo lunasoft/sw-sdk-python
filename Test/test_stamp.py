@@ -1,4 +1,4 @@
-from Stamp.stamp import Stamp
+from Stamp.Stamp import Stamp
 import base64
 import unittest
 

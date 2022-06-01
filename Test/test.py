@@ -1,16 +1,16 @@
 import unittest
 import json
-from Auth.auth import Auth
-from Stamp.stamp import Stamp
-from Issue.issue import Issue
-from Balance.balance import Balance
-from Cancelation.cancelation import Cancelation
-from Validate.validate import Validate
-from Relations.relations import Relations
-from AcceptReject.accept_reject import AcceptReject
-from Pendings.pendings import Pendings
-from StatusCfdi.status_cfdi import StatusCfdi
-from Csd.csd import Csd
+from Auth.Auth import Auth
+from Stamp.Stamp import Stamp
+from Issue.Issue import Issue
+from Balance.Balance import Balance
+from Cancelation.Cancelation import Cancelation
+from Validate.Validate import Validate
+from Relations.Relations import Relations
+from AcceptReject.AcceptReject import AcceptReject
+from Pendings.Pendings import Pendings
+from StatusCfdi.StatusCfdi import StatusCfdi
+from Csd.Csd import Csd
 
 class MyTest(unittest.TestCase):
     expected = "success"
