@@ -30,7 +30,7 @@ La clase de authentication, nos sirve para obtener un token de 2 hrs de duració
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from Auth.auth import Auth
+from Auth.Auth import Auth
 ```
 
 Ejemplo de uso
@@ -62,7 +62,7 @@ La clase de Balance nos ayuda a obtener información referente a nuestra cuenta.
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from Balance.balance import Balance
+from Balance.Balance import Balance
 ```
 
 Ejemplo de uso
@@ -98,7 +98,7 @@ Funciones disponibles
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from Cancelation.cancelation import Cancelation
+from Cancelation.Cancelation import Cancelation
 ```
 
 Ejemplo de uso
@@ -140,7 +140,7 @@ La clase Issue nos ayudará a timbrar nuestros documentos XML por medio de emisi
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from Issue.issue import Issue
+from Issue.Issue import Issue
 ```
 
 Ejemplo de uso
@@ -179,7 +179,7 @@ La clase Issue nos ayudará a timbrar nuestros documentos JSON por medio de emis
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from Issue.issue import Issue
+from Issue.Issue import Issue
 ```
 
 Ejemplo de uso
@@ -220,7 +220,7 @@ La clase Stamp se utiliza para el timbrado de documentos XML. El documento deber
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from Stamp.stamp import Stamp
+from Stamp.Stamp import Stamp
 ```
 
 Ejemplo de uso
@@ -257,7 +257,7 @@ Funciones disponibles
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from Validate.validate import Validate
+from Validate.Validate import Validate
 ```
 
 Ejemplo de uso
@@ -292,7 +292,7 @@ La clase Estatus CFDI servirá para verificar el estatus de algún comprobante d
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from StatusCfdi.status_cfdi import StatusCfdi
+from StatusCfdi.StatusCfdi import StatusCfdi
 ```
 
 Ejemplo de uso
@@ -324,7 +324,7 @@ La clase de Relations nos servirá para consultar los documentos que existen hac
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from Relations.relations import Relations
+from Relations.Relations import Relations
 ```
 
 Ejemplo de uso
@@ -359,8 +359,9 @@ La clase de Pendings nos servirá para conocer la lista de uuids que un RFC como
 - pendings(rfc)
 
 importar la clase al inicio de nuestro programa de la siguiente manera:
+
 ```py
-from Pendings.pendings import Pendings
+from Pendings.Pendings import Pendings
 ```
 
 Ejemplo de uso
@@ -387,7 +388,7 @@ La clase de AcceptReject nos servirá para cancelar algún comprobante pendiente
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
 ```py
-from AcceptReject.accept_reject import AcceptReject
+from AcceptReject.AcceptReject import AcceptReject
 ```
 
 Ejemplo de uso
