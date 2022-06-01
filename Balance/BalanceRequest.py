@@ -7,5 +7,5 @@ class BalanceRequest:
             'Authorization': "bearer " + token,
             'Content-Type': "application/json"
         }
-        response = requests.request("GET", url + "/account/balance", headers=headers)
+        response = requests.request("GET", url + "/account/balance", headers = headers, verify = True, timeout=300)
         return BalanceResponse(response)

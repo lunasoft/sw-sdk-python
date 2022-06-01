@@ -1,84 +1,121 @@
 import unittest
+import json
 from Auth.Auth import Auth
 from Stamp.Stamp import Stamp
 from Issue.Issue import Issue
 from Balance.Balance import Balance
 from Cancelation.Cancelation import Cancelation
 from Validate.Validate import Validate
-
-def open_file(pathFile):
-    out = open(pathFile,"r", encoding='ansi', errors='ignore').read()
-    return out
+from Relations.Relations import Relations
+from AcceptReject.AcceptReject import AcceptReject
+from Pendings.Pendings import Pendings
+from StatusCfdi.StatusCfdi import StatusCfdi
+from Csd.Csd import Csd
 
 class MyTest(unittest.TestCase):
-    def __init__(self):
-        self.expected = "success"
-        self.message = "401 - El rango de la fecha de generación no debe de ser mayor a 72 horas para la emisión del timbre."
-
+    expected = "success"
+    message = "307. El comprobante contiene un timbre previo."
+    @staticmethod
+    def open_file(pathFile):
+        out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
+        return out
     def testAuth(self):
-        objAuth = Auth("http://services.test.sw.com.mx", None ,"demo","123456789")
-        objResponseAuth = objAuth.Authentication() 
-        self.assertTrue(self.expected == objResponseAuth.getStatus())
+        auth = Auth("http://services.test.sw.com.mx", None ,"userforut@ut.com", "swpassut")
+        response = auth.authentication()
+        self.assertTrue(self.expected == response.get_status())
     def testStamp(self):
-        objStamp = Stamp("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponseStamp = objStamp.StampV4(open_file("resources\\xml33.xml"))
-        if objResponseStamp.getStatus() == "error":
-            self.assertTrue(self.message == objResponseStamp.getMessage())
+        stamp = Stamp("http://services.test.sw.com.mx", None, "userforut@ut.com", "swpassut")
+        response = stamp.stamp_v4(MyTest.open_file("resources\\xml40.xml"))
+        if response.get_status() == "error":
+            self.assertTrue(self.message == response.get_message())
         else:
-            self.assertTrue(self.expected == objResponseStamp.getStatus())
+            self.assertTrue(self.expected == response.get_status())
     def testIssue(self):
-        objIssue = Issue("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponseIssue = objIssue.IssueV4(open_file("resources\\xml33.xml"))
-        if objResponseIssue.getStatus() == "error":
-            self.assertTrue(self.message == objResponseIssue.getMessage())
+        issue = Issue("http://services.test.sw.com.mx", None, "userforut@ut.com", "swpassut")
+        response = issue.issue_v4(MyTest.open_file("resources\\xml40.xml"))
+        if response.get_status() == "error":
+            self.assertTrue(self.message == response.get_message())
         else:
-            self.assertTrue(self.expected == objResponseIssue.getStatus())
+            self.assertTrue(self.expected == response.get_status())
+    def testIssueJson(self):
+        issue = Issue("http://services.test.sw.com.mx", None, "userforut@ut.com", "swpassut")
+        response = issue.issue_json_v4(MyTest.open_file("resources\\cfdi.json"))
+        if response.get_status() == "error":
+            self.assertTrue(self.message == response.get_message())
+        else:
+            self.assertTrue(self.expected == response.get_status())
     def testBalance(self):
-        objBal = Balance("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponseBal = objBal.AccountBalance()
-        self.assertTrue(self.expected == objResponseBal.getStatus())
+        balance = Balance("http://services.test.sw.com.mx", None, "userforut@ut.com", "swpassut")
+        response = balance.account_balance()
+        self.assertTrue(self.expected == response.get_status())
+    @unittest.skip("Skip due SAT internal error.")
     def testCancelXml(self):
-        objCancel = Cancelation("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponseCancelXML = objCancel.CancelXml(open_file("resources\\cancelByXml.xml"))
-        self.assertTrue(self.expected == objResponseCancelXML.getStatus())
+        cancel = Cancelation("http://services.test.sw.com.mx", None, "userforut@ut.com", "swpassut")
+        response = cancel.CancelXml(MyTest.open_file("resources\\cancelByXml.xml"))
+        self.assertTrue(self.expected == response.get_status())
+
+    @unittest.skip("Skip due SAT internal error.")
     def testCancelCsd(self):
-        objCancel = Cancelation("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponseCancelCSD = objCancel.CancelCsd("LAN7008173R5","c846c65a-6371-4449-9db6-a7daca2f7207",open_file("resources\\b64CSD.txt"), open_file("resources\\b64Key.txt"),"12345678a")
-        self.assertTrue(self.expected == objResponseCancelCSD.getStatus())
+        cancel = Cancelation("http://services.test.sw.com.mx", None, "userforut@ut.com", "swpassut")
+        response = cancel.CancelCsd("3dda215e-4c77-4923-94a1-627e0a04378c", "EKU9003173C9", MyTest.open_file("resources\\b64CSD.txt"), MyTest.open_file("resources\\b64Key.txt"),"12345678a", "02", "")
+        self.assertTrue(self.expected == response.get_status())
+
+    @unittest.skip("Skip due SAT internal error.")
     def testCancelPfx(self):
-        objCancel = Cancelation("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponseCancelPFX = objCancel.CancelPfx("LAN7008173R5","c846c65a-6371-4449-9db6-a7daca2f7207",open_file("resources\\b64PFX.txt"),"12345678a")
-        self.assertTrue(self.expected == objResponseCancelPFX.getStatus())
+        cancel = Cancelation("http://services.test.sw.com.mx", None, "userforut@ut.com", "swpassut")
+        response = cancel.CancelPfx("3dda215e-4c77-4923-94a1-627e0a04378c", "EKU9003173C9", MyTest.open_file("resources\\b64PFX.txt"), "12345678a", "02", "")
+        self.assertTrue(self.expected == response.get_status())
+
+    @unittest.skip("Skip due SAT internal error.")
     def testCancelUuid(self):
-        objCancel = Cancelation("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponseCancelUUID = objCancel.CancelUuid("LAN7008173R5","c846c65a-6371-4449-9db6-a7daca2f7207")
-        self.assertTrue(self.expected == objResponseCancelUUID.getStatus())
+        cancel = Cancelation("http://services.test.sw.com.mx", None, "userforut@ut.com", "swpassut")
+        response = cancel.CancelUuid("3dda215e-4c77-4923-94a1-627e0a04378c", "EKU9003173C9", "02", "")
+        self.assertTrue(self.expected == response.get_status())
     def testValidateXml(self):
-        objValidate = Validate("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponseValidateXml = objValidate.ValidateXml(open_file("resources\\xml33.xml"))
-        self.assertTrue(self.expected == objResponseValidateXml.getStatus())
-    def testValidateLco(self):
-        objValidate = Validate("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponseValidateNoCert = objValidate.ValidateLco("20001000000300022815")
-        self.assertTrue(self.expected == objResponseValidateNoCert.getStatus())
-    def testValidateLrfc(self):
-        objValidate = Validate("http://services.test.sw.com.mx", None, "demo", "123456789")
-        objResponseValidateRFC = objValidate.ValidateLrfc("LAN7008173R5")
-        self.assertTrue(self.expected == objResponseValidateRFC.getStatus())
+        validate = Validate("http://services.test.sw.com.mx", None, "userforut@ut.com", "swpassut")
+        response = validate.ValidateXml(MyTest.open_file("resources\\xml40.xml"))
+        self.assertTrue(self.expected == response.get_status())
+    def testRelationsCsd(self):
+        relations = Relations("http://services.test.sw.com.mx", None, "userforut@ut.com", "swpassut")
+        response = relations.relations_csd("EKU9003173C9","d8145df3-0ff0-497f-8539-08ed7349917e",MyTest.open_file("resources\\b64CSD.txt"), MyTest.open_file("resources\\b64Key.txt"),"12345678a")
+        self.assertTrue(self.expected == response.get_status())
+    def testRelationsPfx(self):
+        relations = Relations("http://services.test.sw.com.mx", None, "userforut@ut.com", "swpassut")
+        response = relations.relations_pfx("EKU9003173C9","d8145df3-0ff0-497f-8539-08ed7349917e",MyTest.open_file("resources\\b64PFX.txt"),"12345678a")
+        self.assertTrue(self.expected == response.get_status())
+    def testRelationsUuid(self):
+        relations = Relations("http://services.test.sw.com.mx", None, "userforut@ut.com", "swpassut")
+        response = relations.relations_uuid("EKU9003173C9","d8145df3-0ff0-497f-8539-08ed7349917e")
+        self.assertTrue(self.expected == response.get_status())
+    def testPendings(self):
+        pendings = Pendings("http://services.test.sw.com.mx", None, "userforut@ut.com", "swpassut")
+        response = pendings.pendings("EKU9003173C9")
+        self.assertTrue(self.expected == response.get_status())
+    def testStatusCfdi(self):
+        objStatus = StatusCfdi.status("EKU9003173C9", "LAN7008173R5", "5800.00", "eb978000-95c7-4513-8d97-4b59434da45f", "https://pruebacfdiconsultaqr.cloudapp.net/ConsultaCFDIService.svc", "http://tempuri.org/IConsultaCFDIService/Consulta")
+        self.assertTrue(objStatus.status_code == 200)
+    def testAcceptRejectCsd(self):
+        accept_reject = AcceptReject("http://services.test.sw.com.mx", None, "userforut@ut.com", "swpassut")
+        uuids = [{"uuid":"baf029f3-93ea-4267-a76c-1958d69bd4d8", "action":"Rechazo"}]
+        response = accept_reject.accept_reject_csd("EKU9003173C9",uuids,MyTest.open_file("resources\\b64CSD.txt"), MyTest.open_file("resources\\b64Key.txt"),"12345678a")
+        self.assertTrue(self.expected == response.get_status())
+    def testAcceptRejectXml(self):
+        accept_reject = AcceptReject("http://services.test.sw.com.mx", None, "userforut@ut.com", "swpassut")
+        response = accept_reject.accept_reject_xml(MyTest.open_file("resources\\fileAcceptReject.xml"))
+        self.assertTrue(self.expected == response.get_status())
+    def testAcceptRejectPfx(self):
+        accept_reject = AcceptReject("http://services.test.sw.com.mx", None, "userforut@ut.com", "swpassut")
+        uuids = [{"uuid":"baf029f3-93ea-4267-a76c-1958d69bd4d8", "action":"Rechazo"}]
+        response = accept_reject.accept_reject_pfx("EKU9003173C9",uuids,MyTest.open_file("resources\\b64PFX.txt"),"12345678a")
+        self.assertTrue(self.expected == response.get_status())
+    def testAcceptRejectUuid(self):
+        accept_reject = AcceptReject("http://services.test.sw.com.mx", None, "userforut@ut.com", "swpassut")
+        response = accept_reject.accept_reject_uuid("EKU9003173C9","baf029f3-93ea-4267-a76c-1958d69bd4d8", "Rechazo")
+        self.assertTrue(self.expected == response.get_status())
+    def testUploadCsd(self):
+        csd_obj = Csd("http://services.test.sw.com.mx", None, "userforut@ut.com", "swpassut")
+        response = csd_obj.upload_csd("stamp", MyTest.open_file("resources\\b64CSD.txt"), MyTest.open_file("resources\\b64Key.txt"),"12345678a")
+        self.assertTrue(self.expected == response.get_status())
 
-
-Test = MyTest()
-Test.testAuth()
-Test.testStamp()
-Test.testIssue()
-Test.testBalance()
-Test.testCancelXml()
-Test.testCancelCsd()
-Test.testCancelPfx()
-Test.testCancelUuid()
-Test.testValidateXml()
-Test.testValidateLco()
-Test.testValidateLrfc()
-
-
-
+suite = unittest.TestLoader().loadTestsFromTestCase(MyTest)
+unittest.TextTestRunner(verbosity=2).run(suite)
