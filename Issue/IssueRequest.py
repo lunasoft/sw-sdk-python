@@ -1,6 +1,7 @@
 import requests
 import string
 import random
+import json
 from Issue.IssueResponse import IssueResponse
 
 class IssueRequest:
@@ -18,13 +19,15 @@ class IssueRequest:
         }
         response = requests.request("POST", url + path + bs64, data = payload.encode('utf-8'), headers = headers, verify = True, timeout = 300)
         return IssueResponse(response)
+    
     @staticmethod
-    def issue_json(url, token, json, version):
-        if(isinstance(json, dict)):
-            json = json.dumps(json)
+    def issue_json(url, token, data, version):
+        if(isinstance(data, dict)):
+            data = json.dumps(data)
+
         headers = {
             'Authorization': "bearer " + token,
             'Content-Type': "application/jsontoxml"
         }
-        response = requests.request("POST", url + "/v3/cfdi33/issue/json/" + version, data = json.encode('utf-8'), headers = headers, verify = True, timeout = 300)
+        response = requests.request("POST", url + "/v3/cfdi33/issue/json/" + version, data = data.encode('utf-8'), headers = headers, verify = True, timeout = 300)
         return IssueResponse(response)
