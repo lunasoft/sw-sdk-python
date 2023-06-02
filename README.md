@@ -82,19 +82,15 @@ Este método recibe los siguientes parametros:
 
 **Ejemplo de consumo de la libreria para timbrar XML en formato string utilizando usuario y contraseña**
 ```py
-#Importar la clase al comienzo de nuestro programa de la siguiente manera
 from Stamp.Stamp import Stamp
 
 #Creamos funcion para abrir nuestro archivo
-xml = open_file("file.xml")
+xml = open("prueba.xml", "r", encoding='ansi', errors='ignore').read()
 #Creamos instancia y pasamos parametros
-stamp = Stamp("http://services.test.sw.com.mx", None, "user", "password")
-response = stamp.stamp_v1(open_file(xml))
-if response.get_status() ==  "error":
-	print(response.get_message())
-	print(response.get_messageDetail())
-else:
-	print(response.get_data())
+stamp = Stamp("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+response = stamp.stamp_v4(xml)
+
+print(response.get_data())
 ```
 
 **Ejemplo de consumo de la libreria para timbrar XML en formato string utilizando token** [¿Como obtener token?](http://developers.sw.com.mx/knowledge-base/generar-un-token-infinito/)
@@ -103,10 +99,11 @@ else:
 from Stamp.Stamp import Stamp
 
 #Creamos funcion para abrir nuestro archivo
-xml = open_file("file.xml")
+xml = open("prueba.xml", "r", encoding='ansi', errors='ignore').read()
 #Creamos instancia y pasamos parametros
-stamp = Stamp("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-response = stamp.stamp_v1(xml)
+stamp = Stamp("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+response = stamp.stamp_v4(xml)
+
 if response.get_status() ==  "error":
 	print(response.get_message())
 	print(response.get_messageDetail())
