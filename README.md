@@ -18,16 +18,16 @@ Librería *Python* para el consumo de los servicios de SW sapien®.
 - CFDI 4.0
 - Python 3 o superior
 
-### Dependencias
+### Dependencias :toolbox:
 - **Python 3** o superior.
 - [Requests](http://docs.python-requests.org)
 
-### Documentación
+### Documentación :open_file_folder:
 * [Inicio Rápido](https://developers.sw.com.mx/knowledge-base/conoce-el-proceso-de-integracion-en-solo-7-pasos/)
 * [Documentacion Oficial Servicios](http://developers.sw.com.mx)
 
 
-### Instalación
+### Instalación :hammer_and_wrench:
 
 Ejecutar los comandos directamente en la consola tal cual aparecen en la página de la librería requerida, por ejemplo
 
@@ -43,7 +43,7 @@ La librería contara con los servicios principales como lo son Timbrado de CFDI,
 ## Autenticaci&oacute;n ##
 El servicio de Autenticación es utilizado para obtener el **token** el cual sera utilizado para consumir los servicios, para poder utilizar este servicio es necesario un **usuario** y **contraseña**.
 
-:pushpin: ***NOTA:*** La clase de authentication, nos sirve para obtener un token de 2 hrs de duración.
+:pushpin: ***NOTA:*** La clase de authentication, nos sirve para obtener un token de 2 hrs de duración. :hourglass:
 
 Parámetros necesarios: 
 - Url Servicios SW
@@ -51,18 +51,17 @@ Parámetros necesarios:
 
 **Ejemplo de consumo de la librería para obtener token**
  ```py
- #Importar la clase al comienzo de nuestro programa de la siguiente manera
- from Auth.Auth import Auth
+objAuth = Auth("http://services.test.sw.com.mx", None, "user", "password")
+objResponseAuth = objAuth.authentication()
 
- objAuth = Auth("http://services.test.sw.com.mx", None ,"user","password")
- objResponseAuth = objAuth.Authentication()
- 
- if objResponseAuth.get_status() ==  "error":
-	print(response.get_message())
-	print(response.get_messageDetail())
+if objResponseAuth.get_status() == "error":
+   print(objResponseAuth.get_status_code())
+   print("\nMessage: "+ objResponseAuth.get_message())
+   print(objResponseAuth.get_messageDetail())
 else:
-	print(objResponseAuth.get_token())
-
+   print(objResponseAuth.get_status_code())
+   print("\nToken: "+objResponseAuth.get_token())
+   print(objResponseAuth.get_time_expire())
 ```
 
 ## Timbrado ##
