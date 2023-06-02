@@ -17,12 +17,10 @@ Librería *Python* para el consumo de los servicios de SW sapien®.
 - CFDI 3.3 (Complemento de nóminas)
 - CFDI 4.0
 - Python 3 o superior
----
 
 ### Dependencias
 - **Python 3** o superior.
 - [Requests](http://docs.python-requests.org)
----
 
 ### Documentación
 * [Inicio Rápido](https://developers.sw.com.mx/knowledge-base/conoce-el-proceso-de-integracion-en-solo-7-pasos/)
@@ -33,49 +31,254 @@ Librería *Python* para el consumo de los servicios de SW sapien®.
 
 Ejecutar los comandos directamente en la consola tal cual aparecen en la página de la librería requerida, por ejemplo
 
-> pip install requests
+ ```py
+pip install requests
+```
 
----
 ### Implementación
 
 La librería contara con los servicios principales como lo son Timbrado de CFDI, Cancelación, Consulta estatus CFDI, etc.
 
----
 
 ## Autenticaci&oacute;n ##
 El servicio de Autenticación es utilizado principalmente para obtener el **token** el cual sera utilizado para poder timbrar nuestro CFDI (xml) ya emitido (sellado), para poder utilizar este servicio es necesario que cuente con un **usuario** y **contraseña** para posteriormente obtenga el token, usted puede utilizar los que estan en este ejemplo para el ambiente de **Pruebas**.
 
-:pushpin: ***NOTA:*** :La clase de authentication, nos sirve para obtener un token de 2 hrs de duración.
+:pushpin: ***NOTA:*** La clase de authentication, nos sirve para obtener un token de 2 hrs de duración.
 
 Parámetros necesarios: 
-- url de servicios
-- user
-- password.
+- Url Servicios SW
+- Usuario y contraseña
 
 **Ejemplo de consumo de la librería para obtener token**
  ```py
  #Importar la clase al comienzo de nuestro programa de la siguiente manera
  from Auth.Auth import Auth
 
- objAuth = Auth("http://services.test.sw.com.mx", None ,"usuario","contraseña")
+ objAuth = Auth("http://services.test.sw.com.mx", None ,"user","password")
  objResponseAuth = objAuth.Authentication()
- print(objResponseAuth.get_token()+"\nStatus: "+objResponseAuth.get_status())
+ 
+ if objResponseAuth.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	print(objResponseAuth.get_token())
 
 ```
----
 
-> Cabe aclarar que Auth recibe un valor "None" en el lugar de donde iría el token para las demás funciones de consumo.
+:pushpin: ***NOTA:***  Cabe aclarar que Auth recibe un valor "None" en el lugar de donde iría el token para las demás funciones de consumo.
 
-Las funciones utilizables para el objeto obtenido son las siguientes
 
->- *get_time_expire()*
->- *get_token()*
->- *get_message()*
->- *get_messageDetail()*
->- *get_data()*
->- *get_response()*
->- *get_status()*
->- *get_status_code()*
+## Timbrado ##
+
+<details>
+<summary>
+Timbrado CFDI V1
+</summary>
+
+**TimbrarV1** Recibe el contenido de un **XML** ya emitido (sellado) en formato **String**  ó tambien puede ser en **Base64**, posteriormente si la factura y el token son correctos devuelve el complemento timbre en un string (**TFD**), en caso contrario lanza una excepción.
+
+Este método recibe los siguientes parametros:
+* Archivo en formato **String** ó **Base64**
+* Usuario y contraseña ó Token
+* Url Servicios SW
+
+:pushpin: ***NOTA:*** **b64** es un parámetro opcional y se debe indicar en *true* si el XML va encodeado en base 64. De no indicarse por defecto se tomará el valor de *false*
+
+**Ejemplo de consumo de la libreria para timbrar XML en formato string utilizando usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Stamp.Stamp import Stamp
+
+#Creamos funcion para abrir nuestro archivo
+xml = open_file("file.xml")
+#Creamos instancia y pasamos parametros
+stamp = Stamp("http://services.test.sw.com.mx", None, "user", "password")
+response = stamp.StampV4(open_file(xml))
+if response.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	print(response.get_data())
+```
+
+**Ejemplo de consumo de la libreria para timbrar XML en formato string utilizando token** [¿Como obtener token?](http://developers.sw.com.mx/knowledge-base/generar-un-token-infinito/)
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Stamp.Stamp import Stamp
+
+#Creamos funcion para abrir nuestro archivo
+xml = open_file("file.xml")
+#Creamos instancia y pasamos parametros
+stamp = Stamp("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response = stamp.StampV4(xml)
+if response.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	print(response.get_data())
+```
+
+**Ejemplo de consumo de la libreria para timbrar XML en Base64 utilizando token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Stamp.Stamp import Stamp
+
+#Creamos funcion para abrir nuestro archivo
+xml = open_file("file.xml")
+encoded = base64.b64encode(xml.encode('utf-8'))
+#Creamos instancia y pasamos parametros
+stamp = Stamp("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response = stamp.StampV4(encoded.decode(),True)
+if response.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	print(response.get_data())
+```
+
+**Funciones disponibles**
+- stamp_v1(xml, b64)
+- stamp_v2(xml, b64)
+- stamp_v3(xml, b64)
+- stamp_v4(xml, b64)
+
+</details>
+
+<details>
+<summary>
+Emisión Timbrado V1
+</summary>
+
+**Emisión Timbrado** Realiza el sellado y timbrado de un comprobante CFDI 3.3 ó CFDI 4.0. Recibe el contenido de un **XML** en formato **String**  ó tambien puede ser en **Base64**, posteriormente si la factura y el token son correctos devuelve el complemento timbre en un string (**TFD**), en caso contrario lanza una excepción.
+
+Este método recibe los siguientes parametros:
+* Archivo en formato **String** ó **Base64**
+* Usuario y contraseña ó Token
+* Url Servicios SW
+
+:pushpin: ***NOTA:*** **b64** es un parámetro opcional y se debe indicar en *true* si el XML va encodeado en base 64. De no indicarse por defecto se tomará el valor de *false*
+
+**Ejemplo de consumo de la libreria para la emisión Timbrado XML en formato string utilizando usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Issue.Issue import Issue
+
+#Creamos funcion para abrir nuestro archivo
+xml = open_file("file.xml")
+#Creamos instancia y pasamos parametros
+issue = Issue("http://services.test.sw.com.mx", None, "user", "password")
+response = issue.issue_v4(xml)
+if response.status ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	print(response.get_data())
+```
+
+**Ejemplo de consumo de la libreria para la emisión Timbrado XML en formato string utilizando token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Issue.Issue import Issue
+
+#Creamos funcion para abrir nuestro archivo
+xml = open_file("file.xml")
+issue = Issue("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response = issue.issue_v4(xml)
+if response.status ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	print(response.get_data())
+```
+
+**Ejemplo de consumo de la libreria para timbrar XML en Base64 utilizando token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Issue.Issue import Issue
+
+#Creamos funcion para abrir nuestro archivo
+xml = open_file("file.xml")
+encoded = base64.b64encode(xml.encode('utf-8'))
+#Creamos instancia y pasamos parametros
+issue = Issue("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response = issue.issue_v4(encoded.decode(), True)
+if response.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	print(response.get_data())
+```
+
+**Funciones disponibles**
+- issue_v1(xml, b64)
+- issue_v2(xml, b64)
+- issue_v3(xml, b64)
+- issue_v4(xml, b64)
+
+</details>
+
+<details>
+<summary>
+Emisión Timbrado JSON V1
+</summary>
+
+**Emisión Timbrado JSON** Realiza el sellado y timbrado de un comprobante CFDI 3.3 ó CFDI 4.0. Recibe el contenido de un **JSON** en formato **String**, posteriormente si la factura y el token son correctos devuelve el complemento timbre en un string (**TFD**), en caso contrario lanza una excepción
+
+Este método recibe los siguientes parametros:
+* Archivo en formato **String**
+* Usuario y contraseña ó Token
+* Url Servicios SW
+
+**Ejemplo de consumo de la libreria para la emisión Timbrado JSON en formato string utilizando usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Issue.Issue import Issue
+
+#creamos funcion para abrir nuestro archivo
+json = open_file("file.json")
+issue = Issue("http://services.test.sw.com.mx", None, "user", "password")
+response = issue.issue_json_v4(json)
+if response.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	print(response.get_data())
+```
+**Ejemplo de consumo de la libreria para la emisión Timbrado JSON en formato string utilizando token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Issue.Issue import Issue
+
+#creamos funcion para abrir nuestro archivo
+json = open_file("file.json")
+issue = Issue("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+response = issue.issue_json_v4(json)
+if response.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	print(response.get_data())
+```
+
+**Funciones disponibles**
+- issue_json_v1(json)
+- issue_json_v2(json)
+- issue_json_v3(json)
+- issue_json_v4(json)
+
+
+</details>
+
+:pushpin: ***NOTA:*** Existen varias versiones de respuesta, las cuales son las siguientes:
+
+| Version |                         Respuesta                             | 
+|---------|---------------------------------------------------------------|
+|  V1     | Devuelve el timbre fiscal digital                             | 
+|  V2     | Devuelve el timbre fiscal digital y el CFDI timbrado          | 
+|  V3     | Devuelve el CFDI timbrado                                     | 
+|  V4     | Devuelve todos los datos del timbrado                         |
+
+Para mayor referencia de estas versiones de respuesta, favor de visitar el siguiente [link](https://developers.sw.com.mx/knowledge-base/versiones-de-respuesta-timbrado/).
 
 ## Balance ##
 
@@ -140,126 +343,6 @@ print(objResponseCancelXML.getStatus())
 ```
 
 Las funciones utilizables para estos objetos de cancelación son los siguientes
-
->- *get_message()*
->- *get_messageDetail()*
->- *get_data()*
->- *get_response()*
->- *get_status()*
->- *get_status_code()*
-
-## Issue (Emisión Timbrado) ##
-
-Parámetros necesarios: [user, password y url] o [token y url], así como el XML a timbrar utilizando emisión-timbrado.
-
-La clase Issue nos ayudará a timbrar nuestros documentos XML por medio de emisión-timbrado. A diferencia de la clase Stamp, esta clase además de timbrar el documento le pondrá el sello.
-
-**Funciones disponibles**
-- issue_v1(xml, b64)
-- issue_v2(xml, b64)
-- issue_v3(xml, b64)
-- issue_v4(xml, b64)
-> **b64** es un parámetro opcional y se debe indicar en *true* si el XML va encodeado en base64. De no indicarse, por defecto se tomará el valor de *false*
-
-Importar la clase al comienzo de nuestro programa de la siguiente manera
-
-```py
-from Issue.Issue import Issue
-```
-
-Ejemplo de uso
-
-```py
-issue = Issue("http://services.test.sw.com.mx", token)
-response = issue.issue_v4(xml, True)#XML en Base64
-if response.status ==  "error":
-	print(response.get_message())
-	print(response.get_messageDetail())
-else:
-	print(response.get_data())
-```
-
-Las funciones correspondientes al objeto que regresan estas funciones son las siguientes
-
->- *get_message()*
->- *get_messageDetail()*
->- *get_data()*
->- *get_response()*
->- *get_status()*
->- *get_status_code()*
-
-## Issue Json (Emisión Timbrado JSON) ##
-
-Parámetros necesarios: [user, password y url] o [token y url], así como el JSON a timbrar utilizando emisión-timbrado.
-
-La clase Issue nos ayudará a timbrar nuestros documentos JSON por medio de emisión-timbrado. A diferencia de la clase Stamp, esta clase además generar el XML y timbrarlo, le pondrá el sello.
-
-**Funciones disponibles**
-- issue_json_v1(json)
-- issue_json_v2(json)
-- issue_json_v3(json)
-- issue_json_v4(json)
-
-Importar la clase al comienzo de nuestro programa de la siguiente manera
-
-```py
-from Issue.Issue import Issue
-```
-
-Ejemplo de uso
-
-```py
-issue = Issue("http://services.test.sw.com.mx", token)
-response = issue.issue_json_v4(open_file("resources\\cfdi.json"))
-if response.get_status() ==  "error":
-	print(response.get_message())
-	print(response.get_messageDetail())
-else:
-	print(response.get_data())
-```
-
-Las funciones correspondientes al objeto que regresan estas funciones son las siguientes
-
->- *get_message()*
->- *get_messageDetail()*
->- *get_data()*
->- *get_response()*
->- *get_status()*
->- *get_status_code()*
-
-## Stamp ##
-
-Parámetros necesarios: [user, password y url] o [token y url], así como el XML a timbrar.
-
-La clase Stamp se utiliza para el timbrado de documentos XML. El documento deberá venir ya con el sello.
-
-**Funciones disponibles**
-- stamp_v1(xml, b64)
-- stamp_v2(xml, b64)
-- stamp_v3(xml, b64)
-- stamp_v4(xml, b64)
-
-> **b64** es un parámetro opcional y se debe indicar en *true* si el XML va encodeado en base 64. De no indicarse por defecto se tomará el valor de *false*
-
-Importar la clase al comienzo de nuestro programa de la siguiente manera
-
-```py
-from Stamp.Stamp import Stamp
-```
-
-Ejemplo de uso
-
-```py
-stamp = Stamp("http://services.test.sw.com.mx", token)
-response = stamp.StampV4(open_file("resources\\xml33.xml"))
-if response.get_status() ==  "error":
-	print(response.get_message())
-	print(response.get_messageDetail())
-else:
-	print(response.get_data())
-```
-
-Las funciones correspondientes al objeto que regresan estas funciones son las siguientes
 
 >- *get_message()*
 >- *get_messageDetail()*
