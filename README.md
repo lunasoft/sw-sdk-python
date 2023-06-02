@@ -41,7 +41,7 @@ La librería contara con los servicios principales como lo son Timbrado de CFDI,
 
 
 ## Autenticaci&oacute;n ##
-El servicio de Autenticación es utilizado principalmente para obtener el **token** el cual sera utilizado para poder timbrar nuestro CFDI (xml) ya emitido (sellado), para poder utilizar este servicio es necesario que cuente con un **usuario** y **contraseña** para posteriormente obtenga el token, usted puede utilizar los que estan en este ejemplo para el ambiente de **Pruebas**.
+El servicio de Autenticación es utilizado para obtener el **token** el cual sera utilizado para consumir los servicios, para poder utilizar este servicio es necesario un **usuario** y **contraseña**.
 
 :pushpin: ***NOTA:*** La clase de authentication, nos sirve para obtener un token de 2 hrs de duración.
 
@@ -748,96 +748,211 @@ else:
 </details>
 
 
-## Consulta Solicitudes Pendientes ##
-Parámetros necesarios: [url, user y password] o [url y token]. Además del RFC del cual obtendremos la lista de uuid que tiene pendiente por Aceptar o Rechazar.
+## Consulta solicitudes pendientes Aceptar / Rechazar ##
+Este método obtendra una lista de los UUID que tenemos pendientes por aceptar o rechazar.
 
-La clase de Pendings nos servirá para conocer la lista de uuids que un RFC como cliente tiene pendientes de aceptar o rechazar en el nuevo esquema de cancelaciones.
+<details>
+  <summary>Ejemplos</summary>
 
-**Funciones disponibles**
-- pendings(rfc)
+Este método recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña ò token
+* RFC Receptor
 
-importar la clase al inicio de nuestro programa de la siguiente manera:
-
+**Ejemplo de consumo de la librería para la consulta de solicitudes pendientes mediante token**
 ```py
+#importar la clase al inicio de nuestro programa de la siguiente manera:
 from Pendings.Pendings import Pendings
-```
 
-Ejemplo de uso
-
-```py
-pendings = Pendings("http://services.test.sw.com.mx", token)
+pendings = Pendings("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
 response = pendings.pendings("LAN7008173R5")
 print(response.get_status())
 ```
+</details>
 
-##  Aceptar/Rechazar Cancelación ##
-Parámetros necesarios: [url, user y password] o [url y token]. Además de los parámetros que nos sean necesarios dependiendo del tipo de cancelación a usar.
 
-La clase de AcceptReject nos servirá para cancelar algún comprobante pendiente, teniendo diversas opciones para poder cancelar dicho documento.
+## Aceptar / Rechazar ##
+Servicio mediante el cual aceptaremos o rechazaremos los UUID.
 
-**Funciones disponibles**
- - accept_reject_uuid(rfc, uuid)
- - accept_reject_csd(rfc, uuids, b64_csd, b64_key, password_csd)
- - accept_reject_pfx(rfc, uuids, b64_pfx, password_csd)
- - accept_reject_xml(xml)
-> Tener en cuenta que los métodos que se consumen por CSD o PFX se envía un JSON Array como el siguiente:
->  - uuids = [{"uuid":"fd74d156-b9b0-44a5-9906-e08182e8363e", "action":"Aceptacion"},{"uuid":"26cccb5b-7742-4c54-a031-245a23b8a429", "action":"Rechazo"}]
+<details>
+<summary>
+Aceptar / Rechazar por CSD
+</summary>
 
-Importar la clase al comienzo de nuestro programa de la siguiente manera
+Método mediante el cual el receptor podrá manifestar la aceptación o rechazo de la solicitud de cancelación mediante CSD.
 
+Este método recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña ò token
+* RFC del emisor
+* Arreglo de objetos donde se especifican los UUID y acción a realizar
+* Certificado del receptor en Base64
+* Llave(key) del receptor en Base64
+* Contraseña del certificado
+
+
+**Ejemplo de consumo de la librería para la aceptacion/rechazo de la solicitud por CSD mediante token**
 ```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
 from AcceptReject.AcceptReject import AcceptReject
+
+uuids = [
+	{"uuid":"fd74d156-b9b0-44a5-9906-e08182e8363e", "action":"Aceptacion"},			 {"uuid":"26cccb5b-7742-4c54-a031-245a23b8a429", "action":"Rechazo"}
+	]
+accept_reject = AcceptReject("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response_csd = accept_reject.accept_reject_csd(rfc, uuids, b64_csd, b64_key, password_csd)
+print(response_csd.get_status())
+```
+</details>
+
+<details>
+<summary>
+Aceptar / Rechazar por PFX
+</summary>
+
+Método mediante el cual el receptor podrá manifestar la aceptación o rechazo de la solicitud de cancelación mediante PFX.
+
+Este método recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña ò token
+* RFC del emisor
+* Arreglo de objetos donde se especifican los UUID y acción a realizar
+* Archivo Pfx en Base64
+* Contraseña del certificado
+
+**Ejemplo de consumo de la librería para la aceptacion/rechazo de la solicitud por PFX mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AcceptReject.AcceptReject import AcceptReject
+
+uuids = [
+	{"uuid":"fd74d156-b9b0-44a5-9906-e08182e8363e", "action":"Aceptacion"},			 {"uuid":"26cccb5b-7742-4c54-a031-245a23b8a429", "action":"Rechazo"}
+	]
+accept_reject = AcceptReject("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response_pfx = accept_reject.accept_reject_pfx(rfc, uuid, b64_pfx, password_csd)
+print(response_pfx.get_status())
+```
+</details>
+
+<details>
+<summary>
+Aceptar / Rechazar por XML
+</summary>
+
+Método mediante el cual el receptor podrá manifestar la aceptación o rechazo de la solicitud de cancelación mediante XML.
+
+Este método recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña ò token
+* XML con datos requeridos para la aceptacion/rechazo de la cancelación
+
+**Ejemplo de XML**
+```xml
+<?xml version='1.0' encoding='utf-8'?>
+<SolicitudAceptacionRechazo xmlns:xsd='http://www.w3.org/2001/XMLSchema' 
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' RfcReceptor='LAN7008173R5' RfcPacEnviaSolicitud='DAL050601L35' Fecha='2018-08-22T18:38:05' 
+    xmlns='http://cancelacfd.sat.gob.mx'>
+    <Folios>
+        <UUID>06a46e4b-b154-4c12-bb77-f9a63ed55ff2</UUID>
+        <Respuesta>Aceptacion</Respuesta>
+    </Folios>
+    <Signature xmlns='http://www.w3.org/2000/09/xmldsig#'>
+        <SignedInfo>
+            <CanonicalizationMethod Algorithm='http://www.w3.org/TR/2001/REC-xml-c14n-20010315' />
+            <SignatureMethod Algorithm='http://www.w3.org/2000/09/xmldsig#rsa-sha1' />
+            <Reference URI=''>
+                <Transforms>
+                    <Transform Algorithm='http://www.w3.org/2000/09/xmldsig#enveloped-signature' />
+                </Transforms>
+                <DigestMethod Algorithm='http://www.w3.org/2000/09/xmldsig#sha1' />
+                <DigestValue>AQ36cbqKJKHy5vaS6GhDTWtwKE4=</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>HVlFUPmRLyxeztem827eaasDObRXi+oqedCNNvDyMsRizqsS99cHt5mJCEE4vWgpDGPGLrph/yd++R4aN+V562DPp9qreFkisFpEvJy5Z8o/KzG7vc5qqaD8z9ohPpRERPHvxFrIm3ryEBqnSV6zqJG02PuxkWvYonVc+B7RdsO5iAiDTMs9guUhOvHBK8BVXQHKCbUAPCp/4YepZ4LUkcdloCAMPsN0x9GaUty2RMtNJuwaRWy+5IIBUCeXXZmQhoQfS0QfPpCByt0ago5v+FocJQiYQrsUV/8mesmNw5JoOCmufQYliQFyZgsstV8+h76dU/rwLr6R8YlFOkTxKg==</SignatureValue>
+        <KeyInfo>
+            <X509Data>
+                <X509IssuerSerial>
+                    <X509IssuerName>OID.1.2.840.113549.1.9.2=Responsable: ACDMA, OID.2.5.4.45=SAT970701NN3, L=Coyoacán, S=Distrito Federal, C=MX, PostalCode=06300, STREET='Av. Hidalgo 77, Col. Guerrero', E=asisnet@pruebas.sat.gob.mx, OU=Administración de Seguridad de la Información, O=Servicio de Administración Tributaria, CN=A.C. 2 de pruebas(4096)</X509IssuerName>
+                    <X509SerialNumber>3230303031303030303030333030303232383135</X509SerialNumber>
+                </X509IssuerSerial>
+                <X509Certificate>MIIFxTCCA62gAwIBAgIUMjAwMDEwMDAwMDAzMDAwMjI4MTUwDQYJKoZIhvcNAQELBQAwggFmMSAwHgYDVQQDDBdBLkMuIDIgZGUgcHJ1ZWJhcyg0MDk2KTEvMC0GA1UECgwmU2VydmljaW8gZGUgQWRtaW5pc3RyYWNpw7NuIFRyaWJ1dGFyaWExODA2BgNVBAsML0FkbWluaXN0cmFjacOzbiBkZSBTZWd1cmlkYWQgZGUgbGEgSW5mb3JtYWNpw7NuMSkwJwYJKoZIhvcNAQkBFhphc2lzbmV0QHBydWViYXMuc2F0LmdvYi5teDEmMCQGA1UECQwdQXYuIEhpZGFsZ28gNzcsIENvbC4gR3VlcnJlcm8xDjAMBgNVBBEMBTA2MzAwMQswCQYDVQQGEwJNWDEZMBcGA1UECAwQRGlzdHJpdG8gRmVkZXJhbDESMBAGA1UEBwwJQ295b2Fjw6FuMRUwEwYDVQQtEwxTQVQ5NzA3MDFOTjMxITAfBgkqhkiG9w0BCQIMElJlc3BvbnNhYmxlOiBBQ0RNQTAeFw0xNjEwMjUyMTUyMTFaFw0yMDEwMjUyMTUyMTFaMIGxMRowGAYDVQQDExFDSU5ERU1FWCBTQSBERSBDVjEaMBgGA1UEKRMRQ0lOREVNRVggU0EgREUgQ1YxGjAYBgNVBAoTEUNJTkRFTUVYIFNBIERFIENWMSUwIwYDVQQtExxMQU43MDA4MTczUjUgLyBGVUFCNzcwMTE3QlhBMR4wHAYDVQQFExUgLyBGVUFCNzcwMTE3TURGUk5OMDkxFDASBgNVBAsUC1BydWViYV9DRkRJMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgvvCiCFDFVaYX7xdVRhp/38ULWto/LKDSZy1yrXKpaqFXqERJWF78YHKf3N5GBoXgzwFPuDX+5kvY5wtYNxx/Owu2shNZqFFh6EKsysQMeP5rz6kE1gFYenaPEUP9zj+h0bL3xR5aqoTsqGF24mKBLoiaK44pXBzGzgsxZishVJVM6XbzNJVonEUNbI25DhgWAd86f2aU3BmOH2K1RZx41dtTT56UsszJls4tPFODr/caWuZEuUvLp1M3nj7Dyu88mhD2f+1fA/g7kzcU/1tcpFXF/rIy93APvkU72jwvkrnprzs+SnG81+/F16ahuGsb2EZ88dKHwqxEkwzhMyTbQIDAQABox0wGzAMBgNVHRMBAf8EAjAAMAsGA1UdDwQEAwIGwDANBgkqhkiG9w0BAQsFAAOCAgEAJ/xkL8I+fpilZP+9aO8n93+20XxVomLJjeSL+Ng2ErL2GgatpLuN5JknFBkZAhxVIgMaTS23zzk1RLtRaYvH83lBH5E+M+kEjFGp14Fne1iV2Pm3vL4jeLmzHgY1Kf5HmeVrrp4PU7WQg16VpyHaJ/eonPNiEBUjcyQ1iFfkzJmnSJvDGtfQK2TiEolDJApYv0OWdm4is9Bsfi9j6lI9/T6MNZ+/LM2L/t72Vau4r7m94JDEzaO3A0wHAtQ97fjBfBiO5M8AEISAV7eZidIl3iaJJHkQbBYiiW2gikreUZKPUX0HmlnIqqQcBJhWKRu6Nqk6aZBTETLLpGrvF9OArV1JSsbdw/ZH+P88RAt5em5/gjwwtFlNHyiKG5w+UFpaZOK3gZP0su0sa6dlPeQ9EL4JlFkGqQCgSQ+NOsXqaOavgoP5VLykLwuGnwIUnuhBTVeDbzpgrg9LuF5dYp/zs+Y9ScJqe5VMAagLSYTShNtN8luV7LvxF9pgWwZdcM7lUwqJmUddCiZqdngg3vzTactMToG16gZA4CWnMgbU4E+r541+FNMpgAZNvs2CiW/eApfaaQojsZEAHDsDv4L5n3M1CC7fYjE/d61aSng1LaO6T1mh+dEfPvLzp7zyzz+UgWMhi5Cs4pcXx1eic5r7uxPoBwcCTt3YI1jKVVnV7/w=</X509Certificate>
+            </X509Data>
+        </KeyInfo>
+    </Signature>
+</SolicitudAceptacionRechazo>
 ```
 
-Ejemplo de uso
-
+**Ejemplo de consumo de la librería para la aceptacion/rechazo de la solicitud por XML mediante token**
 ```py
-accept_reject = AcceptReject("http://services.test.sw.com.mx", token)
-uuids = [{"uuid":"fd74d156-b9b0-44a5-9906-e08182e8363e", "action":"Aceptacion"}]
-response_csd = accept_reject.accept_reject_csd(rfc, uuids, b64_csd, b64_key, password_csd)
-response_uuid = accept_reject.accept_reject_uuid(rfc, uuid)
-response_pfx = accept_reject.accept_reject_pfx(rfc, uuid, b64_pfx, password_csd)
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AcceptReject.AcceptReject import AcceptReject
+
+#Creamos funcion para abrir nuestro archivo
+xml_accept_reject = open_file("file.xml")
+accept_reject = AcceptReject("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
 response_xml = accept_reject.accept_reject_xml(xml_accept_reject)
-print(response_uuid.get_status())
-print(response_csd.get_status())
-print(response_pfx.get_status())
 print(response_xml.get_status())
 ```
+</details>
 
-Las funciones utilizables para estos objetos de accept/reject son los siguientes
+<details>
+<summary>
+Aceptar / Rechazar por UUID
+</summary>
 
->- *get_message()*
->- *get_messageDetail()*
->- *get_data()*
->- *get_response()*
->- *get_status()*
->- *get_status_code()*
+Método mediante el cual el receptor podrá manifestar la aceptación o rechazo de la solicitud de cancelación mediante UUID.
 
+Este método recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña ò token
+* RFC del receptor
+* UUID de la factura que se requiere aceptar/rechazar
+* Acción que se requiera realizar Aceptacion/Rechazo
 
-## Procesamiento de las respuestas ##
-Cuando obtenemos un "data", éste viene en formato array asociativo. A continuación expondré ejemplos de uso.
+:pushpin: ***NOTA:*** El usuario deberá tener sus certificados en el administrador de timbres para la utilización de este método.
 
-**Ejemplo 1:**
-
-Tratamiento de los datos de la validación de xml aquí un ejemplo.
+**Ejemplo de consumo de la librería para la aceptacion/rechazo de la solicitud por UUID mediante usuario y contraseña**
 ```py
-validate = Validate("http://services.test.sw.com.mx", token)
-response_xml = validate.validate_xml(open_file("resources\\xml33.xml"))
-for d in response_xml.response["detail"]:
-	print("Detail:")
-	for detail in d["detail"]:
-		print("\tmessage: "+detail["message"])
-		print("\tmessageDetail: "+detail["messageDetail"])
-		print("\tType: "+str(detail["type"]))
-	print("Section: "+d["section"])
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AcceptReject.AcceptReject import AcceptReject
+
+accept_reject = AcceptReject("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response_uuid = accept_reject.accept_reject_uuid(rfc, uuid, accion)
+print(response_uuid.get_status())
 ```
+</details>
 
-**Output**
+## Certificados ##
+Servicio para gestionar los certificados CSD de tu cuenta.
+Para administrar los certificados de manera gráfica, puede hacerlo desde el [Administrador de timbres](https://portal.sw.com.mx/).
 
-> Detail:
->         message: OK
->         messageDetail: Validacion de Estructura Correcta
->         Type: 1 Section: CFDI33 - Validacion de Estructura Detail:
->         message: OK
->         messageDetail: Validaciones Proveedor Comprobante ( CFDI33 ) Correcta
->         Type: 1 Section: CFDI33 - Validaciones Proveedor Comprobante  ( CFDI33 )
+
+<details>
+<summary>
+Cargar Certificado
+</summary>
+
+Método para cargar un certificado en la cuenta.
+
+Este metodo recibe los siguientes parametros:
+* Url Servicios SW
+* Token
+* Tipo de certificado (Default = “stamp”) 
+* CSD en Base64
+* Key en Base64
+* Contraseña del certificado
+
+**Ejemplo de consumo de la libreria para la carga de certificado mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Csd.Csd import Csd
+
+csd_obj = Csd("http://services.test.sw.com.mx", None, "user", "password")
+response = csd_obj.upload_csd("stamp", b64_csd, b64_key, password_csd)
+```
+</details>
+
+
+Para mayor referencia de un listado completo de los servicios favor de visitar el siguiente [link](http://developers.sw.com.mx/).
+
+Si deseas contribuir a la libreria o tienes dudas envianos un correo a **soporte@sw.com.mx**.
