@@ -294,8 +294,8 @@ Como su nombre lo indica, este método realiza la cancelacion mediante los CSD.
 Este método recibe los siguientes parametros:
 * Usuario y contraseña
 * Url Servicios SW
-* Certificado (.cer) en **Base64**
-* Key (.key) en **Base64**
+* Certificado (.cer)
+* Key (.key)
 * RFC emisor
 * Password del archivo key
 * UUID
@@ -351,7 +351,7 @@ Como su nombre lo indica, este método realiza la cancelacion mediante el PFX.
 Este método recibe los siguientes parametros:
 * Usuario y contraseña
 * Url Servicios SW
-* Archivo PFX en **Base64**
+* Archivo PFX 
 * RFC emisor
 * Password (CSD)
 * UUID
@@ -523,124 +523,121 @@ else:
 
 ## Balance ##
 
-Parámetros necesarios: [url, user y password] o [url y token].
+<details>
+<summary>
+Consultar saldo
+</summary>
 
-La clase de Balance nos ayuda a obtener información referente a nuestra cuenta. Así sabremos cuando nos quedan pocos timbres o cuantos tenemos asignados, etc. 
+Servicio mediante el cual puedes realizar la consulta de tu saldo para consumir los servicios de SW.
 
-Importar la clase al comienzo de nuestro programa de la siguiente manera
 
+Este método recibe los siguientes parametros:
+* Usuario y contraseña ó token
+* Url Servicios SW
+
+**Ejemplo de consumo de la libreria para consultar saldo mediante usuario y contraseña**
 ```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
 from Balance.Balance import Balance
-```
 
-Ejemplo de uso
-
-```py
-objBal = Balance("http://services.test.sw.com.mx", token)
+objBal = Balance("http://services.test.sw.com.mx", None ,"user","password")
 objResponseBal = objBal.account_balance()
-print(objResponseBal.data)
+if objResponseBal.get_status() ==  "error":
+	print(objResponseBal.get_message())
+	print(objResponseBal.get_messageDetail())
+else:
+	print(objResponseBal.get_data())
 ```
 
-Las funciones utilizables para el objeto obtenido son las siguientes
-
->- *get_message()*
->- *get_messageDetail()*
->- *get_data()*
->- *get_response()*
->- *get_status()*
->- *get_status_code()*
-
-## Cancelation ##
-
-Parámetros necesarios: [url, user y password] o [url y token]. Además de los parámetros que nos sean necesarios dependiendo del tipo de cancelación a usar.
-
-
-Importar la clase al comienzo de nuestro programa de la siguiente manera
-
+**Ejemplo de consumo de la libreria para consultar saldo mediante token**
 ```py
-from Cancelation.Cancelation import Cancelation
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Balance.Balance import Balance
+
+objBal = Balance("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+objResponseBal = objBal.account_balance()
+if objResponseBal.get_status() ==  "error":
+	print(objResponseBal.get_message())
+	print(objResponseBal.get_messageDetail())
+else:
+	print(objResponseBal.get_data())
 ```
+</details>
 
-Ejemplo de uso
+## Validación ##
 
+<details>
+<summary>
+Validación XML
+</summary>
+
+Este servicio recibe un comprobante CFDI 3.3 ó 4.0 en formato XML mediante el cual se valida integridad, sello, errores de estructura, matriz de errores del SAT incluyendo complementos, se valida que exista en el SAT, así como el estatus en el SAT.
+
+Este metodo recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña o token
+* XML
+
+**Ejemplo de consumo de la libreria para validación de XML mediante usuario y contraseña**
 ```py
-objCancel = Cancelation("http://services.test.sw.com.mx", token)
-objResponseCancelCSD = objCancel.CancelCsd(uuid, passwordCsd, rfc, motivo, foliosust, b64Csd, b64Key)
-objResponseCancelUuid  = objCancel.CancelUuid(rfc, uuid, motivo, foliosust)
-objResponseCancelPfx  = objCancel.CancelPfx(uuid, passwordCsd, rfc, motivo, foliosust, b64Pfx)
-objResponseCancelXml  = objCancel.CancelCsd(xmlCancel)
-print(objResponseCancelUUID.getStatus())
-print(objResponseCancelCSD.getStatus())
-print(objResponseCancelPFX.getStatus())
-print(objResponseCancelXML.getStatus())
-```
-
-Las funciones utilizables para estos objetos de cancelación son los siguientes
-
->- *get_message()*
->- *get_messageDetail()*
->- *get_data()*
->- *get_response()*
->- *get_status()*
->- *get_status_code()*
-
-## Validation ##
-
-Parámetros necesarios: [user, password y url] o [token y url]. Además de parámetros adicionales según sea el caso.
-
-La clase Validation servirá para validar que algunas cosas se encuentren de manera correcta antes de proceder al timbrado del mismo. Por ejemplo, nos pueden ayudar a decir si nuestro XML no tiene algún error.
-
-Funciones disponibles
-
-- validateXml(xml)
-
-Importar la clase al comienzo de nuestro programa de la siguiente manera
-
-```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
 from Validate.Validate import Validate
+
+#Creamos funcion para abrir nuestro archivo
+xml = open_file("file.xml")
+objValidate = Validate("http://services.test.sw.com.mx", , None ,"user","password")
+objResponseValidateXml = objValidate.ValidateXml(xml)
+
+print(objResponseValidateXml.get_response())
 ```
 
-Ejemplo de uso
-
+**Ejemplo de consumo de la libreria para validación de XML mediante token**
 ```py
-objValidate = Validate("http://services.test.sw.com.mx", token)
-objResponseValidateXml = objValidate.ValidateXml(open_file("resources\\xml33.xml"))
-print(objResponseValidateXml.response)
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Validate.Validate import Validate
+
+#Creamos funcion para abrir nuestro archivo
+xml = open_file("file.xml")
+objValidate = Validate("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+objResponseValidateXml = objValidate.ValidateXml(xml)
+
+print(objResponseValidateXml.get_response())
 ```
 
-Las funciones correspondientes al objeto que regresan estas funciones son las siguientes
+:pushpin: ***NOTA:*** La validación del Xml al no tener "data", ni tampoco "message" obtenemos la response que viene en formato de array asociativo.
+</details>
 
->- *get_message()*
->- *get_messageDetail()*
->- *get_data()*
->- *get_response()*
->- *get_status()*
->- *get_status_code()*
+## Consulta Estatus ##
 
->La validación del Xml al no tener "data", ni tampoco "message" obtenemos la response que viene en formato de array asociativo.
+<details>
+<summary>
+Consulta Estatus SAT
+</summary>
+Este servicio sirve para consultar el estatus de un CFDI antes y después de enviarlo a cancelar, con él sabremos sí puede ser cancelado de forma directa, o en caso de que se necesite consultar los CFDI relacionados para poder generar la cancelación.
 
-## Estatus CFDI ##
+:pushpin: ***NOTA:*** El servicio de consulta es de tipo SOAP y es proporcionado directamente por parte del SAT.
 
-Parámetros necesarios: [rfcEmisor, rfcReceptor, total, uuid, URL del SOAP, Action del SOAP]
+Este metodo recibe los siguientes parametros:
+* RFC Emisor
+* RFC Receptor
+* Total declarado en el comprobante
+* Url
+* Acción
 
-La clase Estatus CFDI servirá para verificar el estatus de algún comprobante directamente en el SAT. Este servicio será necesario en el nuevo esquema de cancelación.
-
-**Funciones disponibles**
-- status(rfc_emisor, rfc_receptor, total, uuid, url, soap_action)
-
-
-Importar la clase al comienzo de nuestro programa de la siguiente manera
-
+**Ejemplo de consumo de la libreria para la consulta del estatus SAT**
 ```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
 from StatusCfdi.StatusCfdi import StatusCfdi
+
+#Datos
+rfc_emisor = "LAN8507268IA" 
+rfc_receptor = "LAN7008173R5"
+total = "5800.00"
+uuid = "eb978000-95c7-4513-8d97-4b59434da45f"
+status = StatusCfdi.status(rfc_emisor, rfc_receptor, total, uuid, "https://pruebacfdiconsultaqr.cloudapp.net/ConsultaCFDIService.svc", "http://tempuri.org/IConsultaCFDIService/Consulta")
+
+print(status.get_response())
 ```
-
-Ejemplo de uso
-
-```py
-status = StatusCfdi.status("LAN8507268IA", "LAN7008173R5", "5800.00", "eb978000-95c7-4513-8d97-4b59434da45f", "https://pruebacfdiconsultaqr.cloudapp.net/ConsultaCFDIService.svc", "http://tempuri.org/IConsultaCFDIService/Consulta")
-```
-
 Las funciones correspondientes al objeto que regresan estas funciones son las siguientes
 
 >- *get_status_code()*
@@ -649,6 +646,11 @@ Las funciones correspondientes al objeto que regresan estas funciones son las si
 >- *get_esCancelable()*
 >- *get_estado()*
 >- *get_estatusCancelacion()*
+
+</details>
+
+
+
 
 ## Consulta Documentos Relacionados ##
 Parámetros necesarios: [url, user y password] o [url y token]. Además de los parámetros que nos sean necesarios dependiendo del tipo de método a usar.
