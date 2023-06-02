@@ -65,9 +65,6 @@ else:
 
 ```
 
-:pushpin: ***NOTA:***  Cabe aclarar que Auth recibe un valor "None" en el lugar de donde iría el token para las demás funciones de consumo.
-
-
 ## Timbrado ##
 
 <details>
@@ -649,48 +646,107 @@ Las funciones correspondientes al objeto que regresan estas funciones son las si
 
 </details>
 
+## CFDI Relacionados ##
+A través de estos siguientes métodos obtendremos un listado de los UUID que se encuentren relacionados a una factura.
+
+<details>
+<summary>
+Relacionados por CSD
+</summary>
+
+## Relacionados por CSD ##
+Este método obtendra un listado de los UUID relacionados mediante CSD
+
+Este método recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña ò token
+* RFC del emisor 
+* UUID de la factura.
+* Certificado en base64
+* Llave en base64 
+* Contraseña del certificado 
 
 
-
-## Consulta Documentos Relacionados ##
-Parámetros necesarios: [url, user y password] o [url y token]. Además de los parámetros que nos sean necesarios dependiendo del tipo de método a usar.
-
-La clase de Relations nos servirá para consultar los documentos que existen haciendo relación al documento consultado.
-
-**Funciones disponibles**
- - relations_uuid(rfc, uuid)
- - relations_csd(rfc, uuid, b64_csd, b64_key, password_csd)
- - relations_pfx(rfc, uuid, b64_pfx, password_csd)
- - relations_xml(xml)
-
-Importar la clase al comienzo de nuestro programa de la siguiente manera
-
+**Ejemplo de consumo de la librería para la consulta de CFDI relacionados por CSD mediante usuario y contraseña**
 ```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
 from Relations.Relations import Relations
-```
 
-Ejemplo de uso
-
-```py
 relations = Relations("http://services.test.sw.com.mx", None, "demo", "123456789")
 response_csd = relations.relations_csd(rfc, uuid, b64_csd, b64_key, password_csd)
-response_uuid = relations.relations_uuid(rfc, uuid)
-response_pfx = relations.relations_pfx(rfc, uuid, b64_pfx, password_csd)
-response_xml = relations.relations_xml(xml_relations)
-print(response_csd.get_status())
-print(response_uuid.get_status())
-print(response_pfx.get_status())
-print(response_xml.get_status())
+
+if response_csd.get_status() ==  "error":
+	print(response_csd.get_message())
+	print(response_csd.get_messageDetail())
+else:
+	print(response_csd.get_data())
 ```
+</details>
 
-Las funciones utilizables para estos objetos de relacionados son los siguientes
+<details>
+<summary>
+Relacionados por PFX
+</summary>
 
->- *get_message()*
->- *get_messageDetail()*
->- *get_data()*
->- *get_response()*
->- *get_status()*
->- *get_status_code()*
+## Relacionados por PFX ##
+Este método obtendra un listado de los UUID relacionados mediante PFX.
+
+Este método recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña ò token
+* UUID del comprobante
+* RFC del emisor
+* Archivo Pfx en Base64
+* Contraseña del certificado
+
+**Ejemplo de consumo de la librería para la consulta CFDI relacionados por PFX mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Relations.Relations import Relations
+
+relations = Relations("http://services.test.sw.com.mx", None, "demo", "123456789")
+response_pfx = relations.relations_pfx(rfc, uuid, b64_pfx, password_csd)
+
+if response_pfx.get_status() ==  "error":
+	print(response_pfx.get_message())
+	print(response_pfx.get_messageDetail())
+else:
+	print(response_pfx.get_data())
+```
+</details>
+
+<details>
+<summary>
+Relacionados por UUID
+</summary>
+
+## Relacionados por UUID ##
+Este método obtendra un listado de los UUID relacionados mediante el UUID de la factura.
+
+Este método recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña ò token
+* RFC del emisor
+* UUID de la factura que ser requiere consultar relacionados
+
+:pushpin: ***NOTA:*** El usuario deberá tener sus certificados en el administrador de timbres para la utilización de este método.
+
+**Ejemplo de consumo de la librería para la consulta CFDI relacionados por UUID mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Relations.Relations import Relations
+
+relations = Relations("http://services.test.sw.com.mx", None, "demo", "123456789")
+response_uuid = relations.relations_uuid(rfc, uuid)
+
+if response_uuid.get_status() ==  "error":
+	print(response_uuid.get_message())
+	print(response_uuid.get_messageDetail())
+else:
+	print(response_uuid.get_data())
+```
+</details>
+
 
 ## Consulta Solicitudes Pendientes ##
 Parámetros necesarios: [url, user y password] o [url y token]. Además del RFC del cual obtendremos la lista de uuid que tiene pendiente por Aceptar o Rechazar.
