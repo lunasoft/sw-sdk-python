@@ -93,7 +93,7 @@ from Stamp.Stamp import Stamp
 xml = open_file("file.xml")
 #Creamos instancia y pasamos parametros
 stamp = Stamp("http://services.test.sw.com.mx", None, "user", "password")
-response = stamp.StampV4(open_file(xml))
+response = stamp.stamp_v1(open_file(xml))
 if response.get_status() ==  "error":
 	print(response.get_message())
 	print(response.get_messageDetail())
@@ -110,7 +110,7 @@ from Stamp.Stamp import Stamp
 xml = open_file("file.xml")
 #Creamos instancia y pasamos parametros
 stamp = Stamp("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-response = stamp.StampV4(xml)
+response = stamp.stamp_v1(xml)
 if response.get_status() ==  "error":
 	print(response.get_message())
 	print(response.get_messageDetail())
@@ -128,7 +128,7 @@ xml = open_file("file.xml")
 encoded = base64.b64encode(xml.encode('utf-8'))
 #Creamos instancia y pasamos parametros
 stamp = Stamp("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-response = stamp.StampV4(encoded.decode(),True)
+response = stamp.stamp_v1(encoded.decode(),True)
 if response.get_status() ==  "error":
 	print(response.get_message())
 	print(response.get_messageDetail())
@@ -142,7 +142,7 @@ else:
 - stamp_v3(xml, b64)
 - stamp_v4(xml, b64)
 </details>
----
+
 
 <details>
 <summary>
@@ -167,7 +167,7 @@ from Issue.Issue import Issue
 xml = open_file("file.xml")
 #Creamos instancia y pasamos parametros
 issue = Issue("http://services.test.sw.com.mx", None, "user", "password")
-response = issue.issue_v4(xml)
+response = issue.issue_v1(xml)
 if response.status ==  "error":
 	print(response.get_message())
 	print(response.get_messageDetail())
@@ -183,7 +183,7 @@ from Issue.Issue import Issue
 #Creamos funcion para abrir nuestro archivo
 xml = open_file("file.xml")
 issue = Issue("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-response = issue.issue_v4(xml)
+response = issue.issue_v1(xml)
 if response.status ==  "error":
 	print(response.get_message())
 	print(response.get_messageDetail())
@@ -201,7 +201,7 @@ xml = open_file("file.xml")
 encoded = base64.b64encode(xml.encode('utf-8'))
 #Creamos instancia y pasamos parametros
 issue = Issue("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-response = issue.issue_v4(encoded.decode(), True)
+response = issue.issue_v1(encoded.decode(), True)
 if response.get_status() ==  "error":
 	print(response.get_message())
 	print(response.get_messageDetail())
@@ -237,7 +237,7 @@ from Issue.Issue import Issue
 #creamos funcion para abrir nuestro archivo
 json = open_file("file.json")
 issue = Issue("http://services.test.sw.com.mx", None, "user", "password")
-response = issue.issue_json_v4(json)
+response = issue.issue_json_v1(json)
 if response.get_status() ==  "error":
 	print(response.get_message())
 	print(response.get_messageDetail())
@@ -252,7 +252,7 @@ from Issue.Issue import Issue
 #creamos funcion para abrir nuestro archivo
 json = open_file("file.json")
 issue = Issue("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
-response = issue.issue_json_v4(json)
+response = issue.issue_json_v1(json)
 if response.get_status() ==  "error":
 	print(response.get_message())
 	print(response.get_messageDetail())
@@ -279,6 +279,247 @@ else:
 |  V4     | Devuelve todos los datos del timbrado                         |
 
 Para mayor referencia de estas versiones de respuesta, favor de visitar el siguiente [link](https://developers.sw.com.mx/knowledge-base/versiones-de-respuesta-timbrado/).
+
+## Cancelación ##
+
+Este servicio se utiliza para cancelar documentos xml y se puede hacer mediante varios metodos **Cancelación CSD**, **Cancelación PFX**, **Cancelacion por XML** y **Cancelación UUID**.
+
+<details>
+<summary>
+Cancelacion por CSD
+</summary>
+
+Como su nombre lo indica, este método realiza la cancelacion mediante los CSD.
+
+Este método recibe los siguientes parametros:
+* Usuario y contraseña
+* Url Servicios SW
+* Certificado (.cer) en **Base64**
+* Key (.key) en **Base64**
+* RFC emisor
+* Password del archivo key
+* UUID
+* Motivo
+* Folio Sustitución (Si el motivo es 01)
+
+**Ejemplo de consumo de la libreria para cancelar con CSD con motivo de cancelación 02 sin relación a documento mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Cancelation.Cancelation import Cancelation
+
+#Datos
+uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
+motivo = "02"
+foliosustitucion = "01724196-ac5a-4735-b621-e3b42bcbb459"
+objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+objResponseCancelCSD = objCancel.CancelCsd(uuid, rfc, b64cert, b64key, cPassword, motivo, foliosustitucion)
+
+if objResponseCancelCSD.get_status() ==  "error":
+	print(objResponseCancelCSD.get_message())
+	print(objResponseCancelCSD.get_messageDetail())
+else:
+	print(objResponseCancelCSD.get_data())
+```
+
+**Ejemplo de consumo de la libreria para cancelar con CSD con motivo de cancelación 01 con relación a documento mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Cancelation.Cancelation import Cancelation
+
+uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
+motivo = "01"
+foliosustitucion = None
+objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+objResponseCancelCSD = objCancel.CancelCsd(uuid, passwordCsd, rfc, motivo, foliosust, b64Csd, b64Key)
+
+if objResponseCancelCSD.get_status() ==  "error":
+	print(objResponseCancelCSD.get_message())
+	print(objResponseCancelCSD.get_messageDetail())
+else:
+	print(objResponseCancelCSD.get_data())
+```
+
+</details>
+
+<details>
+<summary>
+Cancelacion por PFX
+</summary>
+
+Como su nombre lo indica, este método realiza la cancelacion mediante el PFX.
+
+Este método recibe los siguientes parametros:
+* Usuario y contraseña
+* Url Servicios SW
+* Archivo PFX en **Base64**
+* RFC emisor
+* Password (CSD)
+* UUID
+* Motivo
+* Folio Sustitución
+
+**Ejemplo de consumo de la libreria para cancelar con PFX con motivo de cancelación 02 sin relación a documento mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Cancelation.Cancelation import Cancelation
+
+uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
+motivo = "02"
+foliosustitucion = "01724196-ac5a-4735-b621-e3b42bcbb459"
+objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+objResponseCancelPfx = objCancel.CancelPfx(rfc, b64Pfx, cPassword, motivo, foliosustitucion)
+
+if objResponseCancelPfx .get_status() ==  "error":
+	print(objResponseCancelPfx.get_message())
+	print(objResponseCancelPfx.get_messageDetail())
+else:
+	print(objResponseCancelPfx.get_data())
+```
+
+**Ejemplo de consumo de la libreria para cancelar con PFX con motivo 01 con documento relacionado mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Cancelation.Cancelation import Cancelation
+
+uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
+motivo = "02"
+foliosustitucion = None
+objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+objResponseCancelPfx = objCancel.CancelPfx(rfc, b64Pfx, cPassword, motivo, foliosustitucion)
+
+if objResponseCancelPfx .get_status() ==  "error":
+	print(objResponseCancelPfx.get_message())
+	print(objResponseCancelPfx.get_messageDetail())
+else:
+	print(objResponseCancelPfx.get_data())
+```
+</details>
+
+<details>
+<summary>
+Cancelacion por XML
+</summary>
+
+Como su nombre lo indica, este método realiza la cancelacion mediante el XML sellado con los UUID a cancelar.
+
+Este método recibe los siguientes parametros:
+* Usuario y contraseña
+* Url Servicios SW
+* XML sellado con los UUID a cancelar.
+
+**Ejemplo de XML para Cancelar**
+```xml
+<Cancelacion xmlns="http://cancelacfd.sat.gob.mx"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" Fecha="2021-12-26T18:15:28" RfcEmisor="EKU9003173C9">
+    <Folios>
+        <Folio UUID="fe4e71b0-8959-4fb9-8091-f5ac4fb0fef8" Motivo="02" FolioSustitucion=""/>
+    </Folios>
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <SignedInfo>
+            <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+            <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+            <Reference URI="">
+                <Transforms>
+                    <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+                </Transforms>
+                <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+                <DigestValue>XEdUtCptjdlz9DsYAP7nnU6MytU=</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>ZnWh91e5tUc4/t1ZWnb3yOgB8zuCXNPioND+rv6aLOEwIw26/8sYYb+GT4wgyqlc09wOs32XTUwWoGQwtWMG8Euqq+4xJyobWvPCsX6CiURvD/Pd33xgkH92A0AGQxEMYGVT7wK+GFS2gDTYEYAXvZqzCe6+rXnlQvHML0TOOmhVu/wc8YrCbGt4z/F5sRxhjpa0eqwFEq4RmB4nkWjcD3Pnudn3XAI5NHIiOd8KVGVcDR+LvYvKj7h+18WxZgujpggYjbFN79i1jEsAEPDfgryUdTvjDw+KC7Mg+/ge6pssH42buEMIwVE4VX9Y3NtWSGTwdIK/8pxXk+Y5wyR6Gg==</SignatureValue>
+        <KeyInfo>
+            <X509Data>
+                <X509IssuerSerial>
+                    <X509IssuerName>OID.1.2.840.113549.1.9.2=responsable: ACDMA-SAT, OID.2.5.4.45=2.5.4.45, L=COYOACAN, S=CIUDAD DE MEXICO, C=MX, PostalCode=06370, STREET=3ra cerrada de cadiz, E=oscar.martinez@sat.gob.mx, OU=SAT-IES Authority, O=SERVICIO DE ADMINISTRACION TRIBUTARIA, CN=AC UAT</X509IssuerName>
+                    <X509SerialNumber>292233162870206001759766198444326234574038512436</X509SerialNumber>
+                </X509IssuerSerial>
+                <X509Certificate>MIIFuzCCA6OgAwIBAgIUMzAwMDEwMDAwMDA0MDAwMDI0MzQwDQYJKoZIhvcNAQELBQAwggErMQ8wDQYDVQQDDAZBQyBVQVQxLjAsBgNVBAoMJVNFUlZJQ0lPIERFIEFETUlOSVNUUkFDSU9OIFRSSUJVVEFSSUExGjAYBgNVBAsMEVNBVC1JRVMgQXV0aG9yaXR5MSgwJgYJKoZIhvcNAQkBFhlvc2Nhci5tYXJ0aW5lekBzYXQuZ29iLm14MR0wGwYDVQQJDBQzcmEgY2VycmFkYSBkZSBjYWRpejEOMAwGA1UEEQwFMDYzNzAxCzAJBgNVBAYTAk1YMRkwFwYDVQQIDBBDSVVEQUQgREUgTUVYSUNPMREwDwYDVQQHDAhDT1lPQUNBTjERMA8GA1UELRMIMi41LjQuNDUxJTAjBgkqhkiG9w0BCQITFnJlc3BvbnNhYmxlOiBBQ0RNQS1TQVQwHhcNMTkwNjE3MTk0NDE0WhcNMjMwNjE3MTk0NDE0WjCB4jEnMCUGA1UEAxMeRVNDVUVMQSBLRU1QRVIgVVJHQVRFIFNBIERFIENWMScwJQYDVQQpEx5FU0NVRUxBIEtFTVBFUiBVUkdBVEUgU0EgREUgQ1YxJzAlBgNVBAoTHkVTQ1VFTEEgS0VNUEVSIFVSR0FURSBTQSBERSBDVjElMCMGA1UELRMcRUtVOTAwMzE3M0M5IC8gWElRQjg5MTExNlFFNDEeMBwGA1UEBRMVIC8gWElRQjg5MTExNk1HUk1aUjA1MR4wHAYDVQQLExVFc2N1ZWxhIEtlbXBlciBVcmdhdGUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCN0peKpgfOL75iYRv1fqq+oVYsLPVUR/GibYmGKc9InHFy5lYF6OTYjnIIvmkOdRobbGlCUxORX/tLsl8Ya9gm6Yo7hHnODRBIDup3GISFzB/96R9K/MzYQOcscMIoBDARaycnLvy7FlMvO7/rlVnsSARxZRO8Kz8Zkksj2zpeYpjZIya/369+oGqQk1cTRkHo59JvJ4Tfbk/3iIyf4H/Ini9nBe9cYWo0MnKob7DDt/vsdi5tA8mMtA953LapNyCZIDCRQQlUGNgDqY9/8F5mUvVgkcczsIgGdvf9vMQPSf3jjCiKj7j6ucxl1+FwJWmbvgNmiaUR/0q4m2rm78lFAgMBAAGjHTAbMAwGA1UdEwEB/wQCMAAwCwYDVR0PBAQDAgbAMA0GCSqGSIb3DQEBCwUAA4ICAQBcpj1TjT4jiinIujIdAlFzE6kRwYJCnDG08zSp4kSnShjxADGEXH2chehKMV0FY7c4njA5eDGdA/G2OCTPvF5rpeCZP5Dw504RZkYDl2suRz+wa1sNBVpbnBJEK0fQcN3IftBwsgNFdFhUtCyw3lus1SSJbPxjLHS6FcZZ51YSeIfcNXOAuTqdimusaXq15GrSrCOkM6n2jfj2sMJYM2HXaXJ6rGTEgYmhYdwxWtil6RfZB+fGQ/H9I9WLnl4KTZUS6C9+NLHh4FPDhSk19fpS2S/56aqgFoGAkXAYt9Fy5ECaPcULIfJ1DEbsXKyRdCv3JY89+0MNkOdaDnsemS2o5Gl08zI4iYtt3L40gAZ60NPh31kVLnYNsmvfNxYyKp+AeJtDHyW9w7ftM0Hoi+BuRmcAQSKFV3pk8j51la+jrRBrAUv8blbRcQ5BiZUwJzHFEKIwTsRGoRyEx96sNnB03n6GTwjIGz92SmLdNl95r9rkvp+2m4S6q1lPuXaFg7DGBrXWC8iyqeWE2iobdwIIuXPTMVqQb12m1dAkJVRO5NdHnP/MpqOvOgLqoZBNHGyBg4Gqm4sCJHCxA1c8Elfa2RQTCk0tAzllL4vOnI1GHkGJn65xokGsaU4B4D36xh7eWrfj4/pgWHmtoDAYa8wzSwo2GVCZOs+mtEgOQB91/g==</X509Certificate>
+            </X509Data>
+        </KeyInfo>
+    </Signature>
+</Cancelacion>
+```
+Para caso de motivo 01 deberá añadir el atributo "FolioSustitucion" dentro del Nodo <Folio>
+
+Ejemplo de nodo Folio: 
+```
+<Folios>
+	<Folio UUID="b374db50-a0a3-4028-9d01-32b93e2b925a" Motivo="01" FolioSustitucion="b3641a4b-7177-4323-aaa0-29bd34bf1ff8" />
+</Folios>
+```
+
+**Ejemplo de consumo de la libreria para cancelar con XML mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Cancelation.Cancelation import Cancelation
+
+#Creamos funcion para abrir nuestro archivo
+xmlCancel = open_file("file.xml")
+objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+objResponseCancelXml  = objCancel.CancelXml(xmlCancel)
+
+if objResponseCancelPfx .get_status() ==  "error":
+	print(objResponseCancelPfx.get_message())
+	print(objResponseCancelPfx.get_messageDetail())
+else:
+	print(objResponseCancelPfx.get_data())
+```
+</details>
+
+<details>
+<summary>
+Cancelacion por UUID
+</summary>
+
+Como su nombre lo indica, este método realiza la cancelacion mediante el UUID a cancelar.
+
+Este método recibe los siguientes parametros:
+* Usuario y contraseña
+* Url Servicios SW
+* RFC emisor
+* UUID
+* Motivo
+* Folio Sustitución
+
+**Ejemplo de consumo de la libreria para cancelar con UUID con motivo de cancelación 02 sin documento relacionado mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Cancelation.Cancelation import Cancelation
+
+#Datos
+uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
+motivo = "02"
+foliosustitucion = "01724196-ac5a-4735-b621-e3b42bcbb459"
+objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+objResponseCancelUuid = objCancel.CancelUuid(uuid, rfc, motivo, foliosustitucion)
+
+if objResponseCancelUuid.get_status() ==  "error":
+	print(objResponseCancelUuid.get_message())
+	print(objResponseCancelUuid.get_messageDetail())
+else:
+	print(objResponseCancelUuid.get_data())
+```
+
+**Ejemplo de consumo de la libreria para cancelar con UUID con motivo de cancelación 01 con documento relacionado mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Cancelation.Cancelation import Cancelation
+
+#Datos
+uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
+motivo = "01"
+foliosustitucion = None
+objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+objResponseCancelUuid = objCancel.CancelUuid(uuid, rfc, motivo, foliosustitucion)
+
+if objResponseCancelUuid.get_status() ==  "error":
+	print(objResponseCancelUuid.get_message())
+	print(objResponseCancelUuid.get_messageDetail())
+else:
+	print(objResponseCancelUuid.get_data())
+```
+</details>
 
 ## Balance ##
 
@@ -313,14 +554,6 @@ Las funciones utilizables para el objeto obtenido son las siguientes
 
 Parámetros necesarios: [url, user y password] o [url y token]. Además de los parámetros que nos sean necesarios dependiendo del tipo de cancelación a usar.
 
-La clase de Cancelation nos servirá para cancelar algún comprobante anteriormente ya timbrado, teniendo diversas opciones para poder cancelar dicho documento.
-
-Funciones disponibles
-
- - cancelUuid(rfc, uuid, motivo, foliosustitucion)
- - cancelCsd(uuid, passwordCsd, rfc, motivo, foliosustitucion, b64Csd, b64Key)
- - cancelPfx(uuid, passwordCsd, rfc, motivo, foliosustitucion, b64Pfx)
- - cancelXml(xml)
 
 Importar la clase al comienzo de nuestro programa de la siguiente manera
 
