@@ -1,45 +1,69 @@
+# SDK python
 
+[![SW sapien](https://dka575ofm4ao0.cloudfront.net/pages-transactional_logos/retina/68712/SW_smarter-Servicios_web.png)](http://sw.com.mx/)
 
+Librería *Python* para el consumo de los servicios de SW sapien®.
 
+## Contenido 
 
-![Python](https://www.python.org/static/opengraph-icon-200x200.png)
-# Requerimientos #
+- [Compatibilidad](#Compatibilidad)
+- [Dependencias](#Dependencias)
+- [Documentación](#Documentación)
+- [Instalación](#Instalación)
+- [Implementación](#Implementación)
+---
 
-**Python 3** o superior.
+### Compatibilidad
+- CFDI 3.3 (Complemento de nóminas)
+- CFDI 4.0
+- Python 3 o superior
+---
 
-[Requests](http://docs.python-requests.org)
+### Dependencias
+- **Python 3** o superior.
+- [Requests](http://docs.python-requests.org)
+---
 
-**Instalación de librerías requeridas con PIP**
+### Documentación
+* [Inicio Rápido](https://developers.sw.com.mx/knowledge-base/conoce-el-proceso-de-integracion-en-solo-7-pasos/)
+* [Documentacion Oficial Servicios](http://developers.sw.com.mx)
+---
+
+### Instalación
 
 Ejecutar los comandos directamente en la consola tal cual aparecen en la página de la librería requerida, por ejemplo
 
 > pip install requests
 
-# Consumo #
+---
+### Implementación
 
-## Authentication ##
+La librería contara con los servicios principales como lo son Timbrado de CFDI, Cancelación, Consulta estatus CFDI, etc.
 
-Parámetros necesarios: url, user y password.
+---
 
-La clase de authentication, nos sirve para obtener un token de 2 hrs de duración. Podrá ser utilizado en los siguientes servicios para consumo.
+## Autenticaci&oacute;n ##
+El servicio de Autenticación es utilizado principalmente para obtener el **token** el cual sera utilizado para poder timbrar nuestro CFDI (xml) ya emitido (sellado), para poder utilizar este servicio es necesario que cuente con un **usuario** y **contraseña** para posteriormente obtenga el token, usted puede utilizar los que estan en este ejemplo para el ambiente de **Pruebas**.
 
-**Funciones disponibles**
+:pushpin: ***NOTA:*** :La clase de authentication, nos sirve para obtener un token de 2 hrs de duración.
 
-- authentication()
+Parámetros necesarios: 
+- url de servicios
+- user
+- password.
 
-Importar la clase al comienzo de nuestro programa de la siguiente manera
+**Ejemplo de consumo de la librería para obtener token**
+ ```py
+ #Importar la clase al comienzo de nuestro programa de la siguiente manera
+ from Auth.Auth import Auth
 
-```py
-from Auth.Auth import Auth
+ objAuth = Auth("http://services.test.sw.com.mx", None ,"usuario","contraseña")
+ objResponseAuth = objAuth.Authentication()
+ print(objResponseAuth.get_token()+"\nStatus: "+objResponseAuth.get_status())
+
 ```
+---
 
-Ejemplo de uso
-
-```py
-objAuth = Auth("http://services.test.sw.com.mx", None ,"usuario","contraseña")
-objResponseAuth = objAuth.Authentication()
-print(objResponseAuth.getToken()+"\nStatus: "+objResponseAuth.getStatus())
-```
 > Cabe aclarar que Auth recibe un valor "None" en el lugar de donde iría el token para las demás funciones de consumo.
 
 Las funciones utilizables para el objeto obtenido son las siguientes
