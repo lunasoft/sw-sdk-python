@@ -1,4 +1,4 @@
-# SDK python
+# Python
 
 [![SW sapien](https://dka575ofm4ao0.cloudfront.net/pages-transactional_logos/retina/68712/SW_smarter-Servicios_web.png)](http://sw.com.mx/)
 
@@ -25,7 +25,7 @@ Librería *Python* para el consumo de los servicios de SW sapien®.
 ### Documentación
 * [Inicio Rápido](https://developers.sw.com.mx/knowledge-base/conoce-el-proceso-de-integracion-en-solo-7-pasos/)
 * [Documentacion Oficial Servicios](http://developers.sw.com.mx)
----
+
 
 ### Instalación
 
@@ -38,7 +38,7 @@ pip install requests
 ### Implementación
 
 La librería contara con los servicios principales como lo son Timbrado de CFDI, Cancelación, Consulta estatus CFDI, etc.
-
+---
 
 ## Autenticaci&oacute;n ##
 El servicio de Autenticación es utilizado principalmente para obtener el **token** el cual sera utilizado para poder timbrar nuestro CFDI (xml) ya emitido (sellado), para poder utilizar este servicio es necesario que cuente con un **usuario** y **contraseña** para posteriormente obtenga el token, usted puede utilizar los que estan en este ejemplo para el ambiente de **Pruebas**.
@@ -141,8 +141,8 @@ else:
 - stamp_v2(xml, b64)
 - stamp_v3(xml, b64)
 - stamp_v4(xml, b64)
-
 </details>
+---
 
 <details>
 <summary>
