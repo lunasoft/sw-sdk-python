@@ -88,7 +88,7 @@ from Stamp.Stamp import Stamp
 xml = open("prueba.xml", "r", encoding='ansi', errors='ignore').read()
 #Creamos instancia y pasamos parametros
 stamp = Stamp("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
-response = stamp.stamp_v4(xml)
+response = stamp.stamp_v1(xml)
 
 print(response.get_data())
 ```
@@ -102,7 +102,7 @@ from Stamp.Stamp import Stamp
 xml = open("prueba.xml", "r", encoding='ansi', errors='ignore').read()
 #Creamos instancia y pasamos parametros
 stamp = Stamp("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
-response = stamp.stamp_v4(xml)
+response = stamp.stamp_v1(xml)
 
 if response.get_status() ==  "error":
 	print(response.get_message())
@@ -117,7 +117,7 @@ else:
 from Stamp.Stamp import Stamp
 
 #Creamos funcion para abrir nuestro archivo
-xml = open_file("file.xml")
+xml = open("prueba.xml", "r", encoding='ansi', errors='ignore').read()
 encoded = base64.b64encode(xml.encode('utf-8'))
 #Creamos instancia y pasamos parametros
 stamp = Stamp("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
