@@ -990,4 +990,4 @@ response = csd_obj.upload_csd("stamp", b64_csd, b64_key, password_csd)
 
 Para mayor referencia de un listado completo de los servicios favor de visitar el siguiente [link](http://developers.sw.com.mx/).
 
-Si deseas contribuir a la libreria o tienes dudas envianos un correo a **soporte@sw.com.mx**.
+Si deseas contribuir a la librería o tienes dudas envianos un correo a **soporte@sw.com.mx**.
