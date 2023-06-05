@@ -13,7 +13,7 @@ Librería *Python* para el consumo de los servicios de SW sapien®.
 - [Implementación](#Implementación)
 ---
 
-### Compatibilidad
+### Compatibilidad :clipboard:
 - CFDI 3.3 (Complemento de nóminas)
 - CFDI 4.0
 - Python 3 o superior
@@ -35,7 +35,7 @@ Ejecutar los comandos directamente en la consola tal cual aparecen en la página
 pip install requests
 ```
 
-### Implementación
+### Implementación :gear:
 
 La librería contara con los servicios principales como lo son Timbrado de CFDI, Cancelación, Consulta estatus CFDI, etc.
 
@@ -285,13 +285,13 @@ Cancelacion por CSD
 Como su nombre lo indica, este método realiza la cancelacion mediante los CSD.
 
 Este método recibe los siguientes parametros:
-* Usuario y contraseña
 * Url Servicios SW
+* Usuario y contraseña o token
+* UUID
+* RFC emisor
 * Certificado (.cer)
 * Key (.key)
-* RFC emisor
 * Password del archivo key
-* UUID
 * Motivo
 * Folio Sustitución (Si el motivo es 01)
 
@@ -303,7 +303,7 @@ from Cancelation.Cancelation import Cancelation
 #Datos
 uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
 motivo = "02"
-foliosustitucion = "01724196-ac5a-4735-b621-e3b42bcbb459"
+foliosustitucion = ""
 objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
 objResponseCancelCSD = objCancel.CancelCsd(uuid, rfc, b64cert, b64key, cPassword, motivo, foliosustitucion)
 
@@ -321,9 +321,9 @@ from Cancelation.Cancelation import Cancelation
 
 uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
 motivo = "01"
-foliosustitucion = None
+foliosustitucion = "01724196-ac5a-4735-b621-e3b42bcbb459"
 objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-objResponseCancelCSD = objCancel.CancelCsd(uuid, passwordCsd, rfc, motivo, foliosust, b64Csd, b64Key)
+objResponseCancelCSD = objCancel.CancelCsd(uuid, rfc, b64cert, b64key, cPassword, motivo, foliosustitucion)
 
 if objResponseCancelCSD.get_status() ==  "error":
 	print(objResponseCancelCSD.get_message())
@@ -342,12 +342,12 @@ Cancelacion por PFX
 Como su nombre lo indica, este método realiza la cancelacion mediante el PFX.
 
 Este método recibe los siguientes parametros:
-* Usuario y contraseña
 * Url Servicios SW
-* Archivo PFX 
-* RFC emisor
-* Password (CSD)
+* Usuario y contraseña o token
 * UUID
+* RFC emisor
+* Archivo PFX 
+* Password (CSD)
 * Motivo
 * Folio Sustitución
 
@@ -358,9 +358,9 @@ from Cancelation.Cancelation import Cancelation
 
 uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
 motivo = "02"
-foliosustitucion = "01724196-ac5a-4735-b621-e3b42bcbb459"
+foliosustitucion = ""
 objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-objResponseCancelPfx = objCancel.CancelPfx(rfc, b64Pfx, cPassword, motivo, foliosustitucion)
+objResponseCancelPfx = objCancel.CancelPfx(uuid, rfc, b64Pfx, cPassword, motivo, foliosustitucion)
 
 if objResponseCancelPfx .get_status() ==  "error":
 	print(objResponseCancelPfx.get_message())
@@ -376,11 +376,11 @@ from Cancelation.Cancelation import Cancelation
 
 uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
 motivo = "02"
-foliosustitucion = None
+foliosustitucion = "01724196-ac5a-4735-b621-e3b42bcbb459"
 objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-objResponseCancelPfx = objCancel.CancelPfx(rfc, b64Pfx, cPassword, motivo, foliosustitucion)
+objResponseCancelPfx = objCancel.CancelPfx(uuid, rfc, b64Pfx, cPassword, motivo, foliosustitucion)
 
-if objResponseCancelPfx .get_status() ==  "error":
+if objResponseCancelPfx.get_status() ==  "error":
 	print(objResponseCancelPfx.get_message())
 	print(objResponseCancelPfx.get_messageDetail())
 else:
@@ -396,8 +396,8 @@ Cancelacion por XML
 Como su nombre lo indica, este método realiza la cancelacion mediante el XML sellado con los UUID a cancelar.
 
 Este método recibe los siguientes parametros:
-* Usuario y contraseña
 * Url Servicios SW
+* Usuario y contraseña o token
 * XML sellado con los UUID a cancelar.
 
 **Ejemplo de XML para Cancelar**
@@ -452,11 +452,11 @@ xmlCancel = open_file("file.xml")
 objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
 objResponseCancelXml  = objCancel.CancelXml(xmlCancel)
 
-if objResponseCancelPfx .get_status() ==  "error":
-	print(objResponseCancelPfx.get_message())
-	print(objResponseCancelPfx.get_messageDetail())
+if objResponseCancelXml.get_status() ==  "error":
+	print(objResponseCancelXml.get_message())
+	print(objResponseCancelXml.get_messageDetail())
 else:
-	print(objResponseCancelPfx.get_data())
+	print(objResponseCancelXml.get_data())
 ```
 </details>
 
@@ -468,8 +468,8 @@ Cancelacion por UUID
 Como su nombre lo indica, este método realiza la cancelacion mediante el UUID a cancelar.
 
 Este método recibe los siguientes parametros:
-* Usuario y contraseña
 * Url Servicios SW
+* Usuario y contraseña o token
 * RFC emisor
 * UUID
 * Motivo
@@ -483,7 +483,7 @@ from Cancelation.Cancelation import Cancelation
 #Datos
 uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
 motivo = "02"
-foliosustitucion = "01724196-ac5a-4735-b621-e3b42bcbb459"
+foliosustitucion = ""
 objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
 objResponseCancelUuid = objCancel.CancelUuid(uuid, rfc, motivo, foliosustitucion)
 
@@ -502,7 +502,7 @@ from Cancelation.Cancelation import Cancelation
 #Datos
 uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
 motivo = "01"
-foliosustitucion = None
+foliosustitucion = "01724196-ac5a-4735-b621-e3b42bcbb459"
 objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
 objResponseCancelUuid = objCancel.CancelUuid(uuid, rfc, motivo, foliosustitucion)
 
@@ -539,7 +539,11 @@ if objResponseBal.get_status() ==  "error":
 	print(objResponseBal.get_message())
 	print(objResponseBal.get_messageDetail())
 else:
+    #Respuesta
 	print(objResponseBal.get_data())
+	#Procesamiento de la respuesta
+	for Key,Value in objResponseBal.response["data"].items():
+  		print (Key,"=",Value)
 ```
 
 **Ejemplo de consumo de la libreria para consultar saldo mediante token**
@@ -553,7 +557,11 @@ if objResponseBal.get_status() ==  "error":
 	print(objResponseBal.get_message())
 	print(objResponseBal.get_messageDetail())
 else:
+    #Respuesta
 	print(objResponseBal.get_data())
+	#Procesamiento de la respuesta
+	for Key,Value in objResponseBal.response["data"].items():
+  		print (Key,"=",Value)
 ```
 </details>
 
@@ -581,7 +589,23 @@ xml = open_file("file.xml")
 objValidate = Validate("http://services.test.sw.com.mx", , None ,"user","password")
 objResponseValidateXml = objValidate.ValidateXml(xml)
 
+#Respuesta
 print(objResponseValidateXml.get_response())
+#Procesamiento de la respuesta
+
+for d in objResponseValidateXml.response["detail"]:
+	print("Detail:")
+	for detail in d["detail"]:
+		print("\tmessage: ", detail["message"])
+		print("\tmessageDetail: ", detail["messageDetail"])
+		print("\tType: ", str(detail["type"]))
+	print("Section: ", d["section"])
+print("\ncadenaOriginalSAT: ",objResponseValidateXml.response['cadenaOriginalSAT'])
+print("\ncadenaOriginalComprobante: ",objResponseValidateXml.response['cadenaOriginalComprobante'])
+print("\nuuid: ",objResponseValidateXml.response['uuid'])
+print("\nstatusSat: ",objResponseValidateXml.response['statusSat'])
+print("\nstatusCodeSat: ",objResponseValidateXml.response['statusCodeSat'])
+print("\nstatus: ",objResponseValidateXml.response['status'])
 ```
 
 **Ejemplo de consumo de la libreria para validación de XML mediante token**
@@ -594,7 +618,23 @@ xml = open_file("file.xml")
 objValidate = Validate("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
 objResponseValidateXml = objValidate.ValidateXml(xml)
 
+#Respuesta
 print(objResponseValidateXml.get_response())
+#Procesamiento de la respuesta
+
+for d in objResponseValidateXml.response["detail"]:
+	print("Detail:")
+	for detail in d["detail"]:
+		print("\tmessage: ", detail["message"])
+		print("\tmessageDetail: ", detail["messageDetail"])
+		print("\tType: ", str(detail["type"]))
+	print("Section: ", d["section"])
+print("\ncadenaOriginalSAT: ",objResponseValidateXml.response['cadenaOriginalSAT'])
+print("\ncadenaOriginalComprobante: ",objResponseValidateXml.response['cadenaOriginalComprobante'])
+print("\nuuid: ",objResponseValidateXml.response['uuid'])
+print("\nstatusSat: ",objResponseValidateXml.response['statusSat'])
+print("\nstatusCodeSat: ",objResponseValidateXml.response['statusCodeSat'])
+print("\nstatus: ",objResponseValidateXml.response['status'])
 ```
 
 :pushpin: ***NOTA:*** La validación del Xml al no tener "data", ni tampoco "message" obtenemos la response que viene en formato de array asociativo.
@@ -614,6 +654,7 @@ Este metodo recibe los siguientes parametros:
 * RFC Emisor
 * RFC Receptor
 * Total declarado en el comprobante
+* UUID del comprobante a consultar
 * Url
 * Acción
 
@@ -630,15 +671,13 @@ uuid = "eb978000-95c7-4513-8d97-4b59434da45f"
 status = StatusCfdi.status(rfc_emisor, rfc_receptor, total, uuid, "https://pruebacfdiconsultaqr.cloudapp.net/ConsultaCFDIService.svc", "http://tempuri.org/IConsultaCFDIService/Consulta")
 
 print(status.get_response())
+#Datos de respuesta
+print(status.get_codigoEstatus())
+print(status.get_estado())
+print(status.get_esCancelable())
+print(status.get_estatusCancelacion())
+print(status.get_status_code())
 ```
-Las funciones correspondientes al objeto que regresan estas funciones son las siguientes
-
->- *get_status_code()*
->- *get_response()*
->- *get_codigoEstatus()*
->- *get_esCancelable()*
->- *get_estado()*
->- *get_estatusCancelacion()*
 
 </details>
 
@@ -690,8 +729,8 @@ Este método obtendra un listado de los UUID relacionados mediante PFX.
 Este método recibe los siguientes parametros:
 * Url Servicios SW
 * Usuario y contraseña ò token
-* UUID del comprobante
 * RFC del emisor
+* UUID del comprobante
 * Archivo Pfx en Base64
 * Contraseña del certificado
 
