@@ -991,9 +991,17 @@ logo = None
 extras = None
 pdf = Pdf("http://services.test.sw.com.mx","https://api.test.sw.com.mx", "user", "password")
 response = pdf.generate_pdf(xml,logo,"cfdi40",extras)
-#Procesamiento de la respuesta
-for Key,Value in response.response["data"].items():
-    print (Key,"=",Value)
+#Obtener respuesta
+print("Content B64: ", response.get_content_b64())
+print("Content Size Bytes: ", response.get_content_size_bytes())
+print("UUID: ", response.get_uuid())
+print("Serie: ", response.get_serie())
+print("Folio: ", response.get_folio())
+print("Stamp Date: ", response.get_stamp_date())
+print("Issuer Date: ", response.get_issued_date())
+print("RFC Issuer: ", response.get_rfc_issuer())
+print("RFC Receptor: ", response.get_rfc_receptor())
+print("Total: ", response.get_total())
 #Generamos el PDF
 bytes = b64decode(response.data["contentB64"], validate=True)
 f = open('file.pdf', 'wb')
