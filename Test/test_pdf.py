@@ -56,6 +56,25 @@ class TestPdf(unittest.TestCase):
         TestPdf.save_pdf(response.data['contentB64'])
         self.assertTrue(response.get_status() == "success")
         
+    def test_pdf_all_one(self):
+        xml = TestPdf.open_file("Test/resources/filePdf.xml")
+        logo = None
+        extras = None
+        pdf = Pdf("http://services.test.sw.com.mx","https://api.test.sw.com.mx",os.environ['SDKTEST_TOKEN'])
+        response = pdf.generate_pdf(xml,logo,"cfdi40",extras)
+        self.assertTrue(response.get_status() == "success")
+        print("Datos")
+        print("Content B64: ", response.get_content_b64())
+        print("Content Size Bytes: ", response.get_content_size_bytes())
+        print("UUID: ", response.get_uuid())
+        print("Serie: ", response.get_serie())
+        print("Folio: ", response.get_folio())
+        print("Stamp Date: ", response.get_stamp_date())
+        print("Issuer Date: ", response.get_issued_date())
+        print("RFC Issuer: ", response.get_rfc_issuer())
+        print("RFC Receptor: ", response.get_rfc_receptor())
+        print("Total: ", response.get_total())
+        
     def test_pdf_all(self):
         xml = TestPdf.open_file("Test/resources/filePdf.xml")
         logo = None

@@ -3,7 +3,6 @@ import datetime
 from Auth.AuthRequest import AuthRequest
 class Services(object):
     url = None
-    urlApi = None
     user = None
     password = None
     token = None
@@ -43,22 +42,3 @@ class Services(object):
     def get_password(self):
         return self.password
     
-class Service(Services):
-    def __init__(self, url, urlApi, token = None, user = None, password = None):
-        if url and urlApi:
-            self.url = url
-            self.urlApi = urlApi
-        else:
-            print("Se debe definir URL")
-        if user and password:
-            self.user = user
-            self.password = password
-        else:
-            if token:
-                self.token = token
-                self.expiration_date = 9999999999
-            else:
-                print("Se debe definir user y password o token")
-                
-    def get_urlApi(self):
-        return self.urlApi
