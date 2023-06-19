@@ -957,6 +957,90 @@ print(response_uuid.get_status())
 ```
 </details>
 
+## PDF ##
+
+<details>
+<summary>
+Generar PDF
+</summary>
+
+Este método genera y obtiene un pdf en base64 a partir de un documento XML timbrado y una plantilla. Puede ser consumido ingresando tu usuario y contraseña así como tambien ingresando solo el token. Este método recibe los siguientes parámetros:
+
+* Url servicios SW
+* Url Api
+* Usuario y contraseña o Token
+* XML timbrado
+* Logo en base 64
+* Template id
+* Datos extra (opcional)
+
+**Ejemplo de consumo de la libreria para la generación de PDF mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Pdf.Pdf import Pdf
+from base64 import b64decode
+
+#Creamos funcion para abrir nuestro archivo
+def open_file(pathFile):
+    out = open(pathFile,"r", encoding='latin_1', errors='ignore').read()
+    return out
+
+#Datos necesarios
+xml = open_file("filePdf.xml")
+logo = None
+extras = None
+pdf = Pdf("http://services.test.sw.com.mx","https://api.test.sw.com.mx", "user", "password")
+response = pdf.generate_pdf(xml,logo,"cfdi40",extras)
+#Procesamiento de la respuesta
+for Key,Value in response.response["data"].items():
+    print (Key,"=",Value)
+#Generamos el PDF
+bytes = b64decode(response.data["contentB64"], validate=True)
+f = open('file.pdf', 'wb')
+f.write(bytes)
+f.close()
+```
+
+**Ejemplo de consumo de la libreria para la generación de PDF mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Pdf.Pdf import Pdf
+from base64 import b64decode
+
+#Creamos funcion para abrir nuestro archivo
+def open_file(pathFile):
+    out = open(pathFile,"r", encoding='latin_1', errors='ignore').read()
+    return out
+
+xml = open_file("filePdf.xml")
+logo = None
+extras = {
+        'REFERENCIA': "Referencia de pruebas"
+        }
+pdf = Pdf("http://services.test.sw.com.mx","https://api.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+response = pdf.generate_pdf(xml,logo,"cfdi40",extras)
+#Procesamiento de la respuesta
+for Key,Value in response.response["data"].items():
+    print (Key,"=",Value)
+#Generamos el PDF
+bytes = b64decode(response.data["contentB64"], validate=True)
+f = open('file.pdf', 'wb')
+f.write(bytes)
+f.close()
+```
+
+:pushpin: ***NOTA:*** Existen varias plantillas de PDF para el CFDI segun el tipo de comprobante, las cuales son las siguientes:
+
+|    Version 4.0     |  Plantilla para el complemento  |   Template Id   |
+|--------------------|---------------------------------|-----------------|
+| :white_check_mark: | Factura ingreso, egreso         | cfdi40          |
+| :white_check_mark: | Nómina                          | payroll40       |
+| :white_check_mark: | Pagos                           | payment20       |
+| :white_check_mark: | Carta porte                     | billoflading40  |
+
+Para mayor referencia de estas plantillas de PDF, favor de visitar el siguiente [link](https://developers.sw.com.mx/knowledge-base/plantillas-pdf/).
+</details>
+
 ## Certificados ##
 Servicio para gestionar los certificados CSD de tu cuenta.
 Para administrar los certificados de manera gráfica, puede hacerlo desde el [Administrador de timbres](https://portal.sw.com.mx/).

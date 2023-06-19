@@ -55,6 +55,20 @@ class TestPdf(unittest.TestCase):
         response = pdf.generate_pdf(xml,logo,"cfdi40",extras)
         TestPdf.save_pdf(response.data['contentB64'])
         self.assertTrue(response.get_status() == "success")
+        
+    def test_pdf_all(self):
+        xml = TestPdf.open_file("Test/resources/filePdf.xml")
+        logo = None
+        extras = {
+            'REFERENCIA': "Referencia de pruebas"
+        }
+        pdf = Pdf("http://services.test.sw.com.mx","https://api.test.sw.com.mx",os.environ['SDKTEST_TOKEN'])
+        response = pdf.generate_pdf(xml,logo,"cfdi40",extras)
+        self.assertTrue(response.get_status() == "success")
+        print("Datos")
+        for Key,Value in response.response["data"].items():
+            print (Key,"=",Value)
+        TestPdf.save_pdf(response.data['contentB64'])
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestPdf)
 unittest.TextTestRunner(verbosity=2).run(suite)
