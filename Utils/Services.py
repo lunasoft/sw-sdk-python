@@ -26,8 +26,11 @@ class Services(object):
     def get_token(self):
         if not self.token or datetime.datetime.now().timestamp() > self.expiration_date:
             auth_obj = AuthRequest.authenticate(self.url, self.user, self.password)
-            self.token = auth_obj.get_token()
-            self.expiration_date = int(auth_obj.get_time_expire())
+            if auth_obj.get_status() == "success":
+                self.token = auth_obj.get_token()
+                self.expiration_date = int(auth_obj.get_time_expire())
+            else:
+                print("Error de autentificación")
         return self.token
 
     def get_url(self):
@@ -38,3 +41,4 @@ class Services(object):
         
     def get_password(self):
         return self.password
+    
