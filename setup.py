@@ -1,7 +1,7 @@
 import setuptools
 setuptools.setup(
     name='sw-sdk-python',
-    version='0.0.1.1dev8',
+    version='0.0.2.2dev8',
     author="Juan Gamez",
     author_email="juan.gamez@sw.com.mx",
     description="SDK para Timbrado en SmarterWeb",
