@@ -1,4 +1,7 @@
-<SolicitudAceptacionRechazo Fecha="2018-09-20T14:48:09" RfcPacEnviaSolicitud="LSO1306189R5" RfcReceptor="EKU9003173C9" xmlns="http://cancelacfd.sat.gob.mx" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<SolicitudAceptacionRechazo Fecha="2018-09-20T14:48:09" RfcPacEnviaSolicitud="LSO1306189R5" RfcReceptor="EKU9003173C9"
+    xmlns="http://cancelacfd.sat.gob.mx"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Folios>
         <UUID>FD74D156-B9B0-44A5-9906-E08182E8363E</UUID>
         <Respuesta>Aceptacion</Respuesta>
