@@ -16,7 +16,7 @@ class MyTest(unittest.TestCase):
         out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
         return out
     def testPendings(self):
-        pendings = Pendings("http://services.test.sw.com.mx", None, "david.reyes@sw.com.mx", "TEST2022")
+        pendings = Pendings("http://services.test.sw.com.mx", None, os.environ["USER_EMAIL"], os.environ["SW_PASSWORD"])
         response = pendings.pendings("EKU9003173C9")
         self.assertTrue(self.expected == response.get_status())
     

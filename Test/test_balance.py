@@ -18,7 +18,7 @@ class MyTest(unittest.TestCase):
         return out
     
     def testBalance(self):
-        balance = Balance("http://services.test.sw.com.mx", None, "david.reyes@sw.com.mx", "TEST2022")
+        balance = Balance("http://services.test.sw.com.mx", None, os.environ["USER_EMAIL"], os.environ["SW_PASSWORD"])
         response = balance.account_balance()
         self.assertTrue(self.expected == response.get_status())
     

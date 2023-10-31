@@ -16,7 +16,7 @@ class MyTest(unittest.TestCase):
         out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
         return out
     def testValidateXml(self):
-        validate = Validate("http://services.test.sw.com.mx", None, "david.reyes@sw.com.mx", "TEST2022")
+        validate = Validate("http://services.test.sw.com.mx", None, os.environ["USER_EMAIL"], os.environ["SW_PASSWORD"])
         response = validate.ValidateXml(MyTest.open_file("resources\\xml40.xml"))
         self.assertTrue(self.expected == response.get_status())
 
