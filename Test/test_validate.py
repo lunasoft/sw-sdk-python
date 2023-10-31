@@ -8,7 +8,7 @@ sys.path.append(PROJECT_ROOT)
 
 from Validate.Validate import Validate
 
-class MyTest(unittest.TestCase):
+class TestValidate(unittest.TestCase):
     expected = "success"
     message = "307. El comprobante contiene un timbre previo."
     @staticmethod
@@ -17,8 +17,8 @@ class MyTest(unittest.TestCase):
         return out
     def testValidateXml(self):
         validate = Validate("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = validate.ValidateXml(MyTest.open_file("resources\\xml40.xml"))
+        response = validate.ValidateXml(TestValidate.open_file("resources\\xml40.xml"))
         self.assertTrue(self.expected == response.get_status())
 
-suite = unittest.TestLoader().loadTestsFromTestCase(MyTest)
+suite = unittest.TestLoader().loadTestsFromTestCase(TestValidate)
 unittest.TextTestRunner(verbosity=2).run(suite)

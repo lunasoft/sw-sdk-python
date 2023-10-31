@@ -9,7 +9,7 @@ sys.path.append(PROJECT_ROOT)
 from Stamp.Stamp import Stamp
 
 
-class MyTest(unittest.TestCase):
+class TestStamp(unittest.TestCase):
     expected = "success"
     message = "307. El comprobante contiene un timbre previo."
     @staticmethod
@@ -18,12 +18,12 @@ class MyTest(unittest.TestCase):
         return out
     def testStamp(self):
         stamp = Stamp("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = stamp.stamp_v4(MyTest.open_file("resources\\xml40.xml"))
+        response = stamp.stamp_v4(TestStamp.open_file("resources\\xml40.xml"))
         if response.get_status() == "error":
             self.assertTrue(self.message == response.get_message())
         else:
             self.assertTrue(self.expected == response.get_status())
 
 
-suite = unittest.TestLoader().loadTestsFromTestCase(MyTest)
+suite = unittest.TestLoader().loadTestsFromTestCase(TestStamp)
 unittest.TextTestRunner(verbosity=2).run(suite)

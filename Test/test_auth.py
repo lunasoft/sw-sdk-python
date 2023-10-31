@@ -8,7 +8,7 @@ sys.path.append(PROJECT_ROOT)
 
 from Auth.Auth import Auth
 
-class MyTest(unittest.TestCase):
+class TestAuth(unittest.TestCase):
     expected = "success"
     message = "307. El comprobante contiene un timbre previo."
     @staticmethod
@@ -21,5 +21,5 @@ class MyTest(unittest.TestCase):
         self.assertTrue(self.expected == response.get_status())
     
 
-suite = unittest.TestLoader().loadTestsFromTestCase(MyTest)
+suite = unittest.TestLoader().loadTestsFromTestCase(TestAuth)
 unittest.TextTestRunner(verbosity=2).run(suite)

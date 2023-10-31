@@ -8,7 +8,7 @@ sys.path.append(PROJECT_ROOT)
 
 from Pendings.Pendings import Pendings
 
-class MyTest(unittest.TestCase):
+class TestPendings(unittest.TestCase):
     expected = "success"
     message = "307. El comprobante contiene un timbre previo."
     @staticmethod
@@ -21,5 +21,5 @@ class MyTest(unittest.TestCase):
         self.assertTrue(self.expected == response.get_status())
     
 
-suite = unittest.TestLoader().loadTestsFromTestCase(MyTest)
+suite = unittest.TestLoader().loadTestsFromTestCase(TestPendings)
 unittest.TextTestRunner(verbosity=2).run(suite)

@@ -9,7 +9,7 @@ sys.path.append(PROJECT_ROOT)
 from Balance.Balance import Balance
 
 
-class MyTest(unittest.TestCase):
+class TestBalance(unittest.TestCase):
     expected = "success"
     message = "307. El comprobante contiene un timbre previo."
     @staticmethod
@@ -24,5 +24,5 @@ class MyTest(unittest.TestCase):
     
     
 
-suite = unittest.TestLoader().loadTestsFromTestCase(MyTest)
+suite = unittest.TestLoader().loadTestsFromTestCase(TestBalance)
 unittest.TextTestRunner(verbosity=2).run(suite)

@@ -8,7 +8,7 @@ sys.path.append(PROJECT_ROOT)
 
 from Issue.Issue import Issue
 
-class MyTest(unittest.TestCase):
+class TestIssue(unittest.TestCase):
     expected = "success"
     message = "307. El comprobante contiene un timbre previo."
     @staticmethod
@@ -17,19 +17,19 @@ class MyTest(unittest.TestCase):
         return out
     def testIssue(self):
         issue = Issue("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = issue.issue_v4(MyTest.open_file("resources\\xml40.xml"))
+        response = issue.issue_v4(TestIssue.open_file("resources\\xml40.xml"))
         if response.get_status() == "error":
             self.assertTrue(self.message == response.get_message())
         else:
             self.assertTrue(self.expected == response.get_status())
     def testIssueJson(self):
         issue = Issue("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = issue.issue_json_v4(MyTest.open_file("resources\\cfdi.json"))
+        response = issue.issue_json_v4(TestIssue.open_file("resources\\cfdi.json"))
         if response.get_status() == "error":
             self.assertTrue(self.message == response.get_message())
         else:
             self.assertTrue(self.expected == response.get_status())
     
 
-suite = unittest.TestLoader().loadTestsFromTestCase(MyTest)
+suite = unittest.TestLoader().loadTestsFromTestCase(TestIssue)
 unittest.TextTestRunner(verbosity=2).run(suite)
