@@ -16,7 +16,7 @@ class MyTest(unittest.TestCase):
         out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
         return out
     def testAuth(self):
-        auth = Auth("http://services.test.sw.com.mx", None , os.environ["USER_EMAIL"], os.environ["SW_PASSWORD"])
+        auth = Auth("http://services.test.sw.com.mx", None , os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = auth.authentication()
         self.assertTrue(self.expected == response.get_status())
     

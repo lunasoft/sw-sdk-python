@@ -17,7 +17,7 @@ class MyTest(unittest.TestCase):
         out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
         return out
     def testStamp(self):
-        stamp = Stamp("http://services.test.sw.com.mx", None, os.environ["USER_EMAIL"], os.environ["SW_PASSWORD"])
+        stamp = Stamp("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = stamp.stamp_v4(MyTest.open_file("resources\\xml40.xml"))
         if response.get_status() == "error":
             self.assertTrue(self.message == response.get_message())

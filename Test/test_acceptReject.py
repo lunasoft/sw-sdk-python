@@ -16,21 +16,21 @@ class MyTest(unittest.TestCase):
         out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
         return out
     def testAcceptRejectCsd(self):
-        accept_reject = AcceptReject("http://services.test.sw.com.mx", None, os.environ["USER_EMAIL"], os.environ["SW_PASSWORD"])
+        accept_reject = AcceptReject("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         uuids = [{"uuid":"baf029f3-93ea-4267-a76c-1958d69bd4d8", "action":"Rechazo"}]
         response = accept_reject.accept_reject_csd("EKU9003173C9",uuids,MyTest.open_file("resources\\b64CSD.txt"), MyTest.open_file("resources\\b64Key.txt"),"12345678a")
         self.assertTrue(self.expected == response.get_status())
     def testAcceptRejectXml(self):
-        accept_reject = AcceptReject("http://services.test.sw.com.mx", None, os.environ["USER_EMAIL"], os.environ["SW_PASSWORD"])
+        accept_reject = AcceptReject("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = accept_reject.accept_reject_xml(MyTest.open_file("resources\\fileAcceptReject.xml"))
         self.assertTrue(self.expected == response.get_status())
     def testAcceptRejectPfx(self):
-        accept_reject = AcceptReject("http://services.test.sw.com.mx", None, os.environ["USER_EMAIL"], os.environ["SW_PASSWORD"])
+        accept_reject = AcceptReject("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         uuids = [{"uuid":"baf029f3-93ea-4267-a76c-1958d69bd4d8", "action":"Rechazo"}]
         response = accept_reject.accept_reject_pfx("EKU9003173C9",uuids,MyTest.open_file("resources\\b64PFX.txt"),"12345678a")
         self.assertTrue(self.expected == response.get_status())
     def testAcceptRejectUuid(self):
-        accept_reject = AcceptReject("http://services.test.sw.com.mx", None, os.environ["USER_EMAIL"], os.environ["SW_PASSWORD"])
+        accept_reject = AcceptReject("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = accept_reject.accept_reject_uuid("EKU9003173C9","baf029f3-93ea-4267-a76c-1958d69bd4d8", "Rechazo")
         self.assertTrue(self.expected == response.get_status())
 
