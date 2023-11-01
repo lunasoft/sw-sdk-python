@@ -17,7 +17,7 @@ class TestValidate(unittest.TestCase):
         return out
     def testValidateXml(self):
         validate = Validate("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = validate.ValidateXml(TestValidate.open_file("resources\\xml40.xml"))
+        response = validate.ValidateXml(TestValidate.open_file("Test/resources/xml40.xml"))
         self.assertTrue(self.expected == response.get_status())
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestValidate)

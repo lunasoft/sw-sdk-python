@@ -17,12 +17,12 @@ class TestPdf(unittest.TestCase):
     @staticmethod
     def save_pdf(contentB64):
         bytes = b64decode(contentB64, validate=True)
-        f = open('resources/filePdf.pdf', 'wb')
+        f = open('Test/resources/filePdf.pdf', 'wb')
         f.write(bytes)
         f.close()
 
     def test_pdf_auth(self):
-        xml = TestPdf.open_file("resources/filePdf.xml")
+        xml = TestPdf.open_file("Test/resources/filePdf.xml")
         logo = None
         extras = None
         pdf = Pdf("http://services.test.sw.com.mx","https://api.test.sw.com.mx", None, os.environ['SDKTEST_USER'], os.environ['SDKTEST_PASSWORD'])
@@ -30,7 +30,7 @@ class TestPdf(unittest.TestCase):
         self.assertTrue(response.get_status() == "success")
         
     def test_pdf_token(self):
-        xml = TestPdf.open_file("resources/filePdf.xml")
+        xml = TestPdf.open_file("Test/resources/filePdf.xml")
         logo = None
         extras = None
         pdf = Pdf("http://services.test.sw.com.mx","https://api.test.sw.com.mx",os.environ['SDKTEST_TOKEN'])
@@ -38,7 +38,7 @@ class TestPdf(unittest.TestCase):
         self.assertTrue(response.get_status() == "success")
         
     def test_pdf_error_token(self):
-        xml = TestPdf.open_file("resources/filePdf.xml")
+        xml = TestPdf.open_file("Test/resources/filePdf.xml")
         logo = None
         extras = None
         pdf = Pdf("http://services.test.sw.com.mx","https://api.test.sw.com.mx","T2lYQ0t4.....")
@@ -46,7 +46,7 @@ class TestPdf(unittest.TestCase):
         self.assertTrue(response.get_status() == "error")
         
     def test_pdf_extras(self):
-        xml = TestPdf.open_file("resources/filePdf.xml")
+        xml = TestPdf.open_file("Test/resources/filePdf.xml")
         logo = None
         extras = {
             'REFERENCIA': "Referencia de pruebas"
@@ -57,7 +57,7 @@ class TestPdf(unittest.TestCase):
         self.assertTrue(response.get_status() == "success")
         
     def test_pdf_all_one(self):
-        xml = TestPdf.open_file("resources/filePdf.xml")
+        xml = TestPdf.open_file("Test/resources/filePdf.xml")
         logo = None
         extras = None
         pdf = Pdf("http://services.test.sw.com.mx","https://api.test.sw.com.mx",os.environ['SDKTEST_TOKEN'])
@@ -76,7 +76,7 @@ class TestPdf(unittest.TestCase):
         print("Total: ", response.get_total())
         
     def test_pdf_all(self):
-        xml = TestPdf.open_file("resources/filePdf.xml")
+        xml = TestPdf.open_file("Test/resources/filePdf.xml")
         logo = None
         extras = {
             'REFERENCIA': "Referencia de pruebas"

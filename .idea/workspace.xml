@@ -41,12 +41,12 @@
       <change beforePath="$PROJECT_DIR$/Validate/Validate.py" beforeDir="false" afterPath="$PROJECT_DIR$/Validate/Validate.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Validate/ValidateRequest.py" beforeDir="false" afterPath="$PROJECT_DIR$/Validate/ValidateRequest.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Validate/ValidateResponse.py" beforeDir="false" afterPath="$PROJECT_DIR$/Validate/ValidateResponse.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/b64CSD.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/b64CSD.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/b64Key.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/b64Key.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/b64Pfx.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/b64Pfx.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/cfdi.json" beforeDir="false" afterPath="$PROJECT_DIR$/resources/cfdi.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/fileAcceptReject.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/fileAcceptReject.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/xml33.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/resources/b64CSD.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/resources/b64CSD.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/resources/b64Key.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/resources/b64Key.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/resources/b64Pfx.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/resources/b64Pfx.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/resources/cfdi.json" beforeDir="false" afterPath="$PROJECT_DIR$/Test/resources/cfdi.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/resources/fileAcceptReject.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Test/resources/fileAcceptReject.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/resources/xml33.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

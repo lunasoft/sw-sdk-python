@@ -18,7 +18,7 @@ class TestStamp(unittest.TestCase):
         return out
     def testStamp(self):
         stamp = Stamp("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = stamp.stamp_v4(TestStamp.open_file("resources\\xml40.xml"))
+        response = stamp.stamp_v4(TestStamp.open_file("Test/resources/xml40.xml"))
         if response.get_status() == "error":
             self.assertTrue(self.message == response.get_message())
         else:

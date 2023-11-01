@@ -20,11 +20,11 @@ class TestRelations(unittest.TestCase):
     
     def testRelationsCsd(self):
         relations = Relations("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = relations.relations_csd("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90",TestRelations.open_file("resources\\b64CSD.txt"), TestRelations.open_file("resources\\b64Key.txt"),"12345678a")
+        response = relations.relations_csd("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90",TestRelations.open_file("Test/resources/b64CSD.txt"), TestRelations.open_file("Test/resources/b64Key.txt"),"12345678a")
         self.assertTrue(self.expected == response.get_status())
     def testRelationsPfx(self):
         relations = Relations("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = relations.relations_pfx("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90",TestRelations.open_file("resources\\b64PFX.txt"),"12345678a")
+        response = relations.relations_pfx("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90",TestRelations.open_file("Test/resources/b64PFX.txt"),"12345678a")
         self.assertTrue(self.expected == response.get_status())
     def testRelationsUuid(self):
         relations = Relations("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])

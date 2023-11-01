@@ -17,14 +17,14 @@ class TestIssue(unittest.TestCase):
         return out
     def testIssue(self):
         issue = Issue("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = issue.issue_v4(TestIssue.open_file("resources\\xml40.xml"))
+        response = issue.issue_v4(TestIssue.open_file("Test/resources/xml40.xml"))
         if response.get_status() == "error":
             self.assertTrue(self.message == response.get_message())
         else:
             self.assertTrue(self.expected == response.get_status())
     def testIssueJson(self):
         issue = Issue("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = issue.issue_json_v4(TestIssue.open_file("resources\\cfdi.json"))
+        response = issue.issue_json_v4(TestIssue.open_file("Test/resources/cfdi.json"))
         if response.get_status() == "error":
             self.assertTrue(self.message == response.get_message())
         else:
