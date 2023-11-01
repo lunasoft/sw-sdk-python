@@ -1,38 +1,35 @@
-import os 
-import sys
-import base64
-import json
-import datetime
 import unittest
+import os
+import json
+import sys
+
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+sys.path.append(PROJECT_ROOT)
+
 from Issue.Issue import Issue
 
 class TestIssue(unittest.TestCase):
     expected = "success"
-    message = "401 - El rango de la fecha de generación no debe de ser mayor a 72 horas para la emisión del timbre."
+    message = "307. El comprobante contiene un timbre previo."
     @staticmethod
     def open_file(pathFile):
-        out = open(pathFile,"r", encoding='latin_1', errors='ignore').read()
+        out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
         return out
-    def test_issue_b64(self):
-        xml = TestIssue.open_file("resources/xml33.xml")
-        encoded = base64.b64encode(xml.encode('utf-8'))
-        issue = Issue("http://services.test.sw.com.mx", None, "demo", "123456789")
-        response = issue.issue_v4(encoded.decode(),True)
-        self.assertTrue(response.get_status() == self.expected or self.message == response.get_message())
-    def test_issue(self):
-        xml = TestIssue.open_file("resources/xml33.xml")
-        issue = Issue("http://services.test.sw.com.mx", None, "demo", "123456789")
-        response = issue.issue_v4(xml)
-        self.assertTrue(response.get_status() == self.expected or self.message == response.get_message())
-    def test_issue_json(self):
-        jsontxt = TestIssue.open_file("resources/cfdi.json")
-        JSON = json.loads(jsontxt)
-        fecha = (datetime.datetime.now()-datetime.timedelta(days = 1)).strftime('%Y-%m-%dT%H:%M:%S')
-        JSON['Fecha'] = fecha
-        jsontxt = json.dumps(JSON)
-        issue = Issue("http://services.test.sw.com.mx", None, "demo", "123456789")
-        response = issue.issue_json_v4(jsontxt)
-        self.assertTrue(response.get_status() == self.expected or self.message == response.get_message())
+    def testIssue(self):
+        issue = Issue("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        response = issue.issue_v4(TestIssue.open_file("Test/resources/xml40.xml"))
+        if response.get_status() == "error":
+            self.assertTrue(self.message == response.get_message())
+        else:
+            self.assertTrue(self.expected == response.get_status())
+    def testIssueJson(self):
+        issue = Issue("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        response = issue.issue_json_v4(TestIssue.open_file("Test/resources/cfdi.json"))
+        if response.get_status() == "error":
+            self.assertTrue(self.message == response.get_message())
+        else:
+            self.assertTrue(self.expected == response.get_status())
+    
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestIssue)
 unittest.TextTestRunner(verbosity=2).run(suite)
