@@ -14,5 +14,5 @@ class Cancelation(Services):
     def CancelPfx(self, uuid, rfc, b64Pfx, cPassword, motivo, foliosustitucion):
         return CancelationRequest.cancel_by_pfx(self.get_url(), self.get_token(), rfc, uuid, b64Pfx, cPassword, motivo, foliosustitucion)
 
-    def CancelUuid(self, uuid, rfc, motivo, foliosustitucion):
+    def CancelUuid(self, rfc, uuid, motivo, foliosustitucion):
         return CancelationRequest.cancel_by_uuid(self.get_url(), self.get_token(), rfc, uuid, motivo, foliosustitucion)
