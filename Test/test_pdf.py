@@ -14,6 +14,7 @@ class TestPdf(unittest.TestCase):
     def open_file(pathFile):
         out = open(pathFile,"r", encoding='latin_1', errors='ignore').read()
         return out
+    
     @staticmethod
     def save_pdf(contentB64):
         bytes = b64decode(contentB64, validate=True)
@@ -64,7 +65,7 @@ class TestPdf(unittest.TestCase):
         response = pdf.generate_pdf(xml,logo,"cfdi40",extras)
         self.assertTrue(response.get_status() == "success")
         print("Datos")
-        print("Content B64: ", response.get_content_b64())
+        #print("Content B64: ", response.get_content_b64())
         print("Content Size Bytes: ", response.get_content_size_bytes())
         print("UUID: ", response.get_uuid())
         print("Serie: ", response.get_serie())

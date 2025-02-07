@@ -8,20 +8,20 @@ sys.path.append(PROJECT_ROOT)
 
 from Balance.Balance import Balance
 
-
 class TestBalance(unittest.TestCase):
     expected = "success"
-    @staticmethod
-    def open_file(pathFile):
-        out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
-        return out
     
-    def testBalance(self):
+    def testBalance_Auth(self):
         balance = Balance("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = balance.account_balance()
         self.assertTrue(self.expected == response.get_status())
-    
-    
+        self.assertIsNotNone(response.get_data())
+        
+    def testBalance(self):
+        balance = Balance("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
+        response = balance.account_balance()
+        self.assertTrue(self.expected == response.get_status())
+        self.assertIsNotNone(response.get_data())
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestBalance)
 unittest.TextTestRunner(verbosity=2).run(suite)
