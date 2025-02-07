@@ -1,6 +1,5 @@
 import unittest
 import os
-import json
 import sys
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
@@ -9,17 +8,20 @@ sys.path.append(PROJECT_ROOT)
 from Auth.Auth import Auth
 
 class TestAuth(unittest.TestCase):
-    expected = "success"
-    message = "307. El comprobante contiene un timbre previo."
-    @staticmethod
-    def open_file(pathFile):
-        out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
-        return out
-    def testAuth(self):
+    expectedSucces = "success"
+    expectedError = "error"
+    
+    def testAuth_Success(self):
         auth = Auth("http://services.test.sw.com.mx", None , os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = auth.authentication()
-        self.assertTrue(self.expected == response.get_status())
-    
-
+        self.assertTrue(self.expectedSucces == response.get_status())
+        self.assertIsNotNone(response.get_token(),"El valor de token esta vacio")
+        
+    def testAuth_EmailError(self):
+        auth = Auth("http://services.test.sw.com.mx", None , os.environ["SDKTEST_USER"], "wrongPassword")
+        response = auth.authentication()
+        self.assertTrue(self.expectedError == response.get_status())
+        self.assertIsNotNone(response.get_message(),"El valor de message esta vacio")
+        
 suite = unittest.TestLoader().loadTestsFromTestCase(TestAuth)
 unittest.TextTestRunner(verbosity=2).run(suite)
