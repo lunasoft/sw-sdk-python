@@ -11,13 +11,13 @@ class TestAuth(unittest.TestCase):
     expectedSucces = "success"
     expectedError = "error"
     
-    def testAuth_Success(self):
+    def testAuth_success(self):
         auth = Auth("http://services.test.sw.com.mx", None , os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = auth.authentication()
         self.assertTrue(self.expectedSucces == response.get_status())
         self.assertIsNotNone(response.get_token(),"El valor de token esta vacio")
         
-    def testAuth_EmailError(self):
+    def testAuth_emailError(self):
         auth = Auth("http://services.test.sw.com.mx", None , os.environ["SDKTEST_USER"], "wrongPassword")
         response = auth.authentication()
         self.assertTrue(self.expectedError == response.get_status())

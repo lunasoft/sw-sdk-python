@@ -15,7 +15,7 @@ class TestCsd(unittest.TestCase):
         out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
         return out
     
-    def testUploadCsd_Auth(self):
+    def testUploadCsd_auth(self):
         csd_obj = Csd("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"),"12345678a")
         self.assertTrue(self.expected == response.get_status())

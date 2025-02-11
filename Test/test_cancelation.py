@@ -8,7 +8,6 @@ sys.path.append(PROJECT_ROOT)
 
 from Cancelation.Cancelation import Cancelation
 
-
 class TestCancelation(unittest.TestCase):
     expected = "success"
     @staticmethod
@@ -16,7 +15,7 @@ class TestCancelation(unittest.TestCase):
         out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
         return out
     
-    def testCancelXml_Auth(self):
+    def testCancelXml_auth(self):
         cancel = Cancelation("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = cancel.CancelXml(TestCancelation.open_file("Test/resources/cancelByXml.xml"))
         self.assertTrue(self.expected == response.get_status())
@@ -26,7 +25,7 @@ class TestCancelation(unittest.TestCase):
         response = cancel.CancelXml(TestCancelation.open_file("Test/resources/cancelByXml.xml"))
         self.assertTrue(self.expected == response.get_status())
     
-    def testCancelCsd_Auth(self):
+    def testCancelCsd_auth(self):
         cancel = Cancelation("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = cancel.CancelCsd("3dda215e-4c77-4923-94a1-627e0a04378c", "EKU9003173C9", TestCancelation.open_file("Test/resources/b64CSD.txt"), TestCancelation.open_file("Test/resources/b64Key.txt"),"12345678a", "02", "")
         self.assertTrue(self.expected == response.get_status())
@@ -36,7 +35,7 @@ class TestCancelation(unittest.TestCase):
         response = cancel.CancelCsd("3dda215e-4c77-4923-94a1-627e0a04378c", "EKU9003173C9", TestCancelation.open_file("Test/resources/b64CSD.txt"), TestCancelation.open_file("Test/resources/b64Key.txt"),"12345678a", "02", "")
         self.assertTrue(self.expected == response.get_status())
         
-    def testCancelPfx_Auth(self):
+    def testCancelPfx_auth(self):
         cancel = Cancelation("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = cancel.CancelPfx("3dda215e-4c77-4923-94a1-627e0a04378c", "EKU9003173C9", TestCancelation.open_file("Test/resources/b64PFX.txt"), "12345678a", "02", "")
         self.assertTrue(self.expected == response.get_status())
@@ -46,7 +45,7 @@ class TestCancelation(unittest.TestCase):
         response = cancel.CancelPfx("3dda215e-4c77-4923-94a1-627e0a04378c", "EKU9003173C9", TestCancelation.open_file("Test/resources/b64PFX.txt"), "12345678a", "02", "")
         self.assertTrue(self.expected == response.get_status())
     
-    def testCancelUuid_Auth(self):
+    def testCancelUuid_auth(self):
         cancel = Cancelation("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = cancel.CancelUuid("3dda215e-4c77-4923-94a1-627e0a04378c", "EKU9003173C9", "02", "")
         self.assertTrue(self.expected == response.get_status())

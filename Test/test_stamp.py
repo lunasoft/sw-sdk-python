@@ -15,7 +15,7 @@ class TestStamp(unittest.TestCase):
         out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
         return out
     
-    def testStamp_Auth(self):
+    def testStamp_auth(self):
         stamp = Stamp("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = stamp.stamp_v4(TestStamp.open_file("Test/resources/xml40Stamp.xml"))
         if response.get_status() == "error":

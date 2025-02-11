@@ -14,7 +14,7 @@ class TestRelations(unittest.TestCase):
         out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
         return out
     
-    def testRelationsCsd_Auth(self):
+    def testRelationsCsd_auth(self):
         relations = Relations("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = relations.relations_csd("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90",TestRelations.open_file("Test/resources/b64CSD.txt"), TestRelations.open_file("Test/resources/b64Key.txt"),"12345678a")
         self.assertTrue(self.expected == response.get_status())
@@ -24,7 +24,7 @@ class TestRelations(unittest.TestCase):
         response = relations.relations_csd("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90",TestRelations.open_file("Test/resources/b64CSD.txt"), TestRelations.open_file("Test/resources/b64Key.txt"),"12345678a")
         self.assertTrue(self.expected == response.get_status())
         
-    def testRelationsPfx_Auth(self):
+    def testRelationsPfx_auth(self):
         relations = Relations("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = relations.relations_pfx("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90",TestRelations.open_file("Test/resources/b64PFX.txt"),"12345678a")
         self.assertTrue(self.expected == response.get_status())
@@ -34,7 +34,7 @@ class TestRelations(unittest.TestCase):
         response = relations.relations_pfx("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90",TestRelations.open_file("Test/resources/b64PFX.txt"),"12345678a")
         self.assertTrue(self.expected == response.get_status())
         
-    def testRelationsUuid_Auth(self):
+    def testRelationsUuid_auth(self):
         relations = Relations("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = relations.relations_uuid("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90")
         self.assertTrue(self.expected == response.get_status())

@@ -15,7 +15,7 @@ class TestPendings(unittest.TestCase):
         out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
         return out
     
-    def testPendings_Auth(self):
+    def testPendings_auth(self):
         pendings = Pendings("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = pendings.pendings("EKU9003173C9")
         self.assertTrue(self.expected == response.get_status())
