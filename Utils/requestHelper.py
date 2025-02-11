@@ -19,22 +19,36 @@ class RequestHelper:
     @staticmethod
     def post_json_request(endpoint, token, payload=None):
         session = RequestHelper._get_session()
-        headers = {'Authorization': f"bearer {token}",'Content-Type': "application/json"}
+        headers = {'Authorization': f"bearer {token}",'Content-Type': "application/json",'Cache-Control': "no-cache"}
         response = session.post(endpoint, json=payload, headers=headers, verify=True, timeout=300)
         return response
     
     @staticmethod
     def post_jsontoxml_request(endpoint, token, payload=None):
         session = RequestHelper._get_session()
-        headers = {'Authorization': f"bearer {token}",'Content-Type': "application/jsontoxml"}
+        headers = {'Authorization': f"bearer {token}",'Content-Type': "application/jsontoxml",'Cache-Control': "no-cache"}
         response = session.post(endpoint, data=payload.encode('utf-8'), headers=headers, verify=True, timeout=300)
         return response
     
     @staticmethod
     def get_json_request(endpoint, token, payload=None):
         session = RequestHelper._get_session()
-        headers = {'Authorization': f"bearer {token}",'Content-Type': "application/json"}
+        headers = {'Authorization': f"bearer {token}",'Content-Type': "application/json",'Cache-Control': "no-cache"}
         response = session.get(endpoint, json=payload, headers=headers, verify=True, timeout=300)
+        return response
+    
+    @staticmethod
+    def delete_json_request(endpoint, token, payload=None):
+        session = RequestHelper._get_session()
+        headers = {'Authorization': f"bearer {token}",'Content-Type': "application/json",'Cache-Control': "no-cache"}
+        response = session.delete(endpoint, json=payload, headers=headers, verify=True, timeout=300)
+        return response
+    
+    @staticmethod
+    def put_json_request(endpoint, token, payload=None):
+        session = RequestHelper._get_session()
+        headers = {'Authorization': f"bearer {token}",'Content-Type': "application/json",'Cache-Control': "no-cache"}
+        response = session.put(endpoint, json=payload, headers=headers, verify=True, timeout=300)
         return response
         
     @staticmethod
