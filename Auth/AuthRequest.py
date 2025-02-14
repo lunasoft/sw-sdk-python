@@ -1,9 +1,11 @@
-import requests
 from Auth.AuthResponse import AuthResponse
+from Utils.requestHelper import RequestHelper
+
 class AuthRequest:
     @staticmethod
     def authenticate(url, user, password):
-        headers = {'user': user, 'password': password, 'Cache-Control': "no-cache"}
-        response = requests.request("POST", (url + "/security/authenticate"), headers = headers, verify = True, timeout = 300)
-        response_obj = AuthResponse(response)
-        return response_obj
+        payload = {'user': user, 'password': password}
+        headers = {'Content-Type': 'application/json', 'Cache-Control': "no-cache"}
+        endpoint = url + "/v2/security/authenticate"
+        response = RequestHelper.post_json_request_Without_Headers(endpoint,payload, headers)
+        return AuthResponse(response)
