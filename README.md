@@ -14,7 +14,6 @@ Librería *Python* para el consumo de los servicios de SW sapien®.
 ---
 
 ### Compatibilidad :clipboard:
-- CFDI 3.3 (Complemento de nóminas)
 - CFDI 4.0
 - Python 3 o superior
 
@@ -628,7 +627,7 @@ else:
 
 
 > [!NOTE]  
-> Puedes asignarles “None” a las propiedades que no vayas a actualizar.
+> Puedes asignarles "None" a las propiedades que no vayas a actualizar.
 
 **Ejemplo de consumo de la libreria para actualizar usuarios**
 ```py
@@ -1691,7 +1690,7 @@ Método para cargar un certificado en la cuenta.
 Este metodo recibe los siguientes parametros:
 * Url Servicios SW
 * Token
-* Tipo de certificado (Default = “stamp”) 
+* Tipo de certificado (Default = "stamp") 
 * CSD en Base64
 * Key en Base64
 * Contraseña del certificado
@@ -1705,6 +1704,152 @@ csd_obj = Csd("http://services.test.sw.com.mx", None, "user", "password")
 response = csd_obj.upload_csd("stamp", b64_csd, b64_key, password_csd)
 ```
 </details>
+
+## TimbradoV4 ##
+Servicios de timbrado con servicios adicionales para una mejor experiencia para tu sistema, los headers pueden mezclarse o usarse al mismo tiempo.
+
+### **Email** ###
+
+Este servicio recibe un comprobante CFDI para ser timbrado y recibe un listado de uno o hasta 5 correos electrónicos a los que se requiera enviar el XML timbrado.
+
+Existen varias versiones de respuesta a este método, las cuales puede consultar mas a detalle en el siguiente [link](https://developers.sw.com.mx/knowledge-base/versiones-de-respuesta-timbrado/).
+
+<details>
+  <summary>Timbrado CFDI (StampV4)</summary>
+
+**<br>Ejemplo del consumo de la librería para el servicio StampV4(Email) XML en formato string enviando correos mediante token**
+```py
+from Stamp.StampV4 import StampV4
+from Utils.response_version import ResponseVersion
+#Creamos funcion para abrir nuestro archivo
+ xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+#Creamos instancia y pasamos parametros
+ stamp = StampV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+ headers = {
+                "email": "stamp1@test.com,stamp2@test.com"
+           }
+response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V2)
+print(response.get_data())
+print(response.get_status())
+```
+
+</details>
+<details>
+  <summary>Timbrado Json (IssueJsonV4)</summary>
+
+  **Ejemplo del consumo de la librería para el servicio IssueJsonV4 (Email) Json en formato string mediante usuario y contraseña.**
+```py
+from Issue.IssueV4 import IssueV4
+from Utils.response_version import ResponseVersion
+
+            issue = IssueV4("http://services.test.sw.com.mx", None, "user", "password")
+            json_content =  open_file("cfdi.json")
+            
+            headers = {
+                "email": "test1@test.com,test2@test.com"
+            }
+            
+            response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V4)
+            print(response.get_data())
+            print(response.get_status())
+```
+</details>
+
+### **CustomId** ###
+Este servicio recibe un comprobante CFDI para ser timbrado y que recibe un header conocido como CustomID, el cuál tiene el objetivo de agregar un filtro adicional al timbrado para evitar la duplicidad de timbrado.
+El CustomId es un string y el valor es asignado por el usuario, el cual tiene un límite de 100 caracteres.
+
+Existen varias versiones de respuesta a este método, las cuales puede consultar mas a detalle en el siguiente [link](https://developers.sw.com.mx/knowledge-base/versiones-de-respuesta-timbrado/).
+
+<details>
+  <summary>Timbrado CFDI (StampV4)</summary>
+
+**<br>Ejemplo del consumo de la librería para el servicio StampV4(CustomId) XML en formato string mediante usuario y contraseña**
+```py
+from Stamp.StampV4 import StampV4
+from Utils.response_version import ResponseVersion
+#Creamos funcion para abrir nuestro archivo
+ xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+#Creamos instancia y pasamos parametros
+ stamp = StampV4("http://services.test.sw.com.mx",None, "user", "password")
+ headers = {
+                 "customid": "ISS-25-369"
+           }
+response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V3)
+print(response.get_data())
+print(response.get_status())
+```
+</details>
+
+<details>
+ <summary>Timbrado Json (IssueJsonV4)</summary>
+
+ **Ejemplo del consumo de la librería para el servicio IssueJsonV4 (CustomId) Json en formato string mediante token.**
+```py
+from Issue.IssueV4 import IssueV4
+from Utils.response_version import ResponseVersion
+
+            issue = IssueV4("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+            json_content =  open_file("cfdi.json")
+            
+            headers = {
+                  "customid": "ISS-25-369"
+            }
+            
+            response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V1)
+            print(response.get_data())
+            print(response.get_status())
+```
+</details>
+
+### **PDF** ###
+Este servicio recibe un comprobante CFDI para ser timbrado y que recibe un header conocido como extra mediante el cual se confirma la generación de un PDF del CFDI timbrado que será guardado en automático en el ADT.
+
+Existen varias versiones de respuesta a este método, las cuales puede consultar mas a detalle en el siguiente [link](https://developers.sw.com.mx/knowledge-base/versiones-de-respuesta-timbrado/).
+
+***NOTA:*** En caso de que no se cuente con una plantilla PDF customizada los PDF’s serán generados con las plantillas genéricas.
+
+<details>
+ <summary>Timbrado CFDI (StampV4)</summary>
+**Ejemplo del consumo de la librería para el servicio StampV4 (PDF) Json en formato string mediante usuario y contraseña.**[¿Como obtener token?](http://developers.sw.com.mx/knowledge-base/generar-un-token-infinito/)
+```py
+from Stamp.StampV4 import StampV4
+from Utils.response_version import ResponseVersion
+#Creamos funcion para abrir nuestro archivo
+ xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+#Creamos instancia y pasamos parametros
+ stamp = StampV4("http://services.test.sw.com.mx",None, "user", "password")
+ headers = {
+                 "pdf": "true"
+           }
+response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V2)
+print(response.get_data())
+print(response.get_status())
+```
+</details>
+
+<details>
+ <summary>Timbrado Json (IssueJsonV4)</summary>
+
+ **Ejemplo del consumo de la librería para el servicio IssueJsonV4 (PDF) Json en formato string mediante token**
+```py
+from Issue.IssueV4 import IssueV4
+from Utils.response_version import ResponseVersion
+
+            issue = IssueV4("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+            json_content =  open_file("cfdi.json")
+            
+            headers = {
+                  "pdf": "true"
+            }
+            
+            response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V4)
+            print(response.get_data())
+            print(response.get_status())
+```
+</details>
+
+----------------
 
 
 Para mayor referencia de un listado completo de los servicios favor de visitar el siguiente [link](http://developers.sw.com.mx/).
