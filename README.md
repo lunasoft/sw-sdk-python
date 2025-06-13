@@ -1715,7 +1715,7 @@ Este servicio recibe un comprobante CFDI para ser timbrado y recibe un listado d
 Existen varias versiones de respuesta a este método, las cuales puede consultar mas a detalle en el siguiente [link](https://developers.sw.com.mx/knowledge-base/versiones-de-respuesta-timbrado/).
 
 <details>
-  <summary>Timbrado CFDI (StampV4)</summary>
+  <summary>Timbrado XML</summary>
 
 **<br>Ejemplo del consumo de la librería para el servicio StampV4(Email) XML en formato string enviando correos mediante token**
 ```py
@@ -1734,10 +1734,32 @@ print(response.get_status())
 ```
 
 </details>
-<details>
-  <summary>Timbrado Json (IssueJsonV4)</summary>
 
-  **Ejemplo del consumo de la librería para el servicio IssueJsonV4 (Email) Json en formato string mediante usuario y contraseña.**
+<details>
+  <summary>Emisión Timbrado XML</summary>
+
+**<br>Ejemplo del consumo de la librería para el servicio Issue V4(Email) XML en formato string enviando correos mediante token**
+```py
+from Issue.IssueV4 import IssueV4
+from Utils.response_version import ResponseVersion
+issue = IssueV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+             xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+            
+           headers = {
+                "email": "test1@test.com,test2@test.com"
+            }
+            
+            response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
+            print(response.get_data())
+            print(response.get_status())
+```
+
+</details>
+
+<details>
+  <summary>Emisión Timbrado JSON</summary>
+
+  **Ejemplo del consumo de la librería para el servicio IssueV4 (Email) Json en formato string mediante usuario y contraseña.**
 ```py
 from Issue.IssueV4 import IssueV4
 from Utils.response_version import ResponseVersion
@@ -1762,7 +1784,7 @@ El CustomId es un string y el valor es asignado por el usuario, el cual tiene un
 Existen varias versiones de respuesta a este método, las cuales puede consultar mas a detalle en el siguiente [link](https://developers.sw.com.mx/knowledge-base/versiones-de-respuesta-timbrado/).
 
 <details>
-  <summary>Timbrado CFDI (StampV4)</summary>
+  <summary>Timbrado XML</summary>
 
 **<br>Ejemplo del consumo de la librería para el servicio StampV4(CustomId) XML en formato string mediante usuario y contraseña**
 ```py
@@ -1782,9 +1804,30 @@ print(response.get_status())
 </details>
 
 <details>
- <summary>Timbrado Json (IssueJsonV4)</summary>
+  <summary>Emisión Timbrado XML</summary>
 
- **Ejemplo del consumo de la librería para el servicio IssueJsonV4 (CustomId) Json en formato string mediante token.**
+**<br>Ejemplo del consumo de la librería para el servicio IssueV4 (CustomId)  XML en formato string enviando correos mediante token**
+```py
+from Issue.IssueV4 import IssueV4
+from Utils.response_version import ResponseVersion
+issue = IssueV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+             xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+            
+           headers = {
+                  "customid": "ISS-25-368"
+            }
+            
+            response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
+            print(response.get_data())
+            print(response.get_status())
+```
+
+</details>
+
+<details>
+ <summary>Emisión Timbrado JSON</summary>
+
+ **Ejemplo del consumo de la librería para el servicio IssueV4 (CustomId) Json en formato string mediante token.**
 ```py
 from Issue.IssueV4 import IssueV4
 from Utils.response_version import ResponseVersion
@@ -1810,8 +1853,9 @@ Existen varias versiones de respuesta a este método, las cuales puede consultar
 ***NOTA:*** En caso de que no se cuente con una plantilla PDF customizada los PDF’s serán generados con las plantillas genéricas.
 
 <details>
- <summary>Timbrado CFDI (StampV4)</summary>
-**Ejemplo del consumo de la librería para el servicio StampV4 (PDF) Json en formato string mediante usuario y contraseña.**[¿Como obtener token?](http://developers.sw.com.mx/knowledge-base/generar-un-token-infinito/)
+ <summary>Timbrado XML</summary>
+
+ **Ejemplo del consumo de la librería para el servicio StampV4 (PDF) en formato string mediante usuario y contraseña.** 
 ```py
 from Stamp.StampV4 import StampV4
 from Utils.response_version import ResponseVersion
@@ -1829,9 +1873,31 @@ print(response.get_status())
 </details>
 
 <details>
- <summary>Timbrado Json (IssueJsonV4)</summary>
+  <summary>Emisión Timbrado XML</summary>
 
- **Ejemplo del consumo de la librería para el servicio IssueJsonV4 (PDF) Json en formato string mediante token**
+**<br>Ejemplo del consumo de la librería para el servicio IssueV4 (PDF)  XML en formato string enviando correos mediante token**
+```py
+from Issue.IssueV4 import IssueV4
+from Utils.response_version import ResponseVersion
+issue = IssueV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+             xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+            
+           headers = {
+                   "pdf": "true"
+            }
+            
+            response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
+            print(response.get_data())
+            print(response.get_status())
+```
+
+</details>
+
+
+<details>
+ <summary>Emisión Timbrado JSON</summary>
+
+ **Ejemplo del consumo de la librería para el servicio IssueV4 (PDF) Json en formato string mediante token**
 ```py
 from Issue.IssueV4 import IssueV4
 from Utils.response_version import ResponseVersion
