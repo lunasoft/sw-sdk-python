@@ -10,13 +10,18 @@ from Csd.Csd import Csd
 
 class TestCsd(unittest.TestCase):
     expected = "success"
-    message = "307. El comprobante contiene un timbre previo."
     @staticmethod
     def open_file(pathFile):
         out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
         return out
-    def testUploadCsd(self):
+    
+    def testUploadCsd_auth(self):
         csd_obj = Csd("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        response = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"),"12345678a")
+        self.assertTrue(self.expected == response.get_status())
+        
+    def testUploadCsd(self):
+        csd_obj = Csd("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
         response = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"),"12345678a")
         self.assertTrue(self.expected == response.get_status())
 

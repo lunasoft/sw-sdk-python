@@ -10,16 +10,20 @@ from Pendings.Pendings import Pendings
 
 class TestPendings(unittest.TestCase):
     expected = "success"
-    message = "307. El comprobante contiene un timbre previo."
     @staticmethod
     def open_file(pathFile):
         out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
         return out
-    def testPendings(self):
+    
+    def testPendings_auth(self):
         pendings = Pendings("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = pendings.pendings("EKU9003173C9")
         self.assertTrue(self.expected == response.get_status())
-    
+        
+    def testPendings(self):
+        pendings = Pendings("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
+        response = pendings.pendings("EKU9003173C9")
+        self.assertTrue(self.expected == response.get_status())
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestPendings)
 unittest.TextTestRunner(verbosity=2).run(suite)

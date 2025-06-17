@@ -1,5 +1,9 @@
 *.pyc
+*.pyo
 dist/
 MANIFEST
 build/
+pytest_cache/
+unittest_cache/
+.vscode/
 sw_sdk_python.egg-info/

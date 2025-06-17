@@ -14,7 +14,6 @@ Librería *Python* para el consumo de los servicios de SW sapien®.
 ---
 
 ### Compatibilidad :clipboard:
-- CFDI 3.3 (Complemento de nóminas)
 - CFDI 4.0
 - Python 3 o superior
 
@@ -514,54 +513,681 @@ else:
 ```
 </details>
 
-## Balance ##
+## Usuarios V2 ##
+Métodos para realizar la consulta de informacion de usuarios, así como la creación, actualización y eliminacion  de los mismos
+
+> [!IMPORTANT]
+> Los métodos han tenido algunos cambios y mejoras con respecto a la versión 1.
 
 <details>
-<summary>
-Consultar saldo
-</summary>
+  <summary>Crear usuario</summary>
 
-Servicio mediante el cual puedes realizar la consulta de tu saldo para consumir los servicios de SW.
-
-
-Este método recibe los siguientes parametros:
-* Usuario y contraseña ó token
+<br>Este método recibe los siguientes parametros:
+* Usuario y contraseña o Token
 * Url Servicios SW
+* Url Api
+* Informacion del nuevo cliente
 
-**Ejemplo de consumo de la libreria para consultar saldo mediante usuario y contraseña**
+***Información del cliente:*** 
+
+| Dato              | Descripción                                  |
+|-------------------|----------------------------------------------|
+| name              | Nombre del usuario                           |
+| taxId             | RFC del usuario                              |
+| email             | correo del nuevo usuario                     |
+| stamps            | Cantidad de timbres a asignar                |
+| isUnlimited       | Especificar si tendra timbres ilimitados     |
+| password          | Contraseña del usuario                       |
+| notificationEmail | Correo a donde quiere recibir notificaciones |
+| phone             | Número del telefono del usuario              |
+
+**Ejemplo de consumo de la libreria para crear un usuario mediante usuario y contraseña**
 ```py
 #Importar la clase al comienzo de nuestro programa de la siguiente manera
-from Balance.Balance import Balance
+from AccountUser.AccountUser import AccountUser
 
-objBal = Balance("http://services.test.sw.com.mx", None ,"user","password")
-objResponseBal = objBal.account_balance()
-if objResponseBal.get_status() ==  "error":
-	print(objResponseBal.get_message())
-	print(objResponseBal.get_messageDetail())
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",None,user,password)
+name = "Prueba UT Hijo Python"
+taxId = "XAXX010101000"
+email = "usuario_prueba@example.com"
+stamps = 1
+isUnlimited = False
+password = "_123456789"
+notificationEmail = "usuario_prueba@example.com"
+phone = "0000000000"
+objResponseAccountUser = objAccountUser.create_user(name,taxId,email,stamps,isUnlimited,password,notificationEmail,phone)
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
 else:
-    #Respuesta
-	print(objResponseBal.get_data())
 	#Procesamiento de la respuesta
-	for Key,Value in objResponseBal.response["data"].items():
+	for Key,Value in objResponseAccountUser.response["data"].items():
   		print (Key,"=",Value)
 ```
 
-**Ejemplo de consumo de la libreria para consultar saldo mediante token**
+**Ejemplo de consumo de la libreria para crear un usuario mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AccountUser.AccountUser import AccountUser
+
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",token)
+name = "Prueba UT Hijo Python"
+taxId = "XAXX010101000"
+email = "usuario_prueba@example.com"
+stamps = 1
+isUnlimited = False
+password = "_123456789"
+notificationEmail = "usuario_prueba@example.com"
+phone = "0000000000"
+objResponseAccountUser = objAccountUser.create_user(name,taxId,email,stamps,isUnlimited,password,notificationEmail,phone)
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
+else:
+	#Procesamiento de la respuesta
+	for Key,Value in objResponseAccountUser.response["data"].items():
+  		print (Key,"=",Value)
+```
+
+:pushpin: ***NOTA:*** La contraseña debe cumplir con las siguientes politicas:
+* La contraseña no debe ser igual que el nombre de usuario.
+* La contraseña debe incluir al menos una letra mayúscula.
+* La contraseña debe incluir al menos una letra minúscula
+* La contraseña debe incluir al menos un número.
+* La contraseña debe incluir al menos un símbolo (carácter especial).
+* La contraseña no debe incluir espacios en blanco.
+* La contraseña debe tener entre 10 y 20 caracteres.
+* La contraseña no debe incluir símbolos especiales fuera de lo común.
+* Los caracteres especiales aceptados son los siguientes: !@#$%^&*()_+=\[{\]};:<>|./?,-]
+</details>
+
+<details>
+  <summary>Actualizacion de datos de usuario</summary>
+
+<br>Este método recibe los siguientes parametros:
+* Usuario y contraseña o Token
+* Url Servicios SW
+* Url Api
+* IdUser
+* Datos nuevos del cliente
+
+***Información nueva del cliente:*** 
+
+| Dato              | Descripción                              |
+|-------------------|------------------------------------------|
+| idUser            | Id del usuario a actualizar              |
+| name              | Nuevo nombre del usuario                 |
+| taxId             | Nuevo RFC del usuario                    |
+| notificationEmail | Nuevo correo para recibir notificaciones |
+| isUnlimited       | Especificar si tendra timbres ilimitados |
+| phone             | Número del telefono del usuario          |
+
+
+
+> [!NOTE]  
+> Puedes asignarles "None" a las propiedades que no vayas a actualizar.
+
+**Ejemplo de consumo de la libreria para actualizar usuarios**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AccountUser.AccountUser import AccountUser
+
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",None,user,password)
+idUser = "b9e42c65-4afa-45a2-9b0d-d67b1373a7f4"
+name = "Prueba UT Hijo Python Actualizado"
+taxId = "XAXX010101002"
+notificationEmail = None
+phone = "0000000001"
+isUnlimited = False
+objResponseAccountUser = objAccountUser.update_user(idUser,name,taxId,notificationEmail,phone,isUnlimited)
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
+else:
+	#Obtenemos como Respuesta el IdUser
+	print(objResponseAccountUser.get_data())
+```
+
+**Ejemplo de consumo de la libreria para actualizar usuarios mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AccountUser.AccountUser import AccountUser
+
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",token)
+idUser = "b9e42c65-4afa-45a2-9b0d-d67b1373a7f4"
+name = "Prueba UT Hijo Python Actualizado"
+taxId = "XAXX010101002"
+notificationEmail = None
+phone = "0000000001"
+isUnlimited = False
+objResponseAccountUser = objAccountUser.update_user(idUser,name,taxId,notificationEmail,phone,isUnlimited)
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
+else:
+	#Obtenemos como Respuesta el IdUser
+	print(objResponseAccountUser.get_data())
+```
+</details>
+
+<details>
+  <summary>Eliminación de usuario</summary>
+
+<br>Este método recibe los siguientes parametros:
+* Usuario y contraseña o Token
+* Url Servicios SW
+* Url Api
+* IdUser
+
+**Ejemplo de consumo de la libreria para eliminar usuarios**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AccountUser.AccountUser import AccountUser
+
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",None,user,password)
+idUser = "8e6ec77d-b4d6-47aa-95b9-89b354d8207b"
+objResponseAccountUser = objAccountUser.delete_user(idUser)
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
+else:
+	#Obtenemos como Respuesta el IdUser
+	print(objResponseAccountUser.get_data())
+```
+
+**Ejemplo de consumo de la libreria para eliminar usuarios mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AccountUser.AccountUser import AccountUser
+
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",token)
+idUser = "8e6ec77d-b4d6-47aa-95b9-89b354d8207b"
+objResponseAccountUser = objAccountUser.delete_user(idUser)
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
+else:
+	#Obtenemos como Respuesta el IdUser
+	print(objResponseAccountUser.get_data())
+```
+</details>
+<details>
+  <summary>Obtener todos los usuarios</summary>
+
+<br>Este método recibe los siguientes parametros:
+* Usuario y contraseña o Token de la cuenta padre.
+* Url Servicios SW
+* Url Api
+
+**Ejemplo de consumo de la libreria para obtener todos los usarios de una cuenta administradora o padre**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AccountUser.AccountUser import AccountUser
+
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",None,user,password)
+objResponseAccountUser = objAccountUser.getUser_all()
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
+else:
+	#Obtenemos los datos de los usuarios
+	for user in response.data.items:
+        print("\tName: ",user.name)
+        print("\tIdDelear: ",user.idDealer)
+        print("\tIdUser: ",user.idUser)
+        print("\t taxId: ",user.taxId)
+        print("\t username: ",user.username)
+        print("\t email: ",user.email)
+        print("\t profile: ",user.profile)
+        print("\t isAcrtive: ",user.isActive)
+        print("\t accessToken: ",user.accessToken)
+        print("\t stamps: ",user.stamps)
+        print("\t phone: ",user.phone)
+        print("\t isUnlimited: ",user.isUnlimited)
+```
+**Ejemplo de consumo de la libreria para obtener todos los usarios de una cuenta administradora o padre mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AccountUser.AccountUser import AccountUser
+
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",token)
+objResponseAccountUser = objAccountUser.getUser_all()
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
+else:
+	#Obtenemos los datos de los usuarios
+	for user in response.data.items:
+        print("\tName: ",user.name)
+        print("\tIdDelear: ",user.idDealer)
+        print("\tIdUser: ",user.idUser)
+        print("\t taxId: ",user.taxId)
+        print("\t username: ",user.username)
+        print("\t email: ",user.email)
+        print("\t profile: ",user.profile)
+        print("\t isAcrtive: ",user.isActive)
+        print("\t accessToken: ",user.accessToken)
+        print("\t stamps: ",user.stamps)
+        print("\t phone: ",user.phone)
+        print("\t isUnlimited: ",user.isUnlimited)
+```
+
+</details>
+<details>
+  <summary>Obtener usuario por ID</summary>
+
+<br>Este método recibe los siguientes parametros:
+* Usuario y contraseña o Token de la cuenta padre
+* Url Servicios SW
+* Url Api
+* IdUser
+
+**Ejemplo de consumo de la libreria para obtener usuario por ID**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AccountUser.AccountUser import AccountUser
+
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",None,user,password)
+idUser = "32501CF2-DC62-4370-B47D-25024C44E131"
+objResponseAccountUser = objAccountUser.getUser_by_idUser(idUser)
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
+else:
+	#Obtenemos la respuesta
+	for user in response.data.items:
+        print("\tName: ",user.name)
+        print("\tIdDelear: ",user.idDealer)
+        print("\tIdUser: ",user.idUser)
+        print("\t taxId: ",user.taxId)
+        print("\t username: ",user.username)
+        print("\t email: ",user.email)
+        print("\t profile: ",user.profile)
+        print("\t isAcrtive: ",user.isActive)
+        print("\t accessToken: ",user.accessToken)
+        print("\t stamps: ",user.stamps)
+        print("\t phone: ",user.phone)
+        print("\t isUnlimited: ",user.isUnlimited)
+```
+**Ejemplo de consumo de la libreria para obtener usuario por ID mediante el token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AccountUser.AccountUser import AccountUser
+
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",token)
+idUser = "32501CF2-DC62-4370-B47D-25024C44E131"
+objResponseAccountUser = objAccountUser.getUser_by_idUser(idUser)
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
+else:
+	#Obtenemos la respuesta
+	for user in response.data.items:
+        print("\tName: ",user.name)
+        print("\tIdDelear: ",user.idDealer)
+        print("\tIdUser: ",user.idUser)
+        print("\t taxId: ",user.taxId)
+        print("\t username: ",user.username)
+        print("\t email: ",user.email)
+        print("\t profile: ",user.profile)
+        print("\t isAcrtive: ",user.isActive)
+        print("\t accessToken: ",user.accessToken)
+        print("\t stamps: ",user.stamps)
+        print("\t phone: ",user.phone)
+        print("\t isUnlimited: ",user.isUnlimited)
+```
+</details>
+<details>
+  <summary>Obtener usuarios por Email</summary>
+
+<br>Este método recibe los siguientes parametros:
+* Usuario y contraseña o Token
+* Url Servicios SW
+* Url Api
+* Email del usuario a consulta.
+
+**Ejemplo de consumo de la libreria para obtener todos los usuarios**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AccountUser.AccountUser import AccountUser
+
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",None,user,password)
+email = "usuario_prueba@example.com"
+objResponseAccountUser = objAccountUser.getUser_by_email(email)
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
+else:
+	#Obtenemos la respuesta
+	for user in response.data.items:
+        print("\tName: ",user.name)
+        print("\tIdDelear: ",user.idDealer)
+        print("\tIdUser: ",user.idUser)
+        print("\t taxId: ",user.taxId)
+        print("\t username: ",user.username)
+        print("\t email: ",user.email)
+        print("\t profile: ",user.profile)
+        print("\t isAcrtive: ",user.isActive)
+        print("\t accessToken: ",user.accessToken)
+        print("\t stamps: ",user.stamps)
+        print("\t phone: ",user.phone)
+        print("\t isUnlimited: ",user.isUnlimited)
+```
+**Ejemplo de consumo de la libreria para obtener todos los usuarios mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AccountUser.AccountUser import AccountUser
+
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",token)
+email = "usuario_prueba@example.com"
+objResponseAccountUser = objAccountUser.getUser_by_email(email)
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
+else:
+	#Obtenemos la respuesta
+	for user in response.data.items:
+        print("\tName: ",user.name)
+        print("\tIdDelear: ",user.idDealer)
+        print("\tIdUser: ",user.idUser)
+        print("\t taxId: ",user.taxId)
+        print("\t username: ",user.username)
+        print("\t email: ",user.email)
+        print("\t profile: ",user.profile)
+        print("\t isAcrtive: ",user.isActive)
+        print("\t accessToken: ",user.accessToken)
+        print("\t stamps: ",user.stamps)
+        print("\t phone: ",user.phone)
+        print("\t isUnlimited: ",user.isUnlimited)
+```
+</details>
+<details>
+  <summary>Obtener usuarios por RFC</summary>
+
+<br>Este método recibe los siguientes parametros:
+* Usuario y contraseña o Token
+* Url Servicios SW
+* Url Api
+* RFC del usuario a consultar.
+
+**Ejemplo de consumo de la libreria para obtener todos los usuarios**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AccountUser.AccountUser import AccountUser
+
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",None,user,password)
+taxId = "AAAA000101010"
+objResponseAccountUser = objAccountUser.getUser_by_taxId(taxId)
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
+else:
+	#Obtenemos la respuesta
+	for user in response.data.items:
+        print("\tName: ",user.name)
+        print("\tIdDelear: ",user.idDealer)
+        print("\tIdUser: ",user.idUser)
+        print("\t taxId: ",user.taxId)
+        print("\t username: ",user.username)
+        print("\t email: ",user.email)
+        print("\t profile: ",user.profile)
+        print("\t isAcrtive: ",user.isActive)
+        print("\t accessToken: ",user.accessToken)
+        print("\t stamps: ",user.stamps)
+        print("\t phone: ",user.phone)
+        print("\t isUnlimited: ",user.isUnlimited)
+```
+**Ejemplo de consumo de la libreria para obtener todos los usuarios mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AccountUser.AccountUser import AccountUser
+
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",token)
+taxId = "AAAA000101010"
+objResponseAccountUser = objAccountUser.getUser_by_taxId(taxId)
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
+else:
+	#Obtenemos la respuesta
+	for user in response.data.items:
+        print("\tName: ",user.name)
+        print("\tIdDelear: ",user.idDealer)
+        print("\tIdUser: ",user.idUser)
+        print("\t taxId: ",user.taxId)
+        print("\t username: ",user.username)
+        print("\t email: ",user.email)
+        print("\t profile: ",user.profile)
+        print("\t isAcrtive: ",user.isActive)
+        print("\t accessToken: ",user.accessToken)
+        print("\t stamps: ",user.stamps)
+        print("\t phone: ",user.phone)
+        print("\t isUnlimited: ",user.isUnlimited)
+```
+</details>
+<details>
+  <summary>Obtener usuarios que esten activos o desactivados</summary>
+
+<br>Este método recibe los siguientes parametros:
+* Usuario y contraseña o Token
+* Url Servicios SW
+* Url Api
+* Indica si el Usuario es activo o no (true o false)
+
+**Ejemplo de consumo de la libreria para obtener todos los usuarios**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AccountUser.AccountUser import AccountUser
+
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",None,user,password)
+objResponseAccountUser = objAccountUser.getUser_by_isActive(True)
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
+else:
+	#Obtenemos la respuesta
+	for user in response.data.items:
+        print("\tName: ",user.name)
+        print("\tIdDelear: ",user.idDealer)
+        print("\tIdUser: ",user.idUser)
+        print("\t taxId: ",user.taxId)
+        print("\t username: ",user.username)
+        print("\t email: ",user.email)
+        print("\t profile: ",user.profile)
+        print("\t isAcrtive: ",user.isActive)
+        print("\t accessToken: ",user.accessToken)
+        print("\t stamps: ",user.stamps)
+        print("\t phone: ",user.phone)
+        print("\t isUnlimited: ",user.isUnlimited)
+```
+**Ejemplo de consumo de la libreria para obtener todos los usuarios mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AccountUser.AccountUser import AccountUser
+
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",token)
+objResponseAccountUser = objAccountUser.getUser_by_isActive(True)
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
+else:
+	#Obtenemos la respuesta
+	for user in response.data.items:
+        print("\tName: ",user.name)
+        print("\tIdDelear: ",user.idDealer)
+        print("\tIdUser: ",user.idUser)
+        print("\t taxId: ",user.taxId)
+        print("\t username: ",user.username)
+        print("\t email: ",user.email)
+        print("\t profile: ",user.profile)
+        print("\t isAcrtive: ",user.isActive)
+        print("\t accessToken: ",user.accessToken)
+        print("\t stamps: ",user.stamps)
+        print("\t phone: ",user.phone)
+        print("\t isUnlimited: ",user.isUnlimited)
+```
+</details>
+
+## Balance (Administración de saldo) ##
+Métodos para realizar la consulta de saldo así como la asignación y eliminación de timbres a un usuario.
+
+<details>
+  <summary>Consulta de timbres</summary>
+
+<br>Este método recibe los siguientes parametros:
+* Usuario y contraseña o Token
+* Url Servicios SW
+* Url Api
+
+> [!IMPORTANT]  
+> Los nombres de las variables en la respuesta y la petición han cambiado.
+
+**Ejemplo de consumo de la libreria para consultar el saldo mediante usuario y contraseña**
 ```py
 #Importar la clase al comienzo de nuestro programa de la siguiente manera
 from Balance.Balance import Balance
 
-objBal = Balance("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-objResponseBal = objBal.account_balance()
-if objResponseBal.get_status() ==  "error":
-	print(objResponseBal.get_message())
-	print(objResponseBal.get_messageDetail())
+objBalance = Balance("https://services.test.sw.com.mx","https://api.test.sw.com.mx", None, user, password)
+objResponseBalance = objBalance.get_balance()
+#En caso de error, obtenemos el mensaje
+if objResponseBalance.get_status() ==  "error":
+	print(objResponseBalance.get_message())
+	print(objResponseBalance.get_messageDetail())
 else:
-    #Respuesta
-	print(objResponseBal.get_data())
-	#Procesamiento de la respuesta
-	for Key,Value in objResponseBal.response["data"].items():
-  		print (Key,"=",Value)
+	#Obtenemos los datos
+	print(objResponseBalance.data.idUser)
+	print(objResponseBalance.data.idUserBalance)
+    print(objResponseBalance.data.stampsAssigned)
+	print(objResponseBalance.data.stampsUsed)
+	print(objResponseBalance.data.stampsBalance)
+```
+
+**Ejemplo de consumo de la libreria para consultar el saldo mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Balance.Balance import Balance
+
+objBalance = Balance("https://services.test.sw.com.mx","https://api.test.sw.com.mx", token)
+objResponseBalance = objBalance.get_balance()
+#En caso de error, obtenemos el mensaje
+if objResponseBalance.get_status() ==  "error":
+	print(objResponseBalance.get_message())
+	print(objResponseBalance.get_messageDetail())
+else:
+	#Obtenemos los datos
+	print(objResponseBalance.data.idUser)
+	print(objResponseBalance.data.idUserBalance)
+    print(objResponseBalance.data.stampsAssigned)
+	print(objResponseBalance.data.stampsUsed)
+	print(objResponseBalance.data.stampsBalance)
+```
+</details>
+
+<details>
+  <summary>Agregar timbres</summary>
+
+<br>Este método recibe los siguientes parametros:
+* Usuario y contraseña o Token
+* Url Servicios SW
+* Url Api
+* IdUser
+* Número de timbres
+* Comentario
+
+> [!NOTE] 
+> El servicio regresa unicamente la cantidad de timbres despues del abono de timbres.
+
+**Ejemplo de consumo de la libreria para agregar timbres  mediante usuario  y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Balance.Balance import Balance
+
+objBalance= Balance("https://services.test.sw.com.mx","https://api.test.sw.com.mx", None, user, password)
+objResponseBalance = objBalance.add_stamps("32501CF2-DC62-4370-B47D-25024C44E131",1,"Asignación de 1 timbre")
+#En caso de error, obtenemos el mensaje
+if objResponseBalance.get_status() ==  "error":
+	print(objResponseBalance.get_message())
+	print(objResponseBalance.get_messageDetail())
+else:
+	#Obtenemos la cantidad de timbres posterior a la asignación
+	print(objResponseBalance.get_data())
+```
+**Ejemplo de consumo de la libreria para agregar timbres  mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Balance.Balance import Balance
+
+objBalance = Balance("https://services.test.sw.com.mx","https://api.test.sw.com.mx", token)
+objResponseBalance = objBalance.add_stamps("32501CF2-DC62-4370-B47D-25024C44E131",1,"Asignación de 1 timbre")
+#En caso de error, obtenemos el mensaje
+if objResponseBalance.get_status() ==  "error":
+	print(objResponseBalance.get_message())
+	print(objResponseBalance.get_messageDetail())
+else:
+	#Obtenemos la cantidad de timbres posterior a la asignación
+	print(objResponseBalance.get_data())
+```
+</details>
+<details>
+  <summary>Eliminar timbres</summary>
+
+<br>Este método recibe los siguientes parametros:
+* Usuario y contraseña o Token
+* Url Servicios SW
+* Url Api
+* IdUser
+* Número de timbres
+* Comentario
+
+> [!NOTE]
+> El servicio regresa unicamente la cantidad de timbres despues de remover los timbres.
+
+**Ejemplo de consumo de la libreria para remover timbres mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Balance.Balance import Balance
+
+objBalance = Balance("https://services.test.sw.com.mx","https://api.test.sw.com.mx", None, user, password)
+objResponseBalance = objBalance.remove_stamps("32501CF2-DC62-4370-B47D-25024C44E131",1,"Remover 1 timbre por falta de pago")
+#En caso de error, obtenemos el mensaje
+if objResponseBalance.get_status() ==  "error":
+	print(objResponseBalance.get_message())
+	print(objResponseBalance.get_messageDetail())
+else:
+	#Obtenemos la cantidad de timbres posterior a remover los timbres
+	print(objResponseBalance.get_data())
+```
+
+**Ejemplo de consumo de la libreria para remover timbres mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Balance.Balance import Balance
+
+objBalance = Balance("https://services.test.sw.com.mx","https://api.test.sw.com.mx", token)
+objResponseBalance = objBalance.remove_stamps("32501CF2-DC62-4370-B47D-25024C44E131",1,"Remover 1 timbre por falta de pago")
+#En caso de error, obtenemos el mensaje
+if objResponseBalance.get_status() ==  "error":
+	print(objResponseBalance.get_message())
+	print(objResponseBalance.get_messageDetail())
+else:
+	#Obtenemos la cantidad de timbres posterior a remover los timbres
+	print(objResponseBalance.get_data())
 ```
 </details>
 
@@ -1064,7 +1690,7 @@ Método para cargar un certificado en la cuenta.
 Este metodo recibe los siguientes parametros:
 * Url Servicios SW
 * Token
-* Tipo de certificado (Default = “stamp”) 
+* Tipo de certificado (Default = "stamp") 
 * CSD en Base64
 * Key en Base64
 * Contraseña del certificado
@@ -1078,6 +1704,218 @@ csd_obj = Csd("http://services.test.sw.com.mx", None, "user", "password")
 response = csd_obj.upload_csd("stamp", b64_csd, b64_key, password_csd)
 ```
 </details>
+
+## TimbradoV4 ##
+Servicios de timbrado con servicios adicionales para una mejor experiencia para tu sistema, los headers pueden mezclarse o usarse al mismo tiempo.
+
+### **Email** ###
+
+Este servicio recibe un comprobante CFDI para ser timbrado y recibe un listado de uno o hasta 5 correos electrónicos a los que se requiera enviar el XML timbrado.
+
+Existen varias versiones de respuesta a este método, las cuales puede consultar mas a detalle en el siguiente [link](https://developers.sw.com.mx/knowledge-base/versiones-de-respuesta-timbrado/).
+
+<details>
+  <summary>Timbrado XML</summary>
+
+**<br>Ejemplo del consumo de la librería para el servicio StampV4(Email) XML en formato string enviando correos mediante token**
+```py
+from Stamp.StampV4 import StampV4
+from Utils.response_version import ResponseVersion
+#Creamos funcion para abrir nuestro archivo
+ xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+#Creamos instancia y pasamos parametros
+ stamp = StampV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+ headers = {
+                "email": "stamp1@test.com,stamp2@test.com"
+           }
+response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V2)
+print(response.get_data())
+print(response.get_status())
+```
+
+</details>
+
+<details>
+  <summary>Emisión Timbrado XML</summary>
+
+**<br>Ejemplo del consumo de la librería para el servicio Issue V4(Email) XML en formato string enviando correos mediante token**
+```py
+from Issue.IssueV4 import IssueV4
+from Utils.response_version import ResponseVersion
+issue = IssueV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+             xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+            
+           headers = {
+                "email": "test1@test.com,test2@test.com"
+            }
+            
+            response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
+            print(response.get_data())
+            print(response.get_status())
+```
+
+</details>
+
+<details>
+  <summary>Emisión Timbrado JSON</summary>
+
+  **Ejemplo del consumo de la librería para el servicio IssueV4 (Email) Json en formato string mediante usuario y contraseña.**
+```py
+from Issue.IssueV4 import IssueV4
+from Utils.response_version import ResponseVersion
+
+            issue = IssueV4("http://services.test.sw.com.mx", None, "user", "password")
+            json_content =  open_file("cfdi.json")
+            
+            headers = {
+                "email": "test1@test.com,test2@test.com"
+            }
+            
+            response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V4)
+            print(response.get_data())
+            print(response.get_status())
+```
+</details>
+
+### **CustomId** ###
+Este servicio recibe un comprobante CFDI para ser timbrado y que recibe un header conocido como CustomID, el cuál tiene el objetivo de agregar un filtro adicional al timbrado para evitar la duplicidad de timbrado.
+El CustomId es un string y el valor es asignado por el usuario, el cual tiene un límite de 100 caracteres.
+
+Existen varias versiones de respuesta a este método, las cuales puede consultar mas a detalle en el siguiente [link](https://developers.sw.com.mx/knowledge-base/versiones-de-respuesta-timbrado/).
+
+<details>
+  <summary>Timbrado XML</summary>
+
+**<br>Ejemplo del consumo de la librería para el servicio StampV4(CustomId) XML en formato string mediante usuario y contraseña**
+```py
+from Stamp.StampV4 import StampV4
+from Utils.response_version import ResponseVersion
+#Creamos funcion para abrir nuestro archivo
+ xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+#Creamos instancia y pasamos parametros
+ stamp = StampV4("http://services.test.sw.com.mx",None, "user", "password")
+ headers = {
+                 "customid": "ISS-25-369"
+           }
+response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V3)
+print(response.get_data())
+print(response.get_status())
+```
+</details>
+
+<details>
+  <summary>Emisión Timbrado XML</summary>
+
+**<br>Ejemplo del consumo de la librería para el servicio IssueV4 (CustomId)  XML en formato string enviando correos mediante token**
+```py
+from Issue.IssueV4 import IssueV4
+from Utils.response_version import ResponseVersion
+issue = IssueV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+             xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+            
+           headers = {
+                  "customid": "ISS-25-368"
+            }
+            
+            response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
+            print(response.get_data())
+            print(response.get_status())
+```
+
+</details>
+
+<details>
+ <summary>Emisión Timbrado JSON</summary>
+
+ **Ejemplo del consumo de la librería para el servicio IssueV4 (CustomId) Json en formato string mediante token.**
+```py
+from Issue.IssueV4 import IssueV4
+from Utils.response_version import ResponseVersion
+
+            issue = IssueV4("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+            json_content =  open_file("cfdi.json")
+            
+            headers = {
+                  "customid": "ISS-25-369"
+            }
+            
+            response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V1)
+            print(response.get_data())
+            print(response.get_status())
+```
+</details>
+
+### **PDF** ###
+Este servicio recibe un comprobante CFDI para ser timbrado y que recibe un header conocido como extra mediante el cual se confirma la generación de un PDF del CFDI timbrado que será guardado en automático en el ADT.
+
+Existen varias versiones de respuesta a este método, las cuales puede consultar mas a detalle en el siguiente [link](https://developers.sw.com.mx/knowledge-base/versiones-de-respuesta-timbrado/).
+
+***NOTA:*** En caso de que no se cuente con una plantilla PDF customizada los PDF’s serán generados con las plantillas genéricas.
+
+<details>
+ <summary>Timbrado XML</summary>
+
+ **Ejemplo del consumo de la librería para el servicio StampV4 (PDF) en formato string mediante usuario y contraseña.** 
+```py
+from Stamp.StampV4 import StampV4
+from Utils.response_version import ResponseVersion
+#Creamos funcion para abrir nuestro archivo
+ xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+#Creamos instancia y pasamos parametros
+ stamp = StampV4("http://services.test.sw.com.mx",None, "user", "password")
+ headers = {
+                 "pdf": "true"
+           }
+response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V2)
+print(response.get_data())
+print(response.get_status())
+```
+</details>
+
+<details>
+  <summary>Emisión Timbrado XML</summary>
+
+**<br>Ejemplo del consumo de la librería para el servicio IssueV4 (PDF)  XML en formato string enviando correos mediante token**
+```py
+from Issue.IssueV4 import IssueV4
+from Utils.response_version import ResponseVersion
+issue = IssueV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+             xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+            
+           headers = {
+                   "pdf": "true"
+            }
+            
+            response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
+            print(response.get_data())
+            print(response.get_status())
+```
+
+</details>
+
+
+<details>
+ <summary>Emisión Timbrado JSON</summary>
+
+ **Ejemplo del consumo de la librería para el servicio IssueV4 (PDF) Json en formato string mediante token**
+```py
+from Issue.IssueV4 import IssueV4
+from Utils.response_version import ResponseVersion
+
+            issue = IssueV4("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+            json_content =  open_file("cfdi.json")
+            
+            headers = {
+                  "pdf": "true"
+            }
+            
+            response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V4)
+            print(response.get_data())
+            print(response.get_status())
+```
+</details>
+
+----------------
 
 
 Para mayor referencia de un listado completo de los servicios favor de visitar el siguiente [link](http://developers.sw.com.mx/).
