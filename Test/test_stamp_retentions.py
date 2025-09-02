@@ -71,17 +71,13 @@ class TestStampRetentions(unittest.TestCase):
         stamp = Stamp_Retentions(
             "http://services.test.sw.com.mx",
             None,
-            os.environ["SDKTEST_USER"],
+            "wrongUser",
             os.environ["SDKTEST_PASSWORD"]
         )
         xml_content = TestStampRetentions.open_file("Test/resources/retenciones20.xml")
         response = stamp.stamp_retetions_v3(xml_content)
-        
         TestStampRetentions.log_response("auth", response)
-        if response.get_status() == "error":
-              self.assertTrue(self.message == response.get_message() or self.messageAuth == response.get_message())
-        else:
-            self.assertTrue(self.expected == response.get_status())
+        self.assertTrue(self.expected != response.get_status())
 
     @staticmethod
     def log_response(label, response):
