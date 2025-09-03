@@ -1917,7 +1917,53 @@ from Utils.response_version import ResponseVersion
 
 ----------------
 
+## Timbrado Retenciones ##
 
+<details>
+<summary>
+Timbrado Retenciones V3
+</summary>
+
+**TimbrarRetencionesV3**  
+Recibe el contenido de un **XML** de retenciones ya sellado en formato **String**. Si el comprobante y el token/autenticación son correctos, devuelve el complemento timbrado en un string, en caso contrario lanza un error.
+
+Este método recibe los siguientes parámetros:
+* Url Servicios SW
+* Usuario y contraseña o Token
+* Archivo en formato **String**
+
+**Ejemplo de consumo de la librería para timbrar XML de retenciones en formato string utilizando token**
+```python
+from Stamp_Retentions.Stamp_Retentions import Stamp_Retentions
+
+xml = open("retencion.xml", "r", encoding='utf-8').read()
+stamp_ret = Stamp_Retentions("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response = stamp_ret.stamp_retetions_v3(xml)
+
+if response.get_status() == "error":
+    print(response.get_message())
+    print(response.get_messageDetail())
+else:
+    print(response.get_data())
+```
+
+**Ejemplo de consumo de la librería para timbrar XML de retenciones usando usuario y contraseña**
+```python
+from Stamp_Retentions.Stamp_Retentions import Stamp_Retentions
+
+xml = open("retencion.xml", "r", encoding='utf-8').read()
+stamp_ret = Stamp_Retentions("http://services.test.sw.com.mx", None, "user", "password")
+response = stamp_ret.stamp_retetions_v3(xml)
+
+if response.get_status() == "error":
+    print(response.get_message())
+    print(response.get_messageDetail())
+else:
+    print(response.get_data())
+```
+</details>
+
+----------------
 Para mayor referencia de un listado completo de los servicios favor de visitar el siguiente [link](http://developers.sw.com.mx/).
 
 Si deseas contribuir a la librería o tienes dudas envianos un correo a **soporte@sw.com.mx**.
