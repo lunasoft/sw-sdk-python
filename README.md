@@ -1917,7 +1917,160 @@ from Utils.response_version import ResponseVersion
 
 ----------------
 
+## Timbrado Retenciones ##
 
+<details>
+<summary>
+Timbrado Retenciones V3
+</summary>
+
+**TimbrarRetencionesV3**  
+Recibe el contenido de un **XML** de retenciones ya sellado en formato **String**. Si el comprobante y el token/autenticación son correctos, devuelve el complemento timbrado en un string, en caso contrario lanza un error.
+
+Este método recibe los siguientes parámetros:
+* Url Servicios SW
+* Usuario y contraseña o Token
+* Archivo en formato **String**
+
+**Ejemplo de consumo de la librería para timbrar XML de retenciones en formato string utilizando token**
+```python
+from Stamp_Retentions.Stamp_Retentions import Stamp_Retentions
+
+xml = open("retencion.xml", "r", encoding='utf-8').read()
+stamp_ret = Stamp_Retentions("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response = stamp_ret.stamp_retetions_v3(xml)
+
+if response.get_status() == "error":
+    print(response.get_message())
+    print(response.get_messageDetail())
+else:
+    print(response.get_data())
+```
+
+**Ejemplo de consumo de la librería para timbrar XML de retenciones usando usuario y contraseña**
+```python
+from Stamp_Retentions.Stamp_Retentions import Stamp_Retentions
+
+xml = open("retencion.xml", "r", encoding='utf-8').read()
+stamp_ret = Stamp_Retentions("http://services.test.sw.com.mx", None, "user", "password")
+response = stamp_ret.stamp_retetions_v3(xml)
+
+if response.get_status() == "error":
+    print(response.get_message())
+    print(response.get_messageDetail())
+else:
+    print(response.get_data())
+```
+</details>
+
+## Cancelación de Retenciones ##
+
+Este servicio se utiliza para cancelar documentos de retenciones y se puede hacer mediante varios metodos **Cancelación por XML**, **Cancelación CSD** y **Cancelación PFX**.
+
+<details>
+<summary>
+Cancelacion por XML
+</summary>
+
+Como su nombre lo indica, este método realiza la cancelacion mediante un XML de cancelación.
+
+Este método recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña o token
+* XML de cancelación en formato **String**
+
+**Ejemplo de consumo de la libreria para cancelar retención por XML mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Cancelation_Retentions.CancelationRetentions import CancelationRetentions
+
+xml_cancel = open("cancelacion_retencion.xml", "r", encoding='utf-8').read()
+objCancel = CancelationRetentions("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+objResponseCancel = objCancel.CancelaUno(xml_cancel)
+
+if objResponseCancel.get_status() == "error":
+	print(objResponseCancel.get_message())
+	print(objResponseCancel.get_messageDetail())
+else:
+	print(objResponseCancel.get_data())
+```
+</details>
+
+<details>
+<summary>
+Cancelacion por CSD
+</summary>
+
+Como su nombre lo indica, este método realiza la cancelacion mediante los CSD.
+
+Este método recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña o token
+* UUID de la retención
+* RFC emisor
+* Certificado (.cer)
+* Key (.key)
+* Password del archivo key
+* Motivo
+* Folio Sustitución (Si el motivo es 01)
+
+**Ejemplo de consumo de la libreria para cancelar retención con CSD con motivo de cancelación 02 sin relación a documento mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Cancelation_Retentions.CancelationRetentions import CancelationRetentions
+
+#Datos
+uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
+motivo = "02"
+foliosustitucion = ""
+objCancel = CancelationRetentions("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+objResponseCancelCSD = objCancel.CancelaUnoCSD(uuid, rfc, b64cert, b64key, cPassword, motivo, foliosustitucion)
+
+if objResponseCancelCSD.get_status() == "error":
+	print(objResponseCancelCSD.get_message())
+	print(objResponseCancelCSD.get_messageDetail())
+else:
+	print(objResponseCancelCSD.get_data())
+```
+</details>
+
+<details>
+<summary>
+Cancelacion por PFX
+</summary>
+
+Como su nombre lo indica, este método realiza la cancelacion mediante el PFX.
+
+Este método recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña o token
+* UUID de la retención
+* RFC emisor
+* Archivo PFX 
+* Password (CSD)
+* Motivo
+* Folio Sustitución
+
+**Ejemplo de consumo de la libreria para cancelar retención con PFX con motivo de cancelación 02 sin relación a documento mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Cancelation_Retentions.CancelationRetentions import CancelationRetentions
+
+uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
+motivo = "02"
+foliosustitucion = ""
+objCancel = CancelationRetentions("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+objResponseCancelPfx = objCancel.CancelaUnoPFX(uuid, rfc, b64Pfx, cPassword, motivo, foliosustitucion)
+
+if objResponseCancelPfx.get_status() == "error":
+	print(objResponseCancelPfx.get_message())
+	print(objResponseCancelPfx.get_messageDetail())
+else:
+	print(objResponseCancelPfx.get_data())
+```
+</details>
+
+----------------
 Para mayor referencia de un listado completo de los servicios favor de visitar el siguiente [link](http://developers.sw.com.mx/).
 
 Si deseas contribuir a la librería o tienes dudas envianos un correo a **soporte@sw.com.mx**.
