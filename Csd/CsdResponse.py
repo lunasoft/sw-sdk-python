@@ -11,6 +11,8 @@ class CsdResponse(Response):
                     self.status = self.response["status"]
                     self.data = self.response["data"]
                 else:
+                    if "status" in self.response:
+                        self.status = self.response["status"]
                     self.message = self.response["message"]
                     if "messageDetail" in self.response: 
                         self.messageDetail = self.response["messageDetail"]
