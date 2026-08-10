@@ -90,17 +90,31 @@ class TestCsd(unittest.TestCase):
         self.assertTrue("Debe especificar el RFC" == str(context.exception))
 
     #Eliminación de certificado: destructiva sobre la cuenta de pruebas.
-    #Sube el CSD de pruebas, obtiene su número y desactiva ese mismo certificado.
+    #Sube el CSD de pruebas, ubica su número y desactiva ese mismo certificado,
+    #nunca el primero de la lista, que puede pertenecer a otro RFC.
     #Para volver a habilitarlo basta con ejecutar testUploadCsd.
     @unittest.skipUnless(os.environ.get("SDKTEST_CSD_DELETE"), "Prueba destructiva, definir SDKTEST_CSD_DELETE para ejecutarla")
     def testDisableCsd(self):
         csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
-        upload = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"), "12345678a")
+        b64_cert = TestCsd.open_file("Test/resources/b64CSD.txt")
+        upload = csd_obj.upload_csd("stamp", b64_cert, TestCsd.open_file("Test/resources/b64Key.txt"), "12345678a")
         self.assertTrue(self.expected == upload.get_status())
-        certificate_number = self.first_certificate()["certificate_number"]
+        certificate_number = self.certificate_number_of(b64_cert)
         response = csd_obj.disable_csd(certificate_number)
         self.assertTrue(self.expected == response.get_status())
         self.assertIsNotNone(response.get_data())
+        self.assertTrue(certificate_number in str(response.get_data()))
+
+    def certificate_number_of(self, b64_cert):
+        """Ubica en la cuenta el certificado cuyo Base64 coincide con el recibido.
+        upload_csd sólo regresa un texto de confirmación, sin el número de certificado."""
+        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
+        response = csd_obj.get_list_csd()
+        self.assertTrue(self.expected == response.get_status())
+        for certificado in response.get_data():
+            if certificado["csd_certificate"].strip() == b64_cert.strip():
+                return certificado["certificate_number"]
+        self.fail("No se encontró en la cuenta el certificado de pruebas recién cargado")
 
     def first_certificate(self):
         """Regresa el primer certificado listado en la cuenta de pruebas.
