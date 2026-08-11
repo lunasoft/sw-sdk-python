@@ -51,3 +51,20 @@ class CsdRequest:
         endpoint = f"{url}/certificates/{certificate_number}"
         response = RequestHelper.delete_json_request(endpoint,token)
         return CsdResponse(response)
+
+    @staticmethod
+    def get_list_csd_by_type(url, token, certificate_type):
+        """Consulta los certificados de la cuenta que son de un tipo (stamp o fiel)."""
+        CsdRequest._validate_required(certificate_type, "Debe especificar el tipo de certificado")
+        endpoint = f"{url}/certificates/type/{certificate_type}"
+        response = RequestHelper.get_json_request(endpoint,token)
+        return CsdResponse(response)
+
+    @staticmethod
+    def get_active_csd(url, token, rfc, certificate_type):
+        """Consulta el certificado activo de un RFC para un tipo (stamp o fiel)."""
+        CsdRequest._validate_required(rfc, "Debe especificar el RFC")
+        CsdRequest._validate_required(certificate_type, "Debe especificar el tipo de certificado")
+        endpoint = f"{url}/certificates/rfc/{rfc}/{certificate_type}"
+        response = RequestHelper.get_json_request(endpoint,token)
+        return CsdResponse(response)

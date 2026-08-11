@@ -1851,6 +1851,106 @@ print(response.get_data())
 
 <details>
 <summary>
+Consultar Certificados por Tipo
+</summary>
+
+Método para consultar los certificados de la cuenta que corresponden a un tipo, **stamp** o **fiel**.
+
+Este metodo recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña o token
+* Tipo de certificado
+
+**Ejemplo de consumo de la libreria para la consulta de certificados por tipo mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Csd.Csd import Csd
+
+csd_obj = Csd("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response = csd_obj.get_list_csd_by_type("stamp")
+
+if response.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	for certificado in response.get_data():
+		print("certificate_number: ", certificado["certificate_number"])
+		print("issuer_rfc: ", certificado["issuer_rfc"])
+		print("certificate_type: ", certificado["certificate_type"])
+		print("is_active: ", certificado["is_active"])
+```
+
+**Ejemplo de consumo de la libreria para la consulta de certificados por tipo mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Csd.Csd import Csd
+
+csd_obj = Csd("http://services.test.sw.com.mx", None, "user", "password")
+response = csd_obj.get_list_csd_by_type("stamp")
+
+print(response.get_status())
+print(response.get_data())
+```
+
+:pushpin: ***NOTA:*** Si no hay certificados de ese tipo, el servicio responde `status` **success** con `data` vacío; no se trata de un error.
+
+:pushpin: ***NOTA:*** Si el tipo viene vacío o en `None`, la librería lanza `ValueError("Debe especificar el tipo de certificado")` sin ejecutar la petición.
+</details>
+
+<details>
+<summary>
+Consultar Certificado Activo por RFC
+</summary>
+
+Método para consultar el certificado **activo** de un RFC para un tipo determinado, **stamp** o **fiel**.
+
+Este metodo recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña o token
+* RFC del emisor
+* Tipo de certificado
+
+**Ejemplo de consumo de la libreria para la consulta del certificado activo mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Csd.Csd import Csd
+
+csd_obj = Csd("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response = csd_obj.get_active_csd("EKU9003173C9", "stamp")
+
+if response.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	certificado = response.get_data()
+	print("certificate_number: ", certificado["certificate_number"])
+	print("issuer_business_name: ", certificado["issuer_business_name"])
+	print("valid_from: ", certificado["valid_from"])
+	print("valid_to: ", certificado["valid_to"])
+	print("is_active: ", certificado["is_active"])
+```
+
+**Ejemplo de consumo de la libreria para la consulta del certificado activo mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Csd.Csd import Csd
+
+csd_obj = Csd("http://services.test.sw.com.mx", None, "user", "password")
+response = csd_obj.get_active_csd("EKU9003173C9", "stamp")
+
+print(response.get_status())
+print(response.get_data())
+```
+
+:pushpin: ***NOTA:*** A diferencia de la consulta por RFC, aquí `data` es un objeto único con el certificado activo, no un arreglo.
+
+:pushpin: ***NOTA:*** Si el RFC no tiene un certificado activo de ese tipo, el servicio responde `status` **error**.
+
+:pushpin: ***NOTA:*** Si el RFC o el tipo vienen vacíos o en `None`, la librería lanza `ValueError` sin ejecutar la petición.
+</details>
+
+<details>
+<summary>
 Eliminar Certificado
 </summary>
 
