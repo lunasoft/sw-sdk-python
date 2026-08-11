@@ -1801,7 +1801,7 @@ print(response.get_data())
 
 :pushpin: ***NOTA:*** A diferencia de la consulta general, aquí `data` es un objeto único, no un arreglo.
 
-:pushpin: ***NOTA:*** Si el número de certificado viene vacío o en `None`, la librería lanza `ValueError("Debe especificar el número de certificado")` sin ejecutar la petición.
+:pushpin: ***NOTA:*** El parámetro es obligatorio. La librería no lo valida en local: se envía tal cual y responde el servicio.
 </details>
 
 <details>
@@ -1846,7 +1846,7 @@ print(response.get_status())
 print(response.get_data())
 ```
 
-:pushpin: ***NOTA:*** Si el RFC viene vacío o en `None`, la librería lanza `ValueError("Debe especificar el RFC")` sin ejecutar la petición.
+:pushpin: ***NOTA:*** El parámetro es obligatorio. La librería no lo valida en local: se envía tal cual y responde el servicio.
 </details>
 
 <details>
@@ -1894,7 +1894,7 @@ print(response.get_data())
 
 :pushpin: ***NOTA:*** Si no hay certificados de ese tipo, el servicio responde `status` **success** con `data` vacío; no se trata de un error.
 
-:pushpin: ***NOTA:*** Si el tipo viene vacío o en `None`, la librería lanza `ValueError("Debe especificar el tipo de certificado")` sin ejecutar la petición.
+:pushpin: ***NOTA:*** El parámetro es obligatorio. La librería no lo valida en local: se envía tal cual y responde el servicio.
 </details>
 
 <details>
@@ -1946,7 +1946,7 @@ print(response.get_data())
 
 :pushpin: ***NOTA:*** Si el RFC no tiene un certificado activo de ese tipo, el servicio responde `status` **error**.
 
-:pushpin: ***NOTA:*** Si el RFC o el tipo vienen vacíos o en `None`, la librería lanza `ValueError` sin ejecutar la petición.
+:pushpin: ***NOTA:*** El parámetro es obligatorio. La librería no lo valida en local: se envía tal cual y responde el servicio.
 </details>
 
 <details>
@@ -1991,7 +1991,7 @@ print(response.get_data())
 
 :pushpin: ***NOTA:*** La operación desactiva el certificado en la cuenta. Para volver a utilizarlo es necesario cargarlo de nuevo con **Cargar Certificado**.
 
-:pushpin: ***NOTA:*** Si el número de certificado viene vacío o en `None`, la librería lanza `ValueError("Debe especificar el número de certificado")` sin ejecutar la petición.
+:pushpin: ***NOTA:*** El parámetro es obligatorio. La librería no lo valida en local: se envía tal cual y responde el servicio.
 </details>
 
 ## TimbradoV4 ##
