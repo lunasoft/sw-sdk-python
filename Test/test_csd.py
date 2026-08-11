@@ -28,7 +28,7 @@ class TestCsd(unittest.TestCase):
         response = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"),"12345678a")
         self.assertTrue(self.expected == response.get_status())
 
-    #Consulta de certificados
+    #UT Consulta de certificados
     def testGetListCsd(self):
         csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
         response = csd_obj.get_list_csd()
@@ -67,7 +67,7 @@ class TestCsd(unittest.TestCase):
         self.assertTrue("error" == response.get_status())
         self.assertIsNotNone(response.get_message(), "El valor de message esta vacio")
 
-    #Validación de parámetros: falla antes de ejecutar la petición
+    #UT de validación de parámetros
     def testGetCsd_emptyCertificateNumber(self):
         csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
         with self.assertRaises(ValueError) as context:
@@ -90,7 +90,7 @@ class TestCsd(unittest.TestCase):
             csd_obj.get_list_csd_by_rfc(None)
         self.assertTrue("Debe especificar el RFC" == str(context.exception))
 
-    #Paridad con .NET: GetListCsdByType y SearchActiveCsd
+    #UT Consulta por tipo y certificado activo
     def testGetListCsdByType(self):
         csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
         response = csd_obj.get_list_csd_by_type("stamp")
@@ -133,10 +133,8 @@ class TestCsd(unittest.TestCase):
         with self.assertRaises(ValueError):
             csd_obj.get_active_csd("EKU9003173C9", None)
 
-    #Eliminación de certificado: destructiva sobre la cuenta de pruebas.
-    #Sube el CSD de pruebas, ubica su número y desactiva ese mismo certificado,
-    #nunca el primero de la lista, que puede pertenecer a otro RFC.
-    #Para volver a habilitarlo basta con ejecutar testUploadCsd.
+    #UT de eliminación, destructiva: desactiva el CSD de pruebas recién cargado,
+    #no el primero de la lista. Para rehabilitarlo basta con ejecutar testUploadCsd.
     @unittest.skipUnless(os.environ.get("SDKTEST_CSD_DELETE"), "Prueba destructiva, definir SDKTEST_CSD_DELETE para ejecutarla")
     def testDisableCsd(self):
         csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
@@ -214,7 +212,7 @@ class TestCsdResponse(unittest.TestCase):
         self.assertTrue("Certificado 30001000000400002434 desactivado." == response.get_data())
 
     def testParse_error(self):
-        #Regresión: antes de esta versión status quedaba en None en la rama de error.
+        #Regresión: antes status quedaba en None en la rama de error.
         body = '{"message":"Certificado no encontrado","messageDetail":"Detalle del error","data":null,"status":"error"}'
         response = CsdResponse(FakeResponse(400, body))
         self.assertTrue("error" == response.get_status())
