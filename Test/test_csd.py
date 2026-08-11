@@ -14,7 +14,8 @@ class TestCsd(unittest.TestCase):
     url = "http://services.test.sw.com.mx"
     @staticmethod
     def open_file(pathFile):
-        out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
+        with open(pathFile, "r", encoding='ansi', errors='ignore') as file:
+            out = file.read()
         return out
     
     def testUploadCsd_auth(self):
@@ -89,6 +90,49 @@ class TestCsd(unittest.TestCase):
             csd_obj.get_list_csd_by_rfc(None)
         self.assertTrue("Debe especificar el RFC" == str(context.exception))
 
+    #Paridad con .NET: GetListCsdByType y SearchActiveCsd
+    def testGetListCsdByType(self):
+        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
+        response = csd_obj.get_list_csd_by_type("stamp")
+        self.assertTrue(self.expected == response.get_status())
+        self.assertTrue(isinstance(response.get_data(), list))
+        for certificado in response.get_data():
+            self.assertTrue("stamp" == certificado["certificate_type"])
+
+    def testGetListCsdByType_withoutResults(self):
+        #Un tipo sin certificados responde success con data vacío, no es un error.
+        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
+        response = csd_obj.get_list_csd_by_type("fiel")
+        self.assertTrue(self.expected == response.get_status())
+        self.assertTrue(isinstance(response.get_data(), list))
+
+    def testGetActiveCsd(self):
+        #El RFC y el tipo se toman de la propia cuenta, nunca se hardcodean.
+        certificado = self.first_active_certificate()
+        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
+        response = csd_obj.get_active_csd(certificado["issuer_rfc"], certificado["certificate_type"])
+        self.assertTrue(self.expected == response.get_status())
+        self.assertTrue(isinstance(response.get_data(), dict))
+        self.assertTrue(certificado["issuer_rfc"] == response.get_data()["issuer_rfc"])
+        self.assertTrue(response.get_data()["is_active"])
+
+    def testGetActiveCsd_rfcNotFound(self):
+        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
+        response = csd_obj.get_active_csd("XAXX010101000", "stamp")
+        self.assertTrue("error" == response.get_status())
+        self.assertIsNotNone(response.get_message(), "El valor de message esta vacío")
+
+    def testGetListCsdByType_emptyType(self):
+        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
+        with self.assertRaises(ValueError) as context:
+            csd_obj.get_list_csd_by_type("")
+        self.assertTrue("Debe especificar el tipo de certificado" == str(context.exception))
+
+    def testGetActiveCsd_emptyType(self):
+        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
+        with self.assertRaises(ValueError):
+            csd_obj.get_active_csd("EKU9003173C9", None)
+
     #Eliminación de certificado: destructiva sobre la cuenta de pruebas.
     #Sube el CSD de pruebas, ubica su número y desactiva ese mismo certificado,
     #nunca el primero de la lista, que puede pertenecer a otro RFC.
@@ -104,6 +148,17 @@ class TestCsd(unittest.TestCase):
         self.assertTrue(self.expected == response.get_status())
         self.assertIsNotNone(response.get_data())
         self.assertTrue(certificate_number in str(response.get_data()))
+
+    def first_active_certificate(self):
+        """Regresa el primer certificado activo de la cuenta de pruebas.
+        Omite la prueba si la cuenta no tiene ninguno activo."""
+        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
+        response = csd_obj.get_list_csd()
+        self.assertTrue(self.expected == response.get_status())
+        for certificado in response.get_data():
+            if certificado["is_active"]:
+                return certificado
+        self.skipTest("La cuenta de pruebas no tiene certificados activos")
 
     def certificate_number_of(self, b64_cert):
         """Ubica en la cuenta el certificado cuyo Base64 coincide con el recibido.
