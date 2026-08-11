@@ -1731,6 +1731,7 @@ else:
 	for certificado in response.get_data():
 		print("issuer_rfc: ", certificado["issuer_rfc"])
 		print("certificate_number: ", certificado["certificate_number"])
+		print("csd_certificate: ", certificado["csd_certificate"])
 		print("is_active: ", certificado["is_active"])
 		print("issuer_business_name: ", certificado["issuer_business_name"])
 		print("valid_from: ", certificado["valid_from"])
@@ -1780,6 +1781,7 @@ else:
 	certificado = response.get_data()
 	print("issuer_rfc: ", certificado["issuer_rfc"])
 	print("certificate_number: ", certificado["certificate_number"])
+	print("csd_certificate: ", certificado["csd_certificate"])
 	print("is_active: ", certificado["is_active"])
 	print("issuer_business_name: ", certificado["issuer_business_name"])
 	print("valid_from: ", certificado["valid_from"])
