@@ -38,17 +38,23 @@ class TestStorage(unittest.TestCase):
         self.assertIsNone(response.get_url_xml())
 
     def test_get_by_uuid_invalidFormat(self):
-        #PENDIENTE DE VERIFICAR CONTRA EL AMBIENTE: no se pudo ejecutar la consulta con un
-        #UUID mal formado, así que se afirma únicamente el contrato común a las dos respuestas
-        #posibles (400 con message, o 200 con records vacío). Al correrla se fija la aserción exacta.
+        #Un UUID mal formado responde igual que uno inexistente: 200 success con records
+        #vacío y sin message. El servicio no valida el formato.
         storage_obj = Storage(TestStorage.url, TestStorage.urlApi, os.environ["SDKTEST_TOKEN"])
         response = storage_obj.get_by_uuid(TestStorage.uuidInvalid)
-        self.assertIsNotNone(response.get_status_code())
-        self.assertIn(response.get_status(), ("success", "error"))
-        if response.get_status() == "error":
-            self.assertIsNotNone(response.get_message(), "El valor de message esta vacio")
-        else:
-            self.assertTrue(len(response.get_records()) == 0)
+        self.assertTrue(200 == response.get_status_code())
+        self.assertTrue(self.expected == response.get_status())
+        self.assertTrue(len(response.get_records()) == 0)
+
+    def test_get_by_uuid_emptyString(self):
+        #Una cadena vacía deja la ruta en /datawarehouse/v1/live/, que es el buscador por
+        #fechas: responde 400 pidiendo la fecha de inicio. No regresa un recurso distinto
+        #al pedido, así que el valor se envía tal cual y responde el servicio.
+        storage_obj = Storage(TestStorage.url, TestStorage.urlApi, os.environ["SDKTEST_TOKEN"])
+        response = storage_obj.get_by_uuid("")
+        self.assertTrue("error" == response.get_status())
+        self.assertIsNotNone(response.get_message(), "El valor de message esta vacio")
+        self.assertTrue(len(response.get_records()) == 0)
 
     def test_get_by_uuid_invalidToken(self):
         storage_obj = Storage(TestStorage.url, TestStorage.urlApi, "T2lYQ0t4.....")
