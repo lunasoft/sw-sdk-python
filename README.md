@@ -2010,7 +2010,7 @@ Este metodo recibe los siguientes parametros:
 * Url Servicios SW
 * Url Api
 * Token
-* UUID del CFDI
+* UUID del CFDI, como cadena o como `uuid.UUID`
 
 **Ejemplo de consumo de la libreria para la recuperación de un XML mediante token**
 ```py
@@ -2025,7 +2025,8 @@ if response.get_status() ==  "error":
 	print(response.get_messageDetail())
 else:
 	print(response.get_status())
-	#Un UUID sin coincidencias regresa una lista vacía.
+	#Un UUID sin coincidencias regresa una lista vacía. El comprobante recién timbrado
+	#tarda alrededor de un minuto en quedar disponible en la consulta.
 	for registro in response.get_records():
 		print("UUID: ", registro.get("uuid"))
 		print("Serie: ", registro.get("serie"))
@@ -2060,7 +2061,7 @@ Este metodo recibe los siguientes parametros:
 * Url Servicios SW
 * Url Api
 * Usuario y contraseña
-* UUID del CFDI
+* UUID del CFDI, como cadena o como `uuid.UUID`
 
 **Ejemplo de consumo de la libreria para la recuperación de un XML mediante usuario y contraseña**
 ```py
@@ -2078,16 +2079,6 @@ else:
 	print("Url de descarga del XML: ", response.get_url_xml())
 ```
 </details>
-
-:pushpin: ***NOTA:*** La url base de este servicio es la de la **API** (`https://api.test.sw.com.mx`), no la de servicios. La url de servicios sólo se utiliza para autenticar con usuario y contraseña.
-
-:pushpin: ***NOTA:*** Si el UUID no existe, está mal escrito o no fue timbrado con la cuenta autenticada, el servicio responde `status` **success** con `records` vacío. Esto no es un error: se consulta con `get_records()`, que regresa una lista vacía, o con `get_first_record()`, que regresa `None`.
-
-:pushpin: ***NOTA:*** El UUID puede enviarse como cadena o como `uuid.UUID`. La librería no valida el formato en local: se envía tal cual y responde el servicio.
-
-:pushpin: ***NOTA:*** El comprobante tarda alrededor de un minuto en quedar disponible en la consulta después de timbrarse. Durante ese lapso la respuesta es `success` con `records` vacío.
-
-:pushpin: ***NOTA:*** `get_url_pdf()` regresa vacío mientras no se haya generado el PDF del comprobante.
 
 ## TimbradoV4 ##
 Servicios de timbrado con servicios adicionales para una mejor experiencia para tu sistema, los headers pueden mezclarse o usarse al mismo tiempo.
