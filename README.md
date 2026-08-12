@@ -2039,6 +2039,13 @@ else:
 	#Atajos para el primer registro de la consulta
 	print("Url de descarga del XML: ", response.get_url_xml())
 	print("Url de descarga del PDF: ", response.get_url_pdf())
+	#Descargamos el XML
+	if response.get_url_xml():
+		import requests
+		xml = requests.get(response.get_url_xml()).content
+		f = open('file.xml', 'wb')
+		f.write(xml)
+		f.close()
 ```
 </details>
 

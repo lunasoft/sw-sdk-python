@@ -1,6 +1,7 @@
 import unittest
 import os
 import sys
+import uuid
 import requests
 
 #Función para poder importar módulos necesarios.
@@ -22,7 +23,15 @@ class TestStorage(unittest.TestCase):
         response = storage_obj.get_by_uuid(os.environ["SDKTEST_UUID"])
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue(len(response.get_records()) > 0)
+        self.assertTrue(os.environ["SDKTEST_UUID"] == response.get_first_record()["uuid"])
         self.assertIsNotNone(response.get_url_xml(), "El valor de urlXml esta vacio")
+
+    def test_get_by_uuid_uuidObject(self):
+        #El UUID también se acepta como uuid.UUID, no sólo como cadena.
+        storage_obj = Storage(TestStorage.url, TestStorage.urlApi, os.environ["SDKTEST_TOKEN"])
+        response = storage_obj.get_by_uuid(uuid.UUID(os.environ["SDKTEST_UUID"]))
+        self.assertTrue(self.expected == response.get_status())
+        self.assertTrue(os.environ["SDKTEST_UUID"] == response.get_first_record()["uuid"])
 
     def test_get_by_uuid_auth(self):
         storage_obj = Storage(TestStorage.url, TestStorage.urlApi, None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
