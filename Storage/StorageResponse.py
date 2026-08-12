@@ -46,7 +46,7 @@ class StorageResponse(Response):
             return record.get("urlXml")
         return None
 
-    #La documentación oficial nombra el campo urlPDF y el SDK de .NET urlPdf.
+    #El servicio regresa el campo como urlPDF; se contempla urlPdf por si cambia el casing.
     def get_url_pdf(self):
         record = self.get_first_record()
         if record:

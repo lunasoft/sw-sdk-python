@@ -2087,7 +2087,7 @@ else:
 
 :pushpin: ***NOTA:*** El comprobante tarda alrededor de un minuto en quedar disponible en la consulta después de timbrarse. Durante ese lapso la respuesta es `success` con `records` vacío.
 
-:pushpin: ***NOTA:*** El campo con la url del PDF viene como `urlPDF`; el SDK de .NET lo nombra `urlPdf`. El método `get_url_pdf()` contempla ambas variantes, y si se recorren los registros directamente conviene usar `.get()` para no depender del casing. El campo llega vacío mientras no se haya generado el PDF del comprobante.
+:pushpin: ***NOTA:*** El campo con la url del PDF viene como `urlPDF`. El método `get_url_pdf()` contempla también la variante `urlPdf`, y si se recorren los registros directamente conviene usar `.get()` para no depender del casing. El campo llega vacío mientras no se haya generado el PDF del comprobante.
 
 :pushpin: ***NOTA:*** Las pruebas unitarias de este servicio (`Test/test_storage.py`) requieren la variable de entorno `SDKTEST_UUID` con el UUID de un CFDI timbrado en la cuenta de pruebas, además de las ya conocidas `SDKTEST_USER`, `SDKTEST_PASSWORD` y `SDKTEST_TOKEN`.
 

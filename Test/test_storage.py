@@ -18,6 +18,7 @@ class TestStorage(unittest.TestCase):
     uuidNotFound = "00000000-0000-0000-0000-000000000000"
     uuidInvalid = "no-es-uuid"
 
+    #UT Recuperación de XML por UUID
     def test_get_by_uuid(self):
         storage_obj = Storage(TestStorage.url, TestStorage.urlApi, os.environ["SDKTEST_TOKEN"])
         response = storage_obj.get_by_uuid(os.environ["SDKTEST_UUID"])
@@ -38,6 +39,7 @@ class TestStorage(unittest.TestCase):
         response = storage_obj.get_by_uuid(os.environ["SDKTEST_UUID"])
         self.assertTrue(self.expected == response.get_status())
 
+    #UT Consultas sin coincidencias
     def test_get_by_uuid_notFound(self):
         #Un UUID inexistente responde success con records vacío, no es un error.
         storage_obj = Storage(TestStorage.url, TestStorage.urlApi, os.environ["SDKTEST_TOKEN"])
@@ -55,6 +57,7 @@ class TestStorage(unittest.TestCase):
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue(len(response.get_records()) == 0)
 
+    #UT de Error
     def test_get_by_uuid_emptyString(self):
         #Una cadena vacía deja la ruta en /datawarehouse/v1/live/, que es el buscador por
         #fechas: responde 400 pidiendo la fecha de inicio. No regresa un recurso distinto
