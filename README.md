@@ -1996,6 +1996,90 @@ print(response.get_data())
 :pushpin: ***NOTA:*** El parámetro es obligatorio. La librería no lo valida en local: se envía tal cual y responde el servicio.
 </details>
 
+## Recuperar XML por UUID ##
+Servicio para recuperar la información y las URLs de descarga de un CFDI timbrado con SW a partir de su UUID.
+
+<details>
+<summary>
+Recuperar XML por UUID mediante token
+</summary>
+
+Método para consultar un CFDI timbrado en la cuenta mediante su UUID.
+
+Este metodo recibe los siguientes parametros:
+* Url Servicios SW
+* Url Api
+* Token
+* UUID del CFDI, como cadena o como `uuid.UUID`
+
+**Ejemplo de consumo de la libreria para la recuperación de un XML mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Storage.Storage import Storage
+
+storage_obj = Storage("https://services.test.sw.com.mx", "https://api.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response = storage_obj.get_by_uuid("d3773788-c68a-4549-ac67-f223d26c925b")
+
+if response.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	print(response.get_status())
+	#Un UUID sin coincidencias regresa una lista vacía. El comprobante recién timbrado
+	#tarda alrededor de un minuto en quedar disponible en la consulta.
+	for registro in response.get_records():
+		print("UUID: ", registro.get("uuid"))
+		print("Serie: ", registro.get("serie"))
+		print("Folio: ", registro.get("folio"))
+		print("Fecha: ", registro.get("fecha"))
+		print("Total: ", registro.get("total"))
+		print("Emisor: ", registro.get("emisorRfc"), registro.get("emisorNombre"))
+		print("Receptor: ", registro.get("receptorRfc"), registro.get("receptorNombre"))
+		print("Estatus SAT: ", registro.get("statusSAT"))
+		print("Url XML: ", registro.get("urlXml"))
+	#Atajos para el primer registro de la consulta
+	print("Url de descarga del XML: ", response.get_url_xml())
+	print("Url de descarga del PDF: ", response.get_url_pdf())
+	#Descargamos el XML
+	if response.get_url_xml():
+		import requests
+		xml = requests.get(response.get_url_xml()).content
+		f = open('file.xml', 'wb')
+		f.write(xml)
+		f.close()
+```
+</details>
+
+<details>
+<summary>
+Recuperar XML por UUID mediante usuario y contraseña
+</summary>
+
+Método para consultar un CFDI timbrado en la cuenta mediante su UUID, autenticando con usuario y contraseña.
+
+Este metodo recibe los siguientes parametros:
+* Url Servicios SW
+* Url Api
+* Usuario y contraseña
+* UUID del CFDI, como cadena o como `uuid.UUID`
+
+**Ejemplo de consumo de la libreria para la recuperación de un XML mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Storage.Storage import Storage
+
+storage_obj = Storage("https://services.test.sw.com.mx", "https://api.test.sw.com.mx", None, "user", "password")
+response = storage_obj.get_by_uuid("d3773788-c68a-4549-ac67-f223d26c925b")
+
+print(response.get_status())
+registro = response.get_first_record()
+if registro is None:
+	print("El UUID no se encontró en la cuenta")
+else:
+	print("Url de descarga del XML: ", response.get_url_xml())
+```
+</details>
+
 ## TimbradoV4 ##
 Servicios de timbrado con servicios adicionales para una mejor experiencia para tu sistema, los headers pueden mezclarse o usarse al mismo tiempo.
 

@@ -1,16 +1,16 @@
 import setuptools
 setuptools.setup(
     name='sw-sdk-python',
-    version='0.0.9.1',
+    version='0.0.10.1',
     description="SDK para Timbrado en SmarterWeb",
     url="https://github.com/lunasoft/sw-sdk-python",
-    packages=setuptools.find_packages(
-    license="MIT",),
+    packages=setuptools.find_packages(),
+    license="MIT",
     long_description_content_type="text/markdown",
     long_description=open('README.md',encoding='utf-8').read(),
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
 )
