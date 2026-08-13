@@ -14,6 +14,7 @@ from Pdf.Pdf import Pdf
 class TestPdf(unittest.TestCase):
     url = "https://services.test.sw.com.mx"
     urlApi = "https://api.test.sw.com.mx"
+    uuidTest = "3001449c-ef91-4bd5-a698-687bdea46414"
     uuidNotFound = "00000000-0000-0000-0000-000000000000"
     uuidInvalid = "no-es-uuid"
 
@@ -106,7 +107,7 @@ class TestPdf(unittest.TestCase):
     def test_regenerate_pdf_token(self):
         TestPdf.esperar_limite()
         pdf = Pdf(TestPdf.url, TestPdf.urlApi, os.environ['SDKTEST_TOKEN'])
-        response = pdf.regenerate_pdf(os.environ['SDKTEST_UUID'])
+        response = pdf.regenerate_pdf(TestPdf.uuidTest)
         self.assertTrue(response.get_status() == "success")
         self.assertTrue(200 == response.get_status_code())
         self.assertIn("correctamente", response.get_message())
@@ -114,13 +115,13 @@ class TestPdf(unittest.TestCase):
     def test_regenerate_pdf_auth(self):
         TestPdf.esperar_limite()
         pdf = Pdf(TestPdf.url, TestPdf.urlApi, None, os.environ['SDKTEST_USER'], os.environ['SDKTEST_PASSWORD'])
-        response = pdf.regenerate_pdf(os.environ['SDKTEST_UUID'])
+        response = pdf.regenerate_pdf(TestPdf.uuidTest)
         self.assertTrue(response.get_status() == "success")
 
     def test_regenerate_pdf_uuidObject(self):
         TestPdf.esperar_limite()
         pdf = Pdf(TestPdf.url, TestPdf.urlApi, os.environ['SDKTEST_TOKEN'])
-        response = pdf.regenerate_pdf(uuid.UUID(os.environ['SDKTEST_UUID']))
+        response = pdf.regenerate_pdf(uuid.UUID(TestPdf.uuidTest))
         self.assertTrue(response.get_status() == "success")
 
     def test_regenerate_pdf_template_extras(self):
@@ -129,7 +130,7 @@ class TestPdf(unittest.TestCase):
         }
         TestPdf.esperar_limite()
         pdf = Pdf(TestPdf.url, TestPdf.urlApi, os.environ['SDKTEST_TOKEN'])
-        response = pdf.regenerate_pdf(os.environ['SDKTEST_UUID'], None, "cfdi40", extras)
+        response = pdf.regenerate_pdf(TestPdf.uuidTest, None, "cfdi40", extras)
         self.assertTrue(response.get_status() == "success")
 
     #UT de Error
@@ -157,7 +158,7 @@ class TestPdf(unittest.TestCase):
 
     def test_regenerate_pdf_invalidToken(self):
         pdf = Pdf(TestPdf.url, TestPdf.urlApi, "T2lYQ0t4.....")
-        response = pdf.regenerate_pdf(os.environ['SDKTEST_UUID'])
+        response = pdf.regenerate_pdf(TestPdf.uuidTest)
         self.assertTrue(response.get_status() == "error")
         self.assertIsNotNone(response.get_message(), "El valor de message esta vacio")
 
