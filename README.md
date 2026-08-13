@@ -1675,6 +1675,56 @@ f.close()
 Para mayor referencia de estas plantillas de PDF, favor de visitar el siguiente [link](https://developers.sw.com.mx/knowledge-base/plantillas-pdf/).
 </details>
 
+<details>
+<summary>
+Regenerar PDF
+</summary>
+
+Este método genera o regenera el PDF de un CFDI previamente timbrado y lo guarda o reemplaza en el Administrador de Timbres. Puede ser consumido ingresando tu usuario y contraseña así como tambien ingresando solo el token. Este método recibe los siguientes parámetros:
+
+* Url servicios SW
+* Url Api
+* Usuario y contraseña o Token
+* UUID del CFDI, como cadena o como `uuid.UUID`
+* Logo en base 64 (opcional)
+* Template id (opcional), se solicita a Soporte Técnico cuando se trata de una plantilla personalizada
+* Datos extra (opcional), sólo aplica en plantillas personalizadas
+
+**Ejemplo de consumo de la libreria para la regeneración de PDF mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Pdf.Pdf import Pdf
+
+pdf = Pdf("https://services.test.sw.com.mx","https://api.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+response = pdf.regenerate_pdf("d3773788-c68a-4549-ac67-f223d26c925b")
+
+if response.get_status() == "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	print(response.get_status())
+	print(response.get_message())
+```
+
+**Ejemplo de consumo de la libreria para la regeneración de PDF mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Pdf.Pdf import Pdf
+
+#Datos opcionales para una plantilla personalizada
+logo = None
+extras = {
+        'REFERENCIA': "Referencia de pruebas"
+        }
+pdf = Pdf("https://services.test.sw.com.mx","https://api.test.sw.com.mx", None, "user", "password")
+response = pdf.regenerate_pdf("d3773788-c68a-4549-ac67-f223d26c925b", logo, "cfdi40", extras)
+print(response.get_status())
+print(response.get_message())
+```
+
+:pushpin: ***NOTA:*** Este servicio no devuelve el PDF en base 64, únicamente el mensaje de confirmación, y el archivo queda almacenado o reemplazado en el Administrador de Timbres. Si se necesita el contenido del PDF en la respuesta, el servicio correspondiente es **Generar PDF**; las URLs de descarga del comprobante ya regenerado se obtienen con [Recuperar XML por UUID](#recuperar-xml-por-uuid).
+</details>
+
 ## Certificados ##
 Servicio para gestionar los certificados CSD de tu cuenta.
 Para administrar los certificados de manera gráfica, puede hacerlo desde el [Administrador de timbres](https://portal.sw.com.mx/).
