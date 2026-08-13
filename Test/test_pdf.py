@@ -1,6 +1,8 @@
 import unittest
-import os 
+import os
 import sys
+import time
+import uuid
 from base64 import b64decode
 
 #Función para poder importar módulos necesarios.
@@ -10,11 +12,23 @@ sys.path.append(PROJECT_ROOT)
 from Pdf.Pdf import Pdf
 
 class TestPdf(unittest.TestCase):
+    url = "https://services.test.sw.com.mx"
+    urlApi = "https://api.test.sw.com.mx"
+    #SDKTEST_UUID: UUID de un CFDI timbrado en la cuenta de pruebas, nunca de un cliente real.
+    uuidNotFound = "00000000-0000-0000-0000-000000000000"
+    uuidInvalid = "no-es-uuid"
+
     @staticmethod
     def open_file(pathFile):
         out = open(pathFile,"r", encoding='latin_1', errors='ignore').read()
         return out
     
+    @staticmethod
+    def esperar_limite():
+        #La regeneración limita el número de peticiones por usuario y responde 429 si se
+        #consumen seguidas: se espacian para no depender del ritmo de la suite.
+        time.sleep(3)
+
     @staticmethod
     def save_pdf(contentB64):
         bytes = b64decode(contentB64, validate=True)
@@ -90,5 +104,72 @@ class TestPdf(unittest.TestCase):
             print (Key,"=",Value)
         TestPdf.save_pdf(response.data['contentB64'])
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestPdf)
-unittest.TextTestRunner(verbosity=2).run(suite)
+    #UT Regeneración de PDF
+    def test_regenerate_pdf_token(self):
+        TestPdf.esperar_limite()
+        pdf = Pdf(TestPdf.url, TestPdf.urlApi, os.environ['SDKTEST_TOKEN'])
+        response = pdf.regenerate_pdf(os.environ['SDKTEST_UUID'])
+        self.assertTrue(response.get_status() == "success")
+        self.assertTrue(200 == response.get_status_code())
+        self.assertIn("correctamente", response.get_message())
+
+    def test_regenerate_pdf_auth(self):
+        TestPdf.esperar_limite()
+        pdf = Pdf(TestPdf.url, TestPdf.urlApi, None, os.environ['SDKTEST_USER'], os.environ['SDKTEST_PASSWORD'])
+        response = pdf.regenerate_pdf(os.environ['SDKTEST_UUID'])
+        self.assertTrue(response.get_status() == "success")
+
+    def test_regenerate_pdf_uuidObject(self):
+        #El UUID también se acepta como uuid.UUID, no sólo como cadena.
+        TestPdf.esperar_limite()
+        pdf = Pdf(TestPdf.url, TestPdf.urlApi, os.environ['SDKTEST_TOKEN'])
+        response = pdf.regenerate_pdf(uuid.UUID(os.environ['SDKTEST_UUID']))
+        self.assertTrue(response.get_status() == "success")
+
+    def test_regenerate_pdf_template_extras(self):
+        #Los datos extra viajan anidados en extras, igual que en la generación de PDF.
+        extras = {
+            'REFERENCIA': "Referencia de pruebas"
+        }
+        TestPdf.esperar_limite()
+        pdf = Pdf(TestPdf.url, TestPdf.urlApi, os.environ['SDKTEST_TOKEN'])
+        response = pdf.regenerate_pdf(os.environ['SDKTEST_UUID'], None, "cfdi40", extras)
+        self.assertTrue(response.get_status() == "success")
+
+    #UT de Error
+    def test_regenerate_pdf_notFound(self):
+        TestPdf.esperar_limite()
+        pdf = Pdf(TestPdf.url, TestPdf.urlApi, os.environ['SDKTEST_TOKEN'])
+        response = pdf.regenerate_pdf(TestPdf.uuidNotFound)
+        self.assertTrue(response.get_status() == "error")
+        self.assertTrue(404 == response.get_status_code())
+        self.assertIn("UUID", response.get_message())
+
+    def test_regenerate_pdf_invalidFormat(self):
+        #Un UUID mal formado responde igual que uno inexistente: 404 con el mensaje del
+        #servicio. El formato no se valida en local.
+        TestPdf.esperar_limite()
+        pdf = Pdf(TestPdf.url, TestPdf.urlApi, os.environ['SDKTEST_TOKEN'])
+        response = pdf.regenerate_pdf(TestPdf.uuidInvalid)
+        self.assertTrue(response.get_status() == "error")
+        self.assertTrue(404 == response.get_status_code())
+        self.assertIsNotNone(response.get_message(), "El valor de message esta vacio")
+
+    def test_regenerate_pdf_emptyString(self):
+        #Una cadena vacía deja la ruta en /pdf/v1/api/RegeneratePdf/, que no existe: responde
+        #404 y no un recurso distinto al pedido, así que el valor se envía tal cual.
+        pdf = Pdf(TestPdf.url, TestPdf.urlApi, os.environ['SDKTEST_TOKEN'])
+        response = pdf.regenerate_pdf("")
+        self.assertTrue(response.get_status() == "error")
+        self.assertTrue(404 == response.get_status_code())
+
+    def test_regenerate_pdf_invalidToken(self):
+        pdf = Pdf(TestPdf.url, TestPdf.urlApi, "T2lYQ0t4.....")
+        response = pdf.regenerate_pdf(os.environ['SDKTEST_UUID'])
+        self.assertTrue(response.get_status() == "error")
+        self.assertIsNotNone(response.get_message(), "El valor de message esta vacio")
+
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestPdf)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    sys.exit(not result.wasSuccessful())
