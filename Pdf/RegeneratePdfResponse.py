@@ -2,8 +2,6 @@ import json
 import traceback
 from Utils.response import Response
 
-#La regeneración de PDF sólo regresa un mensaje: la respuesta no trae las llaves
-#status ni data, por eso no puede reutilizar PdfResponse.
 class RegeneratePdfResponse(Response):
     def __init__(self, response):
         try:
@@ -17,7 +15,6 @@ class RegeneratePdfResponse(Response):
                     if "messageDetail" in self.response:
                         self.messageDetail = self.response["messageDetail"]
                 except ValueError:
-                    #Un cuerpo que no es JSON se conserva tal cual en message.
                     self.message = response.text
             else:
                 self.message = response.reason

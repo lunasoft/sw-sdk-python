@@ -12,9 +12,6 @@ class PdfRequest():
 
     @staticmethod
     def regenerate_pdf(urlApi, token, uuid, b64Logo=None, template_id=None, extras=None):
-        """Regenera el PDF de un comprobante timbrado y lo reemplaza en el ADT.
-        Todos los datos del cuerpo son opcionales: sólo se envían los informados.
-        El formato del UUID no se valida en local, se envía tal cual y responde el servicio."""
         payload = {}
         if b64Logo is not None:
             payload['logo'] = b64Logo
