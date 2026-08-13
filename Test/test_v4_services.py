@@ -64,7 +64,7 @@ class TestV4Basic(unittest.TestCase):
         data["Fecha"] = new_date
         return json.dumps(data, indent=2, ensure_ascii=False)
 
-    def esperar_url_pdf(self, uuid):
+    def wait_url_pdf(self, uuid):
         #El PDF del comprobante tarda en quedar disponible en el ADT.
         storage = Storage(self.url, self.urlApi, self.token)
         for _ in range(12):
@@ -90,7 +90,7 @@ class TestV4Basic(unittest.TestCase):
         self.assertIsNotNone(response.data)
         self.assertIsNotNone(response.data.get("cfdi"))
         self.assertIsNotNone(response.data.get("uuid"))
-        self.assertIsNotNone(self.esperar_url_pdf(response.data.get("uuid")),
+        self.assertIsNotNone(self.wait_url_pdf(response.data.get("uuid")),
                              "El comprobante se timbró sin generar el PDF en el ADT")
 
     def test_issue_xml_token_minimal_headers(self):
@@ -106,7 +106,6 @@ class TestV4Basic(unittest.TestCase):
         self.assertIsNotNone(response.data.get("cfdi"))
 
     def test_issue_xml_headers_dict(self):
-        #El diccionario headers se conserva y sus valores prevalecen sobre los parámetros.
         issue = IssueV4(self.url, self.token)
         xml_content = self.update_date_xml("Test/resources/xml40.xml")
         headers = {
@@ -144,7 +143,6 @@ class TestV4Basic(unittest.TestCase):
                                pdf=True,
                                version=ResponseVersion.V2)
 
-        #El comprobante de pruebas ya está timbrado: el servicio responde con el timbre previo.
         if response.get_status() == "error":
             self.assertIn("307", response.get_message())
         else:
@@ -224,7 +222,7 @@ class TestV4Basic(unittest.TestCase):
         self.assertEqual(200, response.status_code)
         self.assertIsNotNone(response.data)
         self.assertIsNotNone(response.data.get("uuid"))
-        self.assertIsNotNone(self.esperar_url_pdf(response.data.get("uuid")),
+        self.assertIsNotNone(self.wait_url_pdf(response.data.get("uuid")),
                              "El comprobante se timbró sin generar el PDF en el ADT")
 
     #UT de Error

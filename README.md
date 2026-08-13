@@ -2177,7 +2177,6 @@ from Utils.response_version import ResponseVersion
 
 issue = IssueV4("https://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
 xml_content = open("prueba.xml", "r", encoding='utf-8').read()
-#El listado de correos tambien se acepta como lista
 response = issue.issue_xml(xml_content, email=["test1@test.com", "test2@test.com"], version=ResponseVersion.V4)
 print(response.get_data())
 print(response.get_status())
@@ -2316,8 +2315,6 @@ print(response.get_data())
 print(response.get_status())
 ```
 </details>
-
-:pushpin: ***NOTA:*** El PDF no viene en la respuesta del timbrado: se guarda en el ADT y su URL de descarga se obtiene con [Recuperar XML por UUID](#recuperar-xml-por-uuid). Si necesita el contenido del PDF en la respuesta, el servicio correspondiente es [Generar PDF](#pdf).
 
 ----------------
 
