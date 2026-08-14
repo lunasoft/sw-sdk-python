@@ -1675,6 +1675,56 @@ f.close()
 Para mayor referencia de estas plantillas de PDF, favor de visitar el siguiente [link](https://developers.sw.com.mx/knowledge-base/plantillas-pdf/).
 </details>
 
+<details>
+<summary>
+Regenerar PDF
+</summary>
+
+Este método genera o regenera el PDF de un CFDI previamente timbrado y lo guarda o reemplaza en el Administrador de Timbres. Puede ser consumido ingresando tu usuario y contraseña así como tambien ingresando solo el token. Este método recibe los siguientes parámetros:
+
+* Url servicios SW
+* Url Api
+* Usuario y contraseña o Token
+* UUID del CFDI, como cadena o como `uuid.UUID`
+* Logo en base 64 (opcional)
+* Template id (opcional), se solicita a Soporte Técnico cuando se trata de una plantilla personalizada
+* Datos extra (opcional), sólo aplica en plantillas personalizadas
+
+**Ejemplo de consumo de la libreria para la regeneración de PDF mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Pdf.Pdf import Pdf
+
+pdf = Pdf("https://services.test.sw.com.mx","https://api.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+response = pdf.regenerate_pdf("d3773788-c68a-4549-ac67-f223d26c925b")
+
+if response.get_status() == "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	print(response.get_status())
+	print(response.get_message())
+```
+
+**Ejemplo de consumo de la libreria para la regeneración de PDF mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Pdf.Pdf import Pdf
+
+#Datos opcionales para una plantilla personalizada
+logo = None
+extras = {
+        'REFERENCIA': "Referencia de pruebas"
+        }
+pdf = Pdf("https://services.test.sw.com.mx","https://api.test.sw.com.mx", None, "user", "password")
+response = pdf.regenerate_pdf("d3773788-c68a-4549-ac67-f223d26c925b", logo, "cfdi40", extras)
+print(response.get_status())
+print(response.get_message())
+```
+
+:pushpin: ***NOTA:*** Este servicio no devuelve el PDF en base 64, únicamente el mensaje de confirmación, y el archivo queda almacenado o reemplazado en el Administrador de Timbres. Si se necesita el contenido del PDF en la respuesta, el servicio correspondiente es **Generar PDF**; las URLs de descarga del comprobante ya regenerado se obtienen con [Recuperar XML por UUID](#recuperar-xml-por-uuid).
+</details>
+
 ## Certificados ##
 Servicio para gestionar los certificados CSD de tu cuenta.
 Para administrar los certificados de manera gráfica, puede hacerlo desde el [Administrador de timbres](https://portal.sw.com.mx/).
@@ -1705,8 +1755,396 @@ response = csd_obj.upload_csd("stamp", b64_csd, b64_key, password_csd)
 ```
 </details>
 
+<details>
+<summary>
+Consultar Certificados
+</summary>
+
+Método para consultar todos los certificados cargados en la cuenta.
+
+Este metodo recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña o token
+
+**Ejemplo de consumo de la libreria para la consulta de certificados mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Csd.Csd import Csd
+
+csd_obj = Csd("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response = csd_obj.get_list_csd()
+
+if response.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	for certificado in response.get_data():
+		print("issuer_rfc: ", certificado["issuer_rfc"])
+		print("certificate_number: ", certificado["certificate_number"])
+		print("csd_certificate: ", certificado["csd_certificate"])
+		print("is_active: ", certificado["is_active"])
+		print("issuer_business_name: ", certificado["issuer_business_name"])
+		print("valid_from: ", certificado["valid_from"])
+		print("valid_to: ", certificado["valid_to"])
+		print("certificate_type: ", certificado["certificate_type"])
+```
+
+**Ejemplo de consumo de la libreria para la consulta de certificados mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Csd.Csd import Csd
+
+csd_obj = Csd("http://services.test.sw.com.mx", None, "user", "password")
+response = csd_obj.get_list_csd()
+
+print(response.get_status())
+print(response.get_data())
+```
+
+:pushpin: ***NOTA:*** Si la cuenta no tiene certificados cargados, el servicio responde `status` **success** con `data` vacío; no se trata de un error.
+</details>
+
+<details>
+<summary>
+Consultar Certificado por NoCertificado
+</summary>
+
+Método para consultar un certificado en específico mediante su número de certificado.
+
+Este metodo recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña o token
+* Número de certificado
+
+**Ejemplo de consumo de la libreria para la consulta de un certificado mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Csd.Csd import Csd
+
+csd_obj = Csd("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response = csd_obj.get_csd("30001000000400002434")
+
+if response.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	certificado = response.get_data()
+	print("issuer_rfc: ", certificado["issuer_rfc"])
+	print("certificate_number: ", certificado["certificate_number"])
+	print("csd_certificate: ", certificado["csd_certificate"])
+	print("is_active: ", certificado["is_active"])
+	print("issuer_business_name: ", certificado["issuer_business_name"])
+	print("valid_from: ", certificado["valid_from"])
+	print("valid_to: ", certificado["valid_to"])
+	print("certificate_type: ", certificado["certificate_type"])
+```
+
+**Ejemplo de consumo de la libreria para la consulta de un certificado mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Csd.Csd import Csd
+
+csd_obj = Csd("http://services.test.sw.com.mx", None, "user", "password")
+response = csd_obj.get_csd("30001000000400002434")
+
+print(response.get_status())
+print(response.get_data())
+```
+
+:pushpin: ***NOTA:*** A diferencia de la consulta general, aquí `data` es un objeto único, no un arreglo.
+
+:pushpin: ***NOTA:*** El parámetro es obligatorio. La librería no lo valida en local: se envía tal cual y responde el servicio.
+</details>
+
+<details>
+<summary>
+Consultar Certificados por RFC
+</summary>
+
+Método para consultar los certificados de la cuenta que pertenecen a un RFC emisor.
+
+Este metodo recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña o token
+* RFC del emisor
+
+**Ejemplo de consumo de la libreria para la consulta de certificados por RFC mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Csd.Csd import Csd
+
+csd_obj = Csd("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response = csd_obj.get_list_csd_by_rfc("EKU9003173C9")
+
+if response.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	for certificado in response.get_data():
+		print("certificate_number: ", certificado["certificate_number"])
+		print("is_active: ", certificado["is_active"])
+		print("valid_to: ", certificado["valid_to"])
+```
+
+**Ejemplo de consumo de la libreria para la consulta de certificados por RFC mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Csd.Csd import Csd
+
+csd_obj = Csd("http://services.test.sw.com.mx", None, "user", "password")
+response = csd_obj.get_list_csd_by_rfc("EKU9003173C9")
+
+print(response.get_status())
+print(response.get_data())
+```
+
+:pushpin: ***NOTA:*** El parámetro es obligatorio. La librería no lo valida en local: se envía tal cual y responde el servicio.
+</details>
+
+<details>
+<summary>
+Consultar Certificados por Tipo
+</summary>
+
+Método para consultar los certificados de la cuenta que corresponden a un tipo, **stamp** o **fiel**.
+
+Este metodo recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña o token
+* Tipo de certificado
+
+**Ejemplo de consumo de la libreria para la consulta de certificados por tipo mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Csd.Csd import Csd
+
+csd_obj = Csd("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response = csd_obj.get_list_csd_by_type("stamp")
+
+if response.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	for certificado in response.get_data():
+		print("certificate_number: ", certificado["certificate_number"])
+		print("issuer_rfc: ", certificado["issuer_rfc"])
+		print("certificate_type: ", certificado["certificate_type"])
+		print("is_active: ", certificado["is_active"])
+```
+
+**Ejemplo de consumo de la libreria para la consulta de certificados por tipo mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Csd.Csd import Csd
+
+csd_obj = Csd("http://services.test.sw.com.mx", None, "user", "password")
+response = csd_obj.get_list_csd_by_type("stamp")
+
+print(response.get_status())
+print(response.get_data())
+```
+
+:pushpin: ***NOTA:*** Si no hay certificados de ese tipo, el servicio responde `status` **success** con `data` vacío; no se trata de un error.
+
+:pushpin: ***NOTA:*** El parámetro es obligatorio. La librería no lo valida en local: se envía tal cual y responde el servicio.
+</details>
+
+<details>
+<summary>
+Consultar Certificado Activo por RFC
+</summary>
+
+Método para consultar el certificado **activo** de un RFC para un tipo determinado, **stamp** o **fiel**.
+
+Este metodo recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña o token
+* RFC del emisor
+* Tipo de certificado
+
+**Ejemplo de consumo de la libreria para la consulta del certificado activo mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Csd.Csd import Csd
+
+csd_obj = Csd("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response = csd_obj.get_active_csd("EKU9003173C9", "stamp")
+
+if response.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	certificado = response.get_data()
+	print("certificate_number: ", certificado["certificate_number"])
+	print("issuer_business_name: ", certificado["issuer_business_name"])
+	print("valid_from: ", certificado["valid_from"])
+	print("valid_to: ", certificado["valid_to"])
+	print("is_active: ", certificado["is_active"])
+```
+
+**Ejemplo de consumo de la libreria para la consulta del certificado activo mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Csd.Csd import Csd
+
+csd_obj = Csd("http://services.test.sw.com.mx", None, "user", "password")
+response = csd_obj.get_active_csd("EKU9003173C9", "stamp")
+
+print(response.get_status())
+print(response.get_data())
+```
+
+:pushpin: ***NOTA:*** A diferencia de la consulta por RFC, aquí `data` es un objeto único con el certificado activo, no un arreglo.
+
+:pushpin: ***NOTA:*** Si el RFC no tiene un certificado activo de ese tipo, el servicio responde `status` **error**.
+
+:pushpin: ***NOTA:*** El parámetro es obligatorio. La librería no lo valida en local: se envía tal cual y responde el servicio.
+</details>
+
+<details>
+<summary>
+Eliminar Certificado
+</summary>
+
+Método para desactivar (eliminar) un certificado de la cuenta mediante su número de certificado.
+
+Este metodo recibe los siguientes parametros:
+* Url Servicios SW
+* Usuario y contraseña o token
+* Número de certificado
+
+**Ejemplo de consumo de la libreria para la eliminación de un certificado mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Csd.Csd import Csd
+
+csd_obj = Csd("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response = csd_obj.disable_csd("30001000000400002434")
+
+if response.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	#data regresa un texto: "Certificado 30001000000400002434 desactivado."
+	print(response.get_data())
+```
+
+**Ejemplo de consumo de la libreria para la eliminación de un certificado mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Csd.Csd import Csd
+
+csd_obj = Csd("http://services.test.sw.com.mx", None, "user", "password")
+response = csd_obj.disable_csd("30001000000400002434")
+
+print(response.get_status())
+print(response.get_data())
+```
+
+:pushpin: ***NOTA:*** La operación desactiva el certificado en la cuenta. Para volver a utilizarlo es necesario cargarlo de nuevo con **Cargar Certificado**.
+
+:pushpin: ***NOTA:*** El parámetro es obligatorio. La librería no lo valida en local: se envía tal cual y responde el servicio.
+</details>
+
+## Recuperar XML por UUID ##
+Servicio para recuperar la información y las URLs de descarga de un CFDI timbrado con SW a partir de su UUID.
+
+<details>
+<summary>
+Recuperar XML por UUID mediante token
+</summary>
+
+Método para consultar un CFDI timbrado en la cuenta mediante su UUID.
+
+Este metodo recibe los siguientes parametros:
+* Url Servicios SW
+* Url Api
+* Token
+* UUID del CFDI, como cadena o como `uuid.UUID`
+
+**Ejemplo de consumo de la libreria para la recuperación de un XML mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Storage.Storage import Storage
+
+storage_obj = Storage("https://services.test.sw.com.mx", "https://api.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+response = storage_obj.get_by_uuid("d3773788-c68a-4549-ac67-f223d26c925b")
+
+if response.get_status() ==  "error":
+	print(response.get_message())
+	print(response.get_messageDetail())
+else:
+	print(response.get_status())
+	#Un UUID sin coincidencias regresa una lista vacía. El comprobante recién timbrado
+	#tarda alrededor de un minuto en quedar disponible en la consulta.
+	for registro in response.get_records():
+		print("UUID: ", registro.get("uuid"))
+		print("Serie: ", registro.get("serie"))
+		print("Folio: ", registro.get("folio"))
+		print("Fecha: ", registro.get("fecha"))
+		print("Total: ", registro.get("total"))
+		print("Emisor: ", registro.get("emisorRfc"), registro.get("emisorNombre"))
+		print("Receptor: ", registro.get("receptorRfc"), registro.get("receptorNombre"))
+		print("Estatus SAT: ", registro.get("statusSAT"))
+		print("Url XML: ", registro.get("urlXml"))
+	#Atajos para el primer registro de la consulta
+	print("Url de descarga del XML: ", response.get_url_xml())
+	print("Url de descarga del PDF: ", response.get_url_pdf())
+	#Descargamos el XML
+	if response.get_url_xml():
+		import requests
+		xml = requests.get(response.get_url_xml()).content
+		f = open('file.xml', 'wb')
+		f.write(xml)
+		f.close()
+```
+</details>
+
+<details>
+<summary>
+Recuperar XML por UUID mediante usuario y contraseña
+</summary>
+
+Método para consultar un CFDI timbrado en la cuenta mediante su UUID, autenticando con usuario y contraseña.
+
+Este metodo recibe los siguientes parametros:
+* Url Servicios SW
+* Url Api
+* Usuario y contraseña
+* UUID del CFDI, como cadena o como `uuid.UUID`
+
+**Ejemplo de consumo de la libreria para la recuperación de un XML mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Storage.Storage import Storage
+
+storage_obj = Storage("https://services.test.sw.com.mx", "https://api.test.sw.com.mx", None, "user", "password")
+response = storage_obj.get_by_uuid("d3773788-c68a-4549-ac67-f223d26c925b")
+
+print(response.get_status())
+registro = response.get_first_record()
+if registro is None:
+	print("El UUID no se encontró en la cuenta")
+else:
+	print("Url de descarga del XML: ", response.get_url_xml())
+```
+</details>
+
 ## TimbradoV4 ##
 Servicios de timbrado con servicios adicionales para una mejor experiencia para tu sistema, los headers pueden mezclarse o usarse al mismo tiempo.
+
+Los tres métodos (`StampV4.stamp`, `IssueV4.issue_xml` e `IssueV4.issue_json`) reciben los headers en el parámetro `headers`. Los headers disponibles son:
+
+* `email`: hasta 5 correos, separados por comas, a los que se enviará el XML timbrado.
+* `customid`: identificador asignado por el usuario para evitar la duplicidad de timbrado.
+* `extra`: con el valor `pdf` confirma la generación del PDF, que se guarda en automático en el ADT.
+
+Esos tres headers también se pueden enviar con los parámetros `email`, `custom_id` y `pdf`, que los arman internamente; `email` acepta además una lista y `pdf` es un booleano. Si se usan las dos formas al mismo tiempo, prevalece el contenido de `headers`.
+
+Los tres métodos reciben además:
+
+* `b64`: con el valor `True` indica que el XML se envía en base 64. No aplica en `issue_json`.
+* `version`: versión de la respuesta, tomada del enum `ResponseVersion` (`V1`, `V2`, `V3` y `V4`). Puede consultar el detalle de cada versión en el siguiente [link](https://developers.sw.com.mx/knowledge-base/versiones-de-respuesta-timbrado/).
 
 ### **Email** ###
 
@@ -1721,13 +2159,14 @@ Existen varias versiones de respuesta a este método, las cuales puede consultar
 ```py
 from Stamp.StampV4 import StampV4
 from Utils.response_version import ResponseVersion
+
 #Creamos funcion para abrir nuestro archivo
- xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+xml_content = open("prueba.xml", "r", encoding='utf-8').read()
 #Creamos instancia y pasamos parametros
- stamp = StampV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
- headers = {
-                "email": "stamp1@test.com,stamp2@test.com"
-           }
+stamp = StampV4("https://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+headers = {
+    "email": "stamp1@test.com,stamp2@test.com"
+}
 response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V2)
 print(response.get_data())
 print(response.get_status())
@@ -1742,16 +2181,15 @@ print(response.get_status())
 ```py
 from Issue.IssueV4 import IssueV4
 from Utils.response_version import ResponseVersion
-issue = IssueV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
-             xml_content = open("prueba.xml", "r", encoding='utf-8').read()
-            
-           headers = {
-                "email": "test1@test.com,test2@test.com"
-            }
-            
-            response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
-            print(response.get_data())
-            print(response.get_status())
+
+issue = IssueV4("https://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+headers = {
+    "email": "test1@test.com,test2@test.com"
+}
+response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
+print(response.get_data())
+print(response.get_status())
 ```
 
 </details>
@@ -1764,16 +2202,14 @@ issue = IssueV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealT
 from Issue.IssueV4 import IssueV4
 from Utils.response_version import ResponseVersion
 
-            issue = IssueV4("http://services.test.sw.com.mx", None, "user", "password")
-            json_content =  open_file("cfdi.json")
-            
-            headers = {
-                "email": "test1@test.com,test2@test.com"
-            }
-            
-            response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V4)
-            print(response.get_data())
-            print(response.get_status())
+issue = IssueV4("https://services.test.sw.com.mx", None, "user", "password")
+json_content = open("cfdi.json", "r", encoding='utf-8').read()
+headers = {
+    "email": "test1@test.com,test2@test.com"
+}
+response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V4)
+print(response.get_data())
+print(response.get_status())
 ```
 </details>
 
@@ -1790,13 +2226,14 @@ Existen varias versiones de respuesta a este método, las cuales puede consultar
 ```py
 from Stamp.StampV4 import StampV4
 from Utils.response_version import ResponseVersion
+
 #Creamos funcion para abrir nuestro archivo
- xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+xml_content = open("prueba.xml", "r", encoding='utf-8').read()
 #Creamos instancia y pasamos parametros
- stamp = StampV4("http://services.test.sw.com.mx",None, "user", "password")
- headers = {
-                 "customid": "ISS-25-369"
-           }
+stamp = StampV4("https://services.test.sw.com.mx",None, "user", "password")
+headers = {
+    "customid": "ISS-25-369"
+}
 response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V3)
 print(response.get_data())
 print(response.get_status())
@@ -1810,16 +2247,15 @@ print(response.get_status())
 ```py
 from Issue.IssueV4 import IssueV4
 from Utils.response_version import ResponseVersion
-issue = IssueV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
-             xml_content = open("prueba.xml", "r", encoding='utf-8').read()
-            
-           headers = {
-                  "customid": "ISS-25-368"
-            }
-            
-            response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
-            print(response.get_data())
-            print(response.get_status())
+
+issue = IssueV4("https://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+headers = {
+    "customid": "ISS-25-368"
+}
+response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
+print(response.get_data())
+print(response.get_status())
 ```
 
 </details>
@@ -1832,16 +2268,14 @@ issue = IssueV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealT
 from Issue.IssueV4 import IssueV4
 from Utils.response_version import ResponseVersion
 
-            issue = IssueV4("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-            json_content =  open_file("cfdi.json")
-            
-            headers = {
-                  "customid": "ISS-25-369"
-            }
-            
-            response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V1)
-            print(response.get_data())
-            print(response.get_status())
+issue = IssueV4("https://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+json_content = open("cfdi.json", "r", encoding='utf-8').read()
+headers = {
+    "customid": "ISS-25-369"
+}
+response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V1)
+print(response.get_data())
+print(response.get_status())
 ```
 </details>
 
@@ -1859,13 +2293,14 @@ Existen varias versiones de respuesta a este método, las cuales puede consultar
 ```py
 from Stamp.StampV4 import StampV4
 from Utils.response_version import ResponseVersion
+
 #Creamos funcion para abrir nuestro archivo
- xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+xml_content = open("prueba.xml", "r", encoding='utf-8').read()
 #Creamos instancia y pasamos parametros
- stamp = StampV4("http://services.test.sw.com.mx",None, "user", "password")
- headers = {
-                 "pdf": "true"
-           }
+stamp = StampV4("https://services.test.sw.com.mx",None, "user", "password")
+headers = {
+    "extra": "pdf"
+}
 response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V2)
 print(response.get_data())
 print(response.get_status())
@@ -1879,16 +2314,15 @@ print(response.get_status())
 ```py
 from Issue.IssueV4 import IssueV4
 from Utils.response_version import ResponseVersion
-issue = IssueV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
-             xml_content = open("prueba.xml", "r", encoding='utf-8').read()
-            
-           headers = {
-                   "pdf": "true"
-            }
-            
-            response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
-            print(response.get_data())
-            print(response.get_status())
+
+issue = IssueV4("https://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+headers = {
+    "extra": "pdf"
+}
+response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
+print(response.get_data())
+print(response.get_status())
 ```
 
 </details>
@@ -1902,16 +2336,14 @@ issue = IssueV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealT
 from Issue.IssueV4 import IssueV4
 from Utils.response_version import ResponseVersion
 
-            issue = IssueV4("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-            json_content =  open_file("cfdi.json")
-            
-            headers = {
-                  "pdf": "true"
-            }
-            
-            response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V4)
-            print(response.get_data())
-            print(response.get_status())
+issue = IssueV4("https://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+json_content = open("cfdi.json", "r", encoding='utf-8').read()
+headers = {
+    "extra": "pdf"
+}
+response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V4)
+print(response.get_data())
+print(response.get_status())
 ```
 </details>
 
