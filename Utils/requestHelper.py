@@ -95,23 +95,25 @@ class RequestHelper:
     @staticmethod
     def post_v4_json(endpoint: str, content: Union[str, dict], token: str = None, headers: Dict = None) -> requests.Response:
         request_headers = {
-            'Authorization': f'Bearer {token}' if token else None,
+            'Authorization': f'bearer {token}' if token else None,
             'Content-Type': 'application/jsontoxml; charset=utf-8'
         }
         if headers:
             request_headers.update(headers)
         if isinstance(content, dict):
             content = json.dumps(content, ensure_ascii=False)
-        return requests.post(endpoint, data=content.encode('utf-8'), headers=request_headers)
+        session = RequestHelper._get_session()
+        return session.post(endpoint, data=content.encode('utf-8'), headers=request_headers, verify=True, timeout=300)
 
     @staticmethod
     def post_v4(endpoint: str, content: Union[str, dict], token: str = None, headers: Dict = None) -> requests.Response:
         request_headers = {
-            'Authorization': f'Bearer {token}' if token else None
+            'Authorization': f'bearer {token}' if token else None
         }
         if headers:
             request_headers.update(headers)
         boundary = ''.join(random.choices(string.ascii_letters + string.digits, k=30))
         request_headers['Content-Type'] = f'multipart/form-data; boundary={boundary}'
         body = RequestHelper._create_multipart_body(content, boundary)
-        return requests.post(endpoint, data=body, headers=request_headers)
+        session = RequestHelper._get_session()
+        return session.post(endpoint, data=body, headers=request_headers, verify=True, timeout=300)

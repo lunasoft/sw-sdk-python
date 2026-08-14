@@ -2133,6 +2133,19 @@ else:
 ## TimbradoV4 ##
 Servicios de timbrado con servicios adicionales para una mejor experiencia para tu sistema, los headers pueden mezclarse o usarse al mismo tiempo.
 
+Los tres métodos (`StampV4.stamp`, `IssueV4.issue_xml` e `IssueV4.issue_json`) reciben los headers en el parámetro `headers`. Los headers disponibles son:
+
+* `email`: hasta 5 correos, separados por comas, a los que se enviará el XML timbrado.
+* `customid`: identificador asignado por el usuario para evitar la duplicidad de timbrado.
+* `extra`: con el valor `pdf` confirma la generación del PDF, que se guarda en automático en el ADT.
+
+Esos tres headers también se pueden enviar con los parámetros `email`, `custom_id` y `pdf`, que los arman internamente; `email` acepta además una lista y `pdf` es un booleano. Si se usan las dos formas al mismo tiempo, prevalece el contenido de `headers`.
+
+Los tres métodos reciben además:
+
+* `b64`: con el valor `True` indica que el XML se envía en base 64. No aplica en `issue_json`.
+* `version`: versión de la respuesta, tomada del enum `ResponseVersion` (`V1`, `V2`, `V3` y `V4`). Puede consultar el detalle de cada versión en el siguiente [link](https://developers.sw.com.mx/knowledge-base/versiones-de-respuesta-timbrado/).
+
 ### **Email** ###
 
 Este servicio recibe un comprobante CFDI para ser timbrado y recibe un listado de uno o hasta 5 correos electrónicos a los que se requiera enviar el XML timbrado.
@@ -2146,13 +2159,14 @@ Existen varias versiones de respuesta a este método, las cuales puede consultar
 ```py
 from Stamp.StampV4 import StampV4
 from Utils.response_version import ResponseVersion
+
 #Creamos funcion para abrir nuestro archivo
- xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+xml_content = open("prueba.xml", "r", encoding='utf-8').read()
 #Creamos instancia y pasamos parametros
- stamp = StampV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
- headers = {
-                "email": "stamp1@test.com,stamp2@test.com"
-           }
+stamp = StampV4("https://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+headers = {
+    "email": "stamp1@test.com,stamp2@test.com"
+}
 response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V2)
 print(response.get_data())
 print(response.get_status())
@@ -2167,16 +2181,15 @@ print(response.get_status())
 ```py
 from Issue.IssueV4 import IssueV4
 from Utils.response_version import ResponseVersion
-issue = IssueV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
-             xml_content = open("prueba.xml", "r", encoding='utf-8').read()
-            
-           headers = {
-                "email": "test1@test.com,test2@test.com"
-            }
-            
-            response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
-            print(response.get_data())
-            print(response.get_status())
+
+issue = IssueV4("https://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+headers = {
+    "email": "test1@test.com,test2@test.com"
+}
+response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
+print(response.get_data())
+print(response.get_status())
 ```
 
 </details>
@@ -2189,16 +2202,14 @@ issue = IssueV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealT
 from Issue.IssueV4 import IssueV4
 from Utils.response_version import ResponseVersion
 
-            issue = IssueV4("http://services.test.sw.com.mx", None, "user", "password")
-            json_content =  open_file("cfdi.json")
-            
-            headers = {
-                "email": "test1@test.com,test2@test.com"
-            }
-            
-            response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V4)
-            print(response.get_data())
-            print(response.get_status())
+issue = IssueV4("https://services.test.sw.com.mx", None, "user", "password")
+json_content = open("cfdi.json", "r", encoding='utf-8').read()
+headers = {
+    "email": "test1@test.com,test2@test.com"
+}
+response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V4)
+print(response.get_data())
+print(response.get_status())
 ```
 </details>
 
@@ -2215,13 +2226,14 @@ Existen varias versiones de respuesta a este método, las cuales puede consultar
 ```py
 from Stamp.StampV4 import StampV4
 from Utils.response_version import ResponseVersion
+
 #Creamos funcion para abrir nuestro archivo
- xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+xml_content = open("prueba.xml", "r", encoding='utf-8').read()
 #Creamos instancia y pasamos parametros
- stamp = StampV4("http://services.test.sw.com.mx",None, "user", "password")
- headers = {
-                 "customid": "ISS-25-369"
-           }
+stamp = StampV4("https://services.test.sw.com.mx",None, "user", "password")
+headers = {
+    "customid": "ISS-25-369"
+}
 response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V3)
 print(response.get_data())
 print(response.get_status())
@@ -2235,16 +2247,15 @@ print(response.get_status())
 ```py
 from Issue.IssueV4 import IssueV4
 from Utils.response_version import ResponseVersion
-issue = IssueV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
-             xml_content = open("prueba.xml", "r", encoding='utf-8').read()
-            
-           headers = {
-                  "customid": "ISS-25-368"
-            }
-            
-            response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
-            print(response.get_data())
-            print(response.get_status())
+
+issue = IssueV4("https://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+headers = {
+    "customid": "ISS-25-368"
+}
+response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
+print(response.get_data())
+print(response.get_status())
 ```
 
 </details>
@@ -2257,16 +2268,14 @@ issue = IssueV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealT
 from Issue.IssueV4 import IssueV4
 from Utils.response_version import ResponseVersion
 
-            issue = IssueV4("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-            json_content =  open_file("cfdi.json")
-            
-            headers = {
-                  "customid": "ISS-25-369"
-            }
-            
-            response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V1)
-            print(response.get_data())
-            print(response.get_status())
+issue = IssueV4("https://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+json_content = open("cfdi.json", "r", encoding='utf-8').read()
+headers = {
+    "customid": "ISS-25-369"
+}
+response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V1)
+print(response.get_data())
+print(response.get_status())
 ```
 </details>
 
@@ -2284,13 +2293,14 @@ Existen varias versiones de respuesta a este método, las cuales puede consultar
 ```py
 from Stamp.StampV4 import StampV4
 from Utils.response_version import ResponseVersion
+
 #Creamos funcion para abrir nuestro archivo
- xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+xml_content = open("prueba.xml", "r", encoding='utf-8').read()
 #Creamos instancia y pasamos parametros
- stamp = StampV4("http://services.test.sw.com.mx",None, "user", "password")
- headers = {
-                 "pdf": "true"
-           }
+stamp = StampV4("https://services.test.sw.com.mx",None, "user", "password")
+headers = {
+    "extra": "pdf"
+}
 response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V2)
 print(response.get_data())
 print(response.get_status())
@@ -2304,16 +2314,15 @@ print(response.get_status())
 ```py
 from Issue.IssueV4 import IssueV4
 from Utils.response_version import ResponseVersion
-issue = IssueV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
-             xml_content = open("prueba.xml", "r", encoding='utf-8').read()
-            
-           headers = {
-                   "pdf": "true"
-            }
-            
-            response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
-            print(response.get_data())
-            print(response.get_status())
+
+issue = IssueV4("https://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
+xml_content = open("prueba.xml", "r", encoding='utf-8').read()
+headers = {
+    "extra": "pdf"
+}
+response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
+print(response.get_data())
+print(response.get_status())
 ```
 
 </details>
@@ -2327,16 +2336,14 @@ issue = IssueV4("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealT
 from Issue.IssueV4 import IssueV4
 from Utils.response_version import ResponseVersion
 
-            issue = IssueV4("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-            json_content =  open_file("cfdi.json")
-            
-            headers = {
-                  "pdf": "true"
-            }
-            
-            response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V4)
-            print(response.get_data())
-            print(response.get_status())
+issue = IssueV4("https://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+json_content = open("cfdi.json", "r", encoding='utf-8').read()
+headers = {
+    "extra": "pdf"
+}
+response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V4)
+print(response.get_data())
+print(response.get_status())
 ```
 </details>
 
