@@ -2133,13 +2133,13 @@ else:
 ## TimbradoV4 ##
 Servicios de timbrado con servicios adicionales para una mejor experiencia para tu sistema, los headers pueden mezclarse o usarse al mismo tiempo.
 
-Los tres métodos (`StampV4.stamp`, `IssueV4.issue_xml` e `IssueV4.issue_json`) reciben los headers en el parámetro `headers` y esa es la forma de consumo de referencia, la que usan los ejemplos de esta sección: los nombres de los headers se documentan aquí, de modo que si el servicio agrega o cambia alguno basta con actualizar esta documentación. Los headers disponibles son:
+Los tres métodos (`StampV4.stamp`, `IssueV4.issue_xml` e `IssueV4.issue_json`) reciben los headers en el parámetro `headers`. Los headers disponibles son:
 
-* `email`: uno o varios correos, separados por comas, a los que se enviará el XML timbrado.
+* `email`: hasta 5 correos, separados por comas, a los que se enviará el XML timbrado.
 * `customid`: identificador asignado por el usuario para evitar la duplicidad de timbrado.
 * `extra`: con el valor `pdf` confirma la generación del PDF, que se guarda en automático en el ADT.
 
-Como atajo para esos tres headers, los mismos métodos aceptan los parámetros `email`, `custom_id` y `pdf`, que los arman internamente; `email` acepta también una lista y `pdf` es un booleano. Si se envían las dos formas al mismo tiempo, prevalece el contenido de `headers`.
+Esos tres headers también se pueden enviar con los parámetros `email`, `custom_id` y `pdf`, que los arman internamente; `email` acepta además una lista y `pdf` es un booleano. Si se usan las dos formas al mismo tiempo, prevalece el contenido de `headers`.
 
 Los tres métodos reciben además:
 
