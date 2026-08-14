@@ -75,7 +75,7 @@ class TestV4Basic(unittest.TestCase):
         return None
 
     #UT Emisión de Timbrado XML
-    def test_issue_xml_auth_all_headers(self):
+    def test_issue_xml_auth_named_params(self):
         issue = IssueV4(self.url, None, self.user, self.password)
         xml_content = self.update_date_xml("Test/resources/xml40.xml")
 
@@ -97,36 +97,47 @@ class TestV4Basic(unittest.TestCase):
         issue = IssueV4(self.url, self.token)
         xml_content = self.update_date_xml("Test/resources/xml40.xml")
 
-        response = issue.issue_xml(xml_content,
-                                   custom_id=self.generate_custom_id("ISS"),
-                                   version=ResponseVersion.V3)
+        headers = {
+            "customid": self.generate_custom_id("ISS")
+        }
+
+        response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V3)
 
         self.assertEqual("success", response.get_status())
         self.assertEqual(200, response.status_code)
         self.assertIsNotNone(response.data.get("cfdi"))
 
-    def test_issue_xml_headers_dict(self):
+    def test_issue_xml_headers_over_named_params(self):
         issue = IssueV4(self.url, self.token)
         xml_content = self.update_date_xml("Test/resources/xml40.xml")
+
         headers = {
             "customid": self.generate_custom_id("ISS")
         }
 
-        response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
+        response1 = issue.issue_xml(xml_content, headers=headers,
+                                    custom_id=self.generate_custom_id("OTR"),
+                                    version=ResponseVersion.V4)
 
-        self.assertEqual("success", response.get_status())
-        self.assertEqual(200, response.status_code)
-        self.assertIsNotNone(response.data.get("uuid"))
+        self.assertEqual("success", response1.get_status())
+        self.assertEqual(200, response1.status_code)
+
+        #El customid que llegó al servicio es el del diccionario: al repetirlo responde con el timbre previo.
+        response2 = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
+
+        self.assertEqual("error", response2.get_status())
+        self.assertIn("307", response2.get_message())
 
     def test_issue_xml_b64(self):
         issue = IssueV4(self.url, self.token)
         xml_content = self.update_date_xml("Test/resources/xml40.xml")
         xml_b64 = b64encode(xml_content.encode("utf-8")).decode()
 
-        response = issue.issue_xml(xml_b64,
-                                   custom_id=self.generate_custom_id("ISS"),
-                                   version=ResponseVersion.V4,
-                                   b64=True)
+        headers = {
+            "customid": self.generate_custom_id("ISS")
+        }
+
+        response = issue.issue_xml(xml_b64, headers=headers, version=ResponseVersion.V4, b64=True)
 
         self.assertEqual("success", response.get_status())
         self.assertEqual(200, response.status_code)
@@ -137,11 +148,13 @@ class TestV4Basic(unittest.TestCase):
         stamp = StampV4(self.url, self.token)
         xml_content = open("Test/resources/xml40Stamp.xml", "r", encoding='utf-8').read()
 
-        response = stamp.stamp(xml_content,
-                               custom_id=self.generate_custom_id("STP"),
-                               email="stamp1@test.com,stamp2@test.com",
-                               pdf=True,
-                               version=ResponseVersion.V2)
+        headers = {
+            "customid": self.generate_custom_id("STP"),
+            "email": "stamp1@test.com,stamp2@test.com",
+            "extra": "pdf"
+        }
+
+        response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V2)
 
         if response.get_status() == "error":
             self.assertIn("307", response.get_message())
@@ -154,7 +167,11 @@ class TestV4Basic(unittest.TestCase):
         stamp = StampV4(self.url, None, self.user, self.password)
         xml_content = open("Test/resources/xml40Stamp.xml", "r", encoding='utf-8').read()
 
-        response = stamp.stamp(xml_content, email="stamp1@test.com", version=ResponseVersion.V4)
+        headers = {
+            "email": "stamp1@test.com"
+        }
+
+        response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V4)
 
         if response.get_status() == "error":
             self.assertIn("307", response.get_message())
@@ -167,10 +184,11 @@ class TestV4Basic(unittest.TestCase):
         xml_content = open("Test/resources/xml40Stamp.xml", "r", encoding='utf-8').read()
         xml_b64 = b64encode(xml_content.encode("utf-8")).decode()
 
-        response = stamp.stamp(xml_b64,
-                               custom_id=self.generate_custom_id("STP"),
-                               version=ResponseVersion.V2,
-                               b64=True)
+        headers = {
+            "customid": self.generate_custom_id("STP")
+        }
+
+        response = stamp.stamp(xml_b64, headers=headers, version=ResponseVersion.V2, b64=True)
 
         if response.get_status() == "error":
             self.assertIn("307", response.get_message())
@@ -183,10 +201,12 @@ class TestV4Basic(unittest.TestCase):
         issue = IssueV4(self.url, None, self.user, self.password)
         json_content = self.update_date_json("Test/resources/cfdi.json")
 
-        response = issue.issue_json(json_content,
-                                    custom_id=self.generate_custom_id("ISJ"),
-                                    email=["test1@test.com", "test2@test.com"],
-                                    version=ResponseVersion.V4)
+        headers = {
+            "customid": self.generate_custom_id("ISJ"),
+            "email": "test1@test.com,test2@test.com"
+        }
+
+        response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V4)
 
         self.assertEqual("success", response.get_status())
         self.assertEqual(200, response.status_code)
@@ -199,9 +219,11 @@ class TestV4Basic(unittest.TestCase):
         time.sleep(5)
         json_content = self.update_date_json("Test/resources/cfdi.json")
 
-        response = issue.issue_json(json_content,
-                                    custom_id=self.generate_custom_id("ISJ"),
-                                    version=ResponseVersion.V3)
+        headers = {
+            "customid": self.generate_custom_id("ISJ")
+        }
+
+        response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V3)
 
         self.assertEqual("success", response.get_status())
         self.assertEqual(200, response.status_code)
@@ -212,11 +234,13 @@ class TestV4Basic(unittest.TestCase):
         time.sleep(5)
         json_content = self.update_date_json("Test/resources/cfdi.json")
 
-        response = issue.issue_json(json_content,
-                                    custom_id=self.generate_custom_id("ISJ"),
-                                    email="test1@test.com",
-                                    pdf=True,
-                                    version=ResponseVersion.V4)
+        headers = {
+            "customid": self.generate_custom_id("ISJ"),
+            "email": "test1@test.com",
+            "extra": "pdf"
+        }
+
+        response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V4)
 
         self.assertEqual("success", response.get_status())
         self.assertEqual(200, response.status_code)
@@ -230,7 +254,11 @@ class TestV4Basic(unittest.TestCase):
         issue = IssueV4(self.url, None, "usuario_invalido", "pass_invalido")
         xml_content = self.update_date_xml("Test/resources/xml40.xml")
 
-        response = issue.issue_xml(xml_content, custom_id=self.generate_custom_id("ISS"), version=ResponseVersion.V4)
+        headers = {
+            "customid": self.generate_custom_id("ISS")
+        }
+
+        response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
 
         self.assertEqual("error", response.get_status())
         self.assertNotEqual(200, response.status_code)
@@ -240,9 +268,11 @@ class TestV4Basic(unittest.TestCase):
     def test_issue_xml_invalid_xml(self):
         issue = IssueV4(self.url, self.token)
 
-        response = issue.issue_xml("<xml>mal formado</xml>",
-                                   custom_id=self.generate_custom_id("ISS"),
-                                   version=ResponseVersion.V4)
+        headers = {
+            "customid": self.generate_custom_id("ISS")
+        }
+
+        response = issue.issue_xml("<xml>mal formado</xml>", headers=headers, version=ResponseVersion.V4)
 
         self.assertEqual("error", response.get_status())
         self.assertNotEqual(200, response.status_code)
@@ -252,7 +282,11 @@ class TestV4Basic(unittest.TestCase):
         stamp = StampV4(self.url, "token_invalido")
         xml_content = open("Test/resources/xml40Stamp.xml", "r", encoding='utf-8').read()
 
-        response = stamp.stamp(xml_content, custom_id=self.generate_custom_id("STP"), version=ResponseVersion.V4)
+        headers = {
+            "customid": self.generate_custom_id("STP")
+        }
+
+        response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V4)
 
         self.assertEqual("error", response.get_status())
         self.assertNotEqual(200, response.status_code)
@@ -262,10 +296,12 @@ class TestV4Basic(unittest.TestCase):
         stamp = StampV4(self.url, self.token)
         xml_content = open("Test/resources/xml40Stamp.xml", "r", encoding='utf-8').read()
 
-        response = stamp.stamp(xml_content,
-                               custom_id=self.generate_custom_id("STP"),
-                               email="correo_invalido",
-                               version=ResponseVersion.V4)
+        headers = {
+            "customid": self.generate_custom_id("STP"),
+            "email": "correo_invalido"
+        }
+
+        response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V4)
 
         self.assertEqual("error", response.get_status())
         self.assertNotEqual(200, response.status_code)
@@ -274,15 +310,18 @@ class TestV4Basic(unittest.TestCase):
     def test_issue_duplicate_custom_id(self):
         issue = IssueV4(self.url, self.token)
         xml_content = self.update_date_xml("Test/resources/xml40.xml")
-        custom_id = self.generate_custom_id("ISS")
 
-        response1 = issue.issue_xml(xml_content, custom_id=custom_id, version=ResponseVersion.V4)
+        headers = {
+            "customid": self.generate_custom_id("ISS")
+        }
+
+        response1 = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
 
         self.assertEqual("success", response1.get_status())
         self.assertEqual(200, response1.status_code)
         self.assertIsNotNone(response1.data.get("uuid"))
 
-        response2 = issue.issue_xml(xml_content, custom_id=custom_id, version=ResponseVersion.V4)
+        response2 = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
 
         self.assertEqual("error", response2.get_status())
         self.assertIn("307", response2.get_message())
@@ -290,9 +329,11 @@ class TestV4Basic(unittest.TestCase):
     def test_issue_json_invalid_format(self):
         issue = IssueV4(self.url, self.token)
 
-        response = issue.issue_json('{"invalid": "json format for cfdi"}',
-                                    custom_id=self.generate_custom_id("ISJ"),
-                                    version=ResponseVersion.V4)
+        headers = {
+            "customid": self.generate_custom_id("ISJ")
+        }
+
+        response = issue.issue_json('{"invalid": "json format for cfdi"}', headers=headers, version=ResponseVersion.V4)
 
         self.assertEqual("error", response.get_status())
         self.assertNotEqual(200, response.status_code)

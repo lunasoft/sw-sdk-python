@@ -2133,13 +2133,17 @@ else:
 ## TimbradoV4 ##
 Servicios de timbrado con servicios adicionales para una mejor experiencia para tu sistema, los headers pueden mezclarse o usarse al mismo tiempo.
 
-Los tres métodos (`StampV4.stamp`, `IssueV4.issue_xml` e `IssueV4.issue_json`) reciben los mismos parámetros opcionales:
+Los tres métodos (`StampV4.stamp`, `IssueV4.issue_xml` e `IssueV4.issue_json`) reciben los headers en el parámetro `headers` y esa es la forma de consumo de referencia, la que usan los ejemplos de esta sección: los nombres de los headers se documentan aquí, de modo que si el servicio agrega o cambia alguno basta con actualizar esta documentación. Los headers disponibles son:
 
-* `email`: uno o varios correos a los que se enviará el XML timbrado, como cadena separada por comas o como lista.
-* `custom_id`: identificador asignado por el usuario para evitar la duplicidad de timbrado.
-* `pdf`: con el valor `True` confirma la generación del PDF, que se guarda en automático en el ADT.
+* `email`: uno o varios correos, separados por comas, a los que se enviará el XML timbrado.
+* `customid`: identificador asignado por el usuario para evitar la duplicidad de timbrado.
+* `extra`: con el valor `pdf` confirma la generación del PDF, que se guarda en automático en el ADT.
+
+Como atajo para esos tres headers, los mismos métodos aceptan los parámetros `email`, `custom_id` y `pdf`, que los arman internamente; `email` acepta también una lista y `pdf` es un booleano. Si se envían las dos formas al mismo tiempo, prevalece el contenido de `headers`.
+
+Los tres métodos reciben además:
+
 * `b64`: con el valor `True` indica que el XML se envía en base 64. No aplica en `issue_json`.
-* `headers`: diccionario de headers, que se sigue recibiendo. Sus valores prevalecen sobre los parámetros anteriores.
 * `version`: versión de la respuesta, tomada del enum `ResponseVersion` (`V1`, `V2`, `V3` y `V4`). Puede consultar el detalle de cada versión en el siguiente [link](https://developers.sw.com.mx/knowledge-base/versiones-de-respuesta-timbrado/).
 
 ### **Email** ###
@@ -2160,7 +2164,10 @@ from Utils.response_version import ResponseVersion
 xml_content = open("prueba.xml", "r", encoding='utf-8').read()
 #Creamos instancia y pasamos parametros
 stamp = StampV4("https://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
-response = stamp.stamp(xml_content, email="stamp1@test.com,stamp2@test.com", version=ResponseVersion.V2)
+headers = {
+    "email": "stamp1@test.com,stamp2@test.com"
+}
+response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V2)
 print(response.get_data())
 print(response.get_status())
 ```
@@ -2177,7 +2184,10 @@ from Utils.response_version import ResponseVersion
 
 issue = IssueV4("https://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
 xml_content = open("prueba.xml", "r", encoding='utf-8').read()
-response = issue.issue_xml(xml_content, email=["test1@test.com", "test2@test.com"], version=ResponseVersion.V4)
+headers = {
+    "email": "test1@test.com,test2@test.com"
+}
+response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
 print(response.get_data())
 print(response.get_status())
 ```
@@ -2194,7 +2204,10 @@ from Utils.response_version import ResponseVersion
 
 issue = IssueV4("https://services.test.sw.com.mx", None, "user", "password")
 json_content = open("cfdi.json", "r", encoding='utf-8').read()
-response = issue.issue_json(json_content, email="test1@test.com,test2@test.com", version=ResponseVersion.V4)
+headers = {
+    "email": "test1@test.com,test2@test.com"
+}
+response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V4)
 print(response.get_data())
 print(response.get_status())
 ```
@@ -2218,7 +2231,10 @@ from Utils.response_version import ResponseVersion
 xml_content = open("prueba.xml", "r", encoding='utf-8').read()
 #Creamos instancia y pasamos parametros
 stamp = StampV4("https://services.test.sw.com.mx",None, "user", "password")
-response = stamp.stamp(xml_content, custom_id="ISS-25-369", version=ResponseVersion.V3)
+headers = {
+    "customid": "ISS-25-369"
+}
+response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V3)
 print(response.get_data())
 print(response.get_status())
 ```
@@ -2234,7 +2250,10 @@ from Utils.response_version import ResponseVersion
 
 issue = IssueV4("https://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
 xml_content = open("prueba.xml", "r", encoding='utf-8').read()
-response = issue.issue_xml(xml_content, custom_id="ISS-25-368", version=ResponseVersion.V4)
+headers = {
+    "customid": "ISS-25-368"
+}
+response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
 print(response.get_data())
 print(response.get_status())
 ```
@@ -2251,7 +2270,10 @@ from Utils.response_version import ResponseVersion
 
 issue = IssueV4("https://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
 json_content = open("cfdi.json", "r", encoding='utf-8').read()
-response = issue.issue_json(json_content, custom_id="ISS-25-369", version=ResponseVersion.V1)
+headers = {
+    "customid": "ISS-25-369"
+}
+response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V1)
 print(response.get_data())
 print(response.get_status())
 ```
@@ -2276,7 +2298,10 @@ from Utils.response_version import ResponseVersion
 xml_content = open("prueba.xml", "r", encoding='utf-8').read()
 #Creamos instancia y pasamos parametros
 stamp = StampV4("https://services.test.sw.com.mx",None, "user", "password")
-response = stamp.stamp(xml_content, pdf=True, version=ResponseVersion.V2)
+headers = {
+    "extra": "pdf"
+}
+response = stamp.stamp(xml_content, headers=headers, version=ResponseVersion.V2)
 print(response.get_data())
 print(response.get_status())
 ```
@@ -2292,7 +2317,10 @@ from Utils.response_version import ResponseVersion
 
 issue = IssueV4("https://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealToken")
 xml_content = open("prueba.xml", "r", encoding='utf-8').read()
-response = issue.issue_xml(xml_content, pdf=True, version=ResponseVersion.V4)
+headers = {
+    "extra": "pdf"
+}
+response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
 print(response.get_data())
 print(response.get_status())
 ```
@@ -2310,7 +2338,10 @@ from Utils.response_version import ResponseVersion
 
 issue = IssueV4("https://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
 json_content = open("cfdi.json", "r", encoding='utf-8').read()
-response = issue.issue_json(json_content, pdf=True, version=ResponseVersion.V4)
+headers = {
+    "extra": "pdf"
+}
+response = issue.issue_json(json_content, headers=headers, version=ResponseVersion.V4)
 print(response.get_data())
 print(response.get_status())
 ```
