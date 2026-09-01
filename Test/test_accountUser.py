@@ -1,6 +1,9 @@
 import unittest
 import os
+import random
+import string
 import sys
+from datetime import datetime
 
 #Función para poder importar módulos necesarios.
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
@@ -10,159 +13,259 @@ from AccountUser.AccountUser import AccountUser
 
 class TestAccountUser(unittest.TestCase):
     expected = "success"
-     
-    @unittest.skip("Se omite para evitar afectar UT")
-    def testAccountUser_create_user_auth(self):
-        accountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx", None, os.environ['SDKTEST_USER'], os.environ['SDKTEST_PASSWORD'])
-        name = "Prueba UT Hijo Python"
-        taxId = "XAXX010101000"
-        email = f"userPython_{os.environ['SDKTEST_USER']}"
-        password = f"_{os.environ['SDKTEST_PASSWORD']}"
-        notificationEmail = f"user_{os.environ['SDKTEST_USER']}"
-        phone = "0000000000"
-        response = accountUser.create_user(name,taxId,email,1,False,password,notificationEmail,phone)
-        message_expect = f"El email '{email}' ya esta en uso."
-        self.assertTrue(self.expected == response.get_status() or message_expect == response.get_message())
-        
-    @unittest.skip("Se omite para evitar afectar UT")
-    def testAccountUser_update_user_auth(self):
-        accountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx", None, os.environ['SDKTEST_USER'], os.environ['SDKTEST_PASSWORD'])
-        idUser = "b9e42c65-4afa-45a2-9b0d-d67b1373a7f4"
-        name = "Prueba UT Hijo Python Actualizado"
-        taxId = "XAXX010101002"
-        phone = "0000000001"
-        response = accountUser.update_user(idUser,name,taxId,None,phone,False)
-        self.assertTrue(self.expected == response.get_status())
-        self.assertTrue(idUser == response.get_data())
-        
+    expectedError = "error"
+    url = "https://services.test.sw.com.mx"
+    urlApi = "https://api.test.sw.com.mx"
+    taxId = "XAXX010101000"
+    phone = "0000000000"
+    notFoundId = "00000000-0000-0000-0000-000000000000"
+    invalidId = "no-es-uuid"
+    _firstUser = None
+
+    @classmethod
+    def first_user(cls):
+        #Los datos de consulta se toman de la propia cuenta, nunca se hardcodean.
+        if cls._firstUser is None:
+            accountUser = AccountUser(cls.url, cls.urlApi, os.environ["SDKTEST_TOKEN"])
+            response = accountUser.getUser_all()
+            if response.get_status() != cls.expected or not response.data.items:
+                raise unittest.SkipTest("La cuenta de pruebas no tiene cuentas hijas")
+            cls._firstUser = response.data.items[0]
+        return cls._firstUser
+
+    @staticmethod
+    def generate_email():
+        letters = ''.join(random.choices(string.ascii_lowercase, k=4))
+        timestamp = datetime.now().strftime("%d%H%M%S")
+        return f"ut.python.{letters}{timestamp}@example.com"
+
+    @staticmethod
+    def generate_password():
+        #La contraseña se genera cumpliendo la política del servicio, nunca se escribe en el código.
+        upper = ''.join(random.choices(string.ascii_uppercase, k=3))
+        lower = ''.join(random.choices(string.ascii_lowercase, k=3))
+        numbers = ''.join(random.choices(string.digits, k=3))
+        return f"{upper}{lower}{numbers}$"
+
     #UT Auth consulta de usuarios
     def testAccountUser_all_auth(self):
-        accountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx", None, os.environ['SDKTEST_USER'], os.environ['SDKTEST_PASSWORD'])
+        accountUser = AccountUser(self.url, self.urlApi, None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = accountUser.getUser_all()
-        self.assertTrue(self.expected == response.get_status())
+        self.assertEqual(self.expected, response.get_status())
         self.assertTrue(len(response.data.items) > 0)
-    
+
     def testAccountUser_by_idUser_auth(self):
-        accountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx", None, os.environ['SDKTEST_USER'], os.environ['SDKTEST_PASSWORD'])
-        idUser = "32501CF2-DC62-4370-B47D-25024C44E131"
-        response = accountUser.getUser_by_idUser(idUser)
-        self.assertTrue(self.expected == response.get_status())
-        self.assertTrue(len(response.data.items) > 0) 
-        for user in response.data.items:
-            print("\tName: ",user.name)
-            print("\tIdDelear: ",user.idDealer)
-            print("\tIdUser: ",user.idUser)
-            print("\t taxId: ",user.taxId)
-            print("\t username: ",user.username)
-            print("\t email: ",user.email)
-            print("\t profile: ",user.profile)
-            print("\t isAcrtive: ",user.isActive)
-            print("\t accessToken: ",user.accessToken)
-            print("\t stamps: ",user.stamps)
-            print("\t phone: ",user.phone)
-            print("\t isUnlimited: ",user.isUnlimited)
-        
-    def testAccountUser_by_email_auth(self):
-        accountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx", None, os.environ['SDKTEST_USER'], os.environ['SDKTEST_PASSWORD'])
-        email = f"userPython_{os.environ['SDKTEST_USER']}"
-        response = accountUser.getUser_by_email(email)
-        self.assertTrue(self.expected == response.get_status())
-        self.assertTrue(len(response.data.items) > 0) 
-        
-    def testAccountUser_by_taxId_auth(self):
-        accountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx", None, os.environ['SDKTEST_USER'], os.environ['SDKTEST_PASSWORD'])
-        taxId = "AAAA000101010"
-        response = accountUser.getUser_by_taxId(taxId)
-        self.assertTrue(self.expected == response.get_status())
-        self.assertTrue(len(response.data.items) > 0)  
-        
-    def testAccountUser_by_isActive_auth(self):
-        accountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx", None, os.environ['SDKTEST_USER'], os.environ['SDKTEST_PASSWORD'])
-        response = accountUser.getUser_by_isActive(True)
-        self.assertTrue(self.expected == response.get_status())
-        self.assertTrue(len(response.data.items) > 0) 
-        
-     #UT Token consulta de usuarios
-    def testAccountUser_all(self):
-        accountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx", os.environ['SDKTEST_TOKEN'])
-        response = accountUser.getUser_all()
-        self.assertTrue(self.expected == response.get_status())
+        accountUser = AccountUser(self.url, self.urlApi, None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        response = accountUser.getUser_by_idUser(self.first_user().idUser)
+        self.assertEqual(self.expected, response.get_status())
         self.assertTrue(len(response.data.items) > 0)
-    
-    def testAccountUser_by_idUser(self):
-        accountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx", os.environ['SDKTEST_TOKEN'])
-        idUser = "32501CF2-DC62-4370-B47D-25024C44E131"
-        response = accountUser.getUser_by_idUser(idUser)
-        self.assertTrue(self.expected == response.get_status())
-        self.assertTrue(len(response.data.items) > 0) 
-        
-    def testAccountUser_by_email(self):
-        accountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx", os.environ['SDKTEST_TOKEN'])
-        email = f"userPython_{os.environ['SDKTEST_USER']}"
-        response = accountUser.getUser_by_email(email)
-        self.assertTrue(self.expected == response.get_status())
-        self.assertTrue(len(response.data.items) > 0) 
-        
-    def testAccountUser_by_taxId(self):
-        accountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx", os.environ['SDKTEST_TOKEN'])
-        taxId = "AAAA000101010"
-        response = accountUser.getUser_by_taxId(taxId)
-        self.assertTrue(self.expected == response.get_status())
-        self.assertTrue(len(response.data.items) > 0)  
-        
-    def testAccountUser_by_isActive(self):
-        accountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx", os.environ['SDKTEST_TOKEN'])
+
+    def testAccountUser_by_email_auth(self):
+        accountUser = AccountUser(self.url, self.urlApi, None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        response = accountUser.getUser_by_email(self.first_user().email)
+        self.assertEqual(self.expected, response.get_status())
+        self.assertTrue(len(response.data.items) > 0)
+
+    def testAccountUser_by_taxId_auth(self):
+        accountUser = AccountUser(self.url, self.urlApi, None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        response = accountUser.getUser_by_taxId(self.first_user().taxId)
+        self.assertEqual(self.expected, response.get_status())
+        self.assertTrue(len(response.data.items) > 0)
+
+    def testAccountUser_by_isActive_auth(self):
+        accountUser = AccountUser(self.url, self.urlApi, None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = accountUser.getUser_by_isActive(True)
-        self.assertTrue(self.expected == response.get_status())
-        self.assertTrue(len(response.data.items) > 0) 
-        
-    @unittest.skip("Evitar conflictos por temas de saldos")  
-    def testAccountUser_delete_user_auth(self):
-        accountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx", None, os.environ['SDKTEST_USER'], os.environ['SDKTEST_PASSWORD'])
-        idUser = "8e6ec77d-b4d6-47aa-95b9-89b354d8207b"
-        response = accountUser.delete_user(idUser)
-        self.assertTrue(self.expected == response.get_status())
-        self.assertIsNotNone(response.get_data())
-        
-    #UT de Error
-    def testAccountUser_by_idUser_error(self):
-        accountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx", os.environ['SDKTEST_TOKEN'])
-        idUser = "00000CF2-DC62-4370-B47D-25024C44E000"
+        self.assertEqual(self.expected, response.get_status())
+        self.assertTrue(len(response.data.items) > 0)
+
+    def testAccountUser_by_name_auth(self):
+        accountUser = AccountUser(self.url, self.urlApi, None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        response = accountUser.getUser_by_name(self.first_user().name)
+        self.assertEqual(self.expected, response.get_status())
+        self.assertTrue(len(response.data.items) > 0)
+
+    #UT Token consulta de usuarios
+    def testAccountUser_all(self):
+        accountUser = AccountUser(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
+        response = accountUser.getUser_all()
+        self.assertEqual(self.expected, response.get_status())
+        self.assertTrue(len(response.data.items) > 0)
+        for user in response.data.items:
+            self.assertIsNotNone(user.idUser)
+            self.assertIsNotNone(user.name)
+            self.assertIsNotNone(user.email)
+
+    def testAccountUser_by_idUser(self):
+        accountUser = AccountUser(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
+        idUser = self.first_user().idUser
         response = accountUser.getUser_by_idUser(idUser)
-        self.assertTrue(self.expected == response.get_status())
-        self.assertTrue(len(response.data.items) == 0) 
-        
-    def testAccountUser_by_email_error(self):
-        accountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx", os.environ['SDKTEST_TOKEN'])
-        email = "prueba@example.com"
-        response = accountUser.getUser_by_email(email)
-        self.assertTrue(self.expected == response.get_status())
-        self.assertTrue(len(response.data.items) == 0) 
-        
-    def testAccountUser_by_taxId_error(self):
-        accountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx", os.environ['SDKTEST_TOKEN'])
-        taxId = "AAAA000101011"
-        response = accountUser.getUser_by_taxId(taxId)
-        self.assertTrue(self.expected == response.get_status())
-        self.assertTrue(len(response.data.items) == 0)  
-         
-    def testAccountUser_delete_user_auth_error(self):
-        accountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx", None, os.environ['SDKTEST_USER'], os.environ['SDKTEST_PASSWORD'])
-        idUser = "8e6ec77d-b4d6-47aa-95b9-89b354d8207c"
-        response = accountUser.delete_user(idUser)
-        self.assertTrue("error" == response.get_status())
+        self.assertEqual(self.expected, response.get_status())
+        self.assertEqual(1, len(response.data.items))
+        self.assertEqual(idUser.lower(), response.data.items[0].idUser.lower())
+
+    def testAccountUser_by_email(self):
+        accountUser = AccountUser(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
+        response = accountUser.getUser_by_email(self.first_user().email)
+        self.assertEqual(self.expected, response.get_status())
+        self.assertTrue(len(response.data.items) > 0)
+
+    def testAccountUser_by_taxId(self):
+        accountUser = AccountUser(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
+        response = accountUser.getUser_by_taxId(self.first_user().taxId)
+        self.assertEqual(self.expected, response.get_status())
+        self.assertTrue(len(response.data.items) > 0)
+
+    def testAccountUser_by_isActive(self):
+        accountUser = AccountUser(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
+        response = accountUser.getUser_by_isActive(True)
+        self.assertEqual(self.expected, response.get_status())
+        self.assertTrue(len(response.data.items) > 0)
+
+    def testAccountUser_by_name(self):
+        accountUser = AccountUser(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
+        response = accountUser.getUser_by_name(self.first_user().name)
+        self.assertEqual(self.expected, response.get_status())
+        self.assertTrue(len(response.data.items) > 0)
+
+    #UT Paginación de la consulta
+    def testAccountUser_pagination(self):
+        accountUser = AccountUser(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
+        response = accountUser.getUser_all(1, 1)
+        self.assertEqual(self.expected, response.get_status())
+        self.assertTrue(len(response.data.items) <= 1)
+        self.assertEqual(1, response.get_meta()["page"])
+        self.assertEqual(1, response.get_meta()["perPage"])
+        self.assertIsNotNone(response.get_links())
+
+    def testAccountUser_pagination_emptyPage(self):
+        #Una página sin resultados responde success con la lista vacía, no es un error.
+        accountUser = AccountUser(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
+        response = accountUser.getUser_all(999)
+        self.assertEqual(self.expected, response.get_status())
+        self.assertEqual(0, len(response.data.items))
+        self.assertEqual(999, response.get_meta()["page"])
+
+    def testAccountUser_pagination_invalidPerPage(self):
+        #El servicio es quien limita el tamaño de página.
+        accountUser = AccountUser(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
+        response = accountUser.getUser_all(1, 100)
+        self.assertEqual(self.expectedError, response.get_status())
+        self.assertEqual(400, response.get_status_code())
         self.assertIsNotNone(response.get_message())
-        
-    def testAccountUser_update_user_auth_error(self):
-        accountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx", None, os.environ['SDKTEST_USER'], os.environ['SDKTEST_PASSWORD'])
-        idUser = "b9e42c65-4afa-45a2-9b0d-d67b1373a7f4"
-        name = "Prueba UT Hijo Python Actualizado"
-        taxId = "XAXX010101002"
-        phone = "0000000001"
-        message_expect = "No es posible actualizar, los datos enviados son identicos a los actuales"
-        response = accountUser.update_user(idUser,name,taxId,None,phone,False)
-        self.assertTrue("error"== response.get_status())
-        self.assertTrue(message_expect== response.get_message())
-    
-suite = unittest.TestLoader().loadTestsFromTestCase(TestAccountUser)
-unittest.TextTestRunner(verbosity=2).run(suite)
+
+    #UT Alta, actualización y baja de usuarios
+    #El usuario que se crea se elimina en la misma prueba, de modo que la cuenta queda como estaba.
+    def testAccountUser_lifecycle(self):
+        accountUser = AccountUser(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
+        email = self.generate_email()
+        alta = accountUser.create_user("Prueba UT Python", self.taxId, email, 0, False,
+                                       self.generate_password(), email, self.phone)
+        self.assertEqual(self.expected, alta.get_status())
+        #El alta regresa el usuario creado, la actualización y la baja regresan su idUser.
+        idUser = alta.data.idUser
+        self.assertIsNotNone(idUser)
+        self.addCleanup(accountUser.delete_user, idUser)
+
+        consulta = accountUser.getUser_by_email(email)
+        self.assertEqual(self.expected, consulta.get_status())
+        self.assertEqual(1, len(consulta.data.items))
+        self.assertEqual(idUser.lower(), consulta.data.items[0].idUser.lower())
+
+        actualizacion = accountUser.update_user(idUser, "Prueba UT Python Editado", self.taxId, email, "0000000001")
+        self.assertEqual(self.expected, actualizacion.get_status())
+        self.assertEqual(idUser, actualizacion.get_data())
+
+        baja = accountUser.delete_user(idUser)
+        self.assertEqual(self.expected, baja.get_status())
+        self.assertIsNotNone(baja.get_data())
+        self.assertEqual(0, len(accountUser.getUser_by_email(email).data.items))
+
+    def testAccountUser_lifecycle_auth(self):
+        accountUser = AccountUser(self.url, self.urlApi, None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        email = self.generate_email()
+        alta = accountUser.create_user("Prueba UT Python", self.taxId, email, 0, False,
+                                       self.generate_password(), email, self.phone)
+        self.assertEqual(self.expected, alta.get_status())
+        idUser = alta.data.idUser
+        self.addCleanup(accountUser.delete_user, idUser)
+
+        baja = accountUser.delete_user(idUser)
+        self.assertEqual(self.expected, baja.get_status())
+        self.assertIsNotNone(baja.get_data())
+
+    def testAccountUser_update_sameData(self):
+        accountUser = AccountUser(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
+        email = self.generate_email()
+        alta = accountUser.create_user("Prueba UT Python", self.taxId, email, 0, False,
+                                       self.generate_password(), email, self.phone)
+        self.assertEqual(self.expected, alta.get_status())
+        idUser = alta.data.idUser
+        self.addCleanup(accountUser.delete_user, idUser)
+        response = accountUser.update_user(idUser, "Prueba UT Python", self.taxId, email, self.phone)
+        self.assertEqual(self.expectedError, response.get_status())
+        self.assertIsNotNone(response.get_message())
+
+    #UT Consultas sin coincidencias
+    def testAccountUser_by_idUser_notFound(self):
+        #Una consulta sin coincidencias responde success con la lista vacía, no es un error.
+        accountUser = AccountUser(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
+        response = accountUser.getUser_by_idUser(self.notFoundId)
+        self.assertEqual(self.expected, response.get_status())
+        self.assertEqual(0, len(response.data.items))
+
+    def testAccountUser_by_email_notFound(self):
+        accountUser = AccountUser(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
+        response = accountUser.getUser_by_email("sin.coincidencias@example.com")
+        self.assertEqual(self.expected, response.get_status())
+        self.assertEqual(0, len(response.data.items))
+
+    def testAccountUser_by_taxId_notFound(self):
+        accountUser = AccountUser(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
+        response = accountUser.getUser_by_taxId("AAAA000101011")
+        self.assertEqual(self.expected, response.get_status())
+        self.assertEqual(0, len(response.data.items))
+
+    #UT de Error
+    def testAccountUser_by_idUser_invalid(self):
+        accountUser = AccountUser(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
+        response = accountUser.getUser_by_idUser(self.invalidId)
+        self.assertEqual(self.expectedError, response.get_status())
+        self.assertIsNotNone(response.get_message())
+
+    def testAccountUser_create_duplicatedEmail(self):
+        accountUser = AccountUser(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
+        email = self.first_user().email
+        response = accountUser.create_user("Prueba UT Python", self.taxId, email, 0, False,
+                                           self.generate_password(), email, self.phone)
+        self.assertEqual(self.expectedError, response.get_status())
+        self.assertEqual(400, response.get_status_code())
+        self.assertIsNotNone(response.get_message())
+
+    def testAccountUser_create_invalidPassword(self):
+        #El servicio es quien valida la política de la contraseña.
+        accountUser = AccountUser(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
+        email = self.generate_email()
+        response = accountUser.create_user("Prueba UT Python", self.taxId, email, 0, False,
+                                           "1234", email, self.phone)
+        self.assertEqual(self.expectedError, response.get_status())
+        self.assertEqual(400, response.get_status_code())
+        self.assertIsNotNone(response.get_message())
+
+    def testAccountUser_delete_notFound(self):
+        accountUser = AccountUser(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
+        response = accountUser.delete_user(self.notFoundId)
+        self.assertEqual(self.expectedError, response.get_status())
+        self.assertEqual(404, response.get_status_code())
+        self.assertIsNotNone(response.get_message())
+
+    def testAccountUser_invalidToken(self):
+        accountUser = AccountUser(self.url, self.urlApi, "token-invalido")
+        response = accountUser.getUser_all()
+        self.assertEqual(self.expectedError, response.get_status())
+        self.assertEqual(401, response.get_status_code())
+        self.assertIsNotNone(response.get_message())
+
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestAccountUser)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    sys.exit(not result.wasSuccessful())
