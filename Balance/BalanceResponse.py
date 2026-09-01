@@ -3,6 +3,7 @@ import traceback
 from Utils.response import Response
 
 class AccountBalanceResponse(Response):
+    """Respuesta de la asignación y remoción de timbres; data trae el saldo resultante."""
     def __init__(self, response):
         try:
             self.status_code = response.status_code
@@ -24,6 +25,7 @@ class AccountBalanceResponse(Response):
             traceback.print_exc()
 
 class BalanceResponse(Response):
+    """Respuesta de la consulta de saldo, propia o de una cuenta hija."""
     def __init__(self, response):
         try:
             self.status_code = response.status_code
@@ -51,14 +53,14 @@ class Data:
         self.stampsBalance = data.get("stampsBalance", 0)
         self.stampsUsed = data.get("stampsUsed", 0)
         self.stampsAssigned = data.get("stampsAssigned", 0)
-        self.unlimited = data.get("unlimited", False)
+        self.unlimited = data.get("isUnlimited", False)
         self.expirationDate = data.get("expirationDate", "")
         self.lastTransaction = LastTransaction(data["lastTransaction"]) if "lastTransaction" in data else None
 
 class LastTransaction:
     def __init__(self, transaction):
         self.folio = transaction.get("folio", 0)
-        self.idUSer = transaction.get("idUSer", "")
+        self.idUSer = transaction.get("idUser", "")
         self.idUserReceiver = transaction.get("idUserReceiver", "")
         self.nameReceiver = transaction.get("nameReceiver", "")
         self.stampsIn = transaction.get("stampsIn", 0)
