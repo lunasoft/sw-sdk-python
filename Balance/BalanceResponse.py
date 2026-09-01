@@ -3,7 +3,6 @@ import traceback
 from Utils.response import Response
 
 class AccountBalanceResponse(Response):
-    """Respuesta de la asignación y remoción de timbres; data trae el saldo resultante."""
     def __init__(self, response):
         try:
             self.status_code = response.status_code
@@ -25,7 +24,6 @@ class AccountBalanceResponse(Response):
             traceback.print_exc()
 
 class BalanceResponse(Response):
-    """Respuesta de la consulta de saldo, propia o de una cuenta hija."""
     def __init__(self, response):
         try:
             self.status_code = response.status_code

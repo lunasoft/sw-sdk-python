@@ -76,7 +76,7 @@ class TestBalance(unittest.TestCase):
         self.assertIsNotNone(response.data.stampsBalance)
 
     def testBalanceById_uuid(self):
-        #El identificador se acepta como cadena o como uuid.UUID.
+        #El idUser también se acepta como uuid.UUID, no sólo como cadena.
         idUser = self.child_user_id()
         balance = Balance(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
         response = balance.get_balance_by_id(uuid.UUID(idUser))
@@ -130,7 +130,6 @@ class TestBalance(unittest.TestCase):
         self.assertEqual(inicial, remove.get_data())
 
     def testBalance_stamps_uuid(self):
-        #El identificador se acepta como cadena o como uuid.UUID.
         idUser = uuid.UUID(self.child_user_id())
         balance = Balance(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
         add = balance.add_stamps(idUser, 1, self.comment)
