@@ -1073,7 +1073,7 @@ else:
 	#Obtenemos los datos
 	print(objResponseBalance.data.idUser)
 	print(objResponseBalance.data.idUserBalance)
-    print(objResponseBalance.data.stampsAssigned)
+	print(objResponseBalance.data.stampsAssigned)
 	print(objResponseBalance.data.stampsUsed)
 	print(objResponseBalance.data.stampsBalance)
 ```
@@ -1093,7 +1093,57 @@ else:
 	#Obtenemos los datos
 	print(objResponseBalance.data.idUser)
 	print(objResponseBalance.data.idUserBalance)
-    print(objResponseBalance.data.stampsAssigned)
+	print(objResponseBalance.data.stampsAssigned)
+	print(objResponseBalance.data.stampsUsed)
+	print(objResponseBalance.data.stampsBalance)
+```
+</details>
+
+<details>
+  <summary>Consulta de timbres por ID</summary>
+
+<br>Este método recibe los siguientes parametros:
+* Usuario y contraseña o Token
+* Url Servicios SW
+* Url Api
+* IdUser de la cuenta hija a consultar, como cadena o como uuid.UUID
+
+**Ejemplo de consumo de la libreria para consultar el saldo de una cuenta hija mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Balance.Balance import Balance
+
+objBalance = Balance("https://services.test.sw.com.mx","https://api.test.sw.com.mx", None, user, password)
+objResponseBalance = objBalance.get_balance_by_id("32501CF2-DC62-4370-B47D-25024C44E131")
+#En caso de error, obtenemos el mensaje
+if objResponseBalance.get_status() ==  "error":
+	print(objResponseBalance.get_message())
+	print(objResponseBalance.get_messageDetail())
+else:
+	#Obtenemos los datos
+	print(objResponseBalance.data.idUser)
+	print(objResponseBalance.data.idUserBalance)
+	print(objResponseBalance.data.stampsAssigned)
+	print(objResponseBalance.data.stampsUsed)
+	print(objResponseBalance.data.stampsBalance)
+```
+
+**Ejemplo de consumo de la libreria para consultar el saldo de una cuenta hija mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Balance.Balance import Balance
+
+objBalance = Balance("https://services.test.sw.com.mx","https://api.test.sw.com.mx", token)
+objResponseBalance = objBalance.get_balance_by_id("32501CF2-DC62-4370-B47D-25024C44E131")
+#En caso de error, obtenemos el mensaje
+if objResponseBalance.get_status() ==  "error":
+	print(objResponseBalance.get_message())
+	print(objResponseBalance.get_messageDetail())
+else:
+	#Obtenemos los datos
+	print(objResponseBalance.data.idUser)
+	print(objResponseBalance.data.idUserBalance)
+	print(objResponseBalance.data.stampsAssigned)
 	print(objResponseBalance.data.stampsUsed)
 	print(objResponseBalance.data.stampsBalance)
 ```
@@ -1106,9 +1156,9 @@ else:
 * Usuario y contraseña o Token
 * Url Servicios SW
 * Url Api
-* IdUser
+* IdUser de la cuenta hija, como cadena o como uuid.UUID
 * Número de timbres
-* Comentario
+* Comentario del movimiento, opcional
 
 > [!NOTE] 
 > El servicio regresa unicamente la cantidad de timbres despues del abono de timbres.
@@ -1151,9 +1201,9 @@ else:
 * Usuario y contraseña o Token
 * Url Servicios SW
 * Url Api
-* IdUser
+* IdUser de la cuenta hija, como cadena o como uuid.UUID
 * Número de timbres
-* Comentario
+* Comentario del movimiento, opcional
 
 > [!NOTE]
 > El servicio regresa unicamente la cantidad de timbres despues de remover los timbres.
