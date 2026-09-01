@@ -16,13 +16,15 @@ class AccountUser(Services):
         return AccountUserRequest.delete_user(self.urlApi,self.get_token(),idUser)
     def update_user(self,idUser,name,taxId,notificationEmail,phone,isUnlimited=False):
         return AccountUserRequest.update_user(self.urlApi,self.get_token(),idUser,name,taxId,notificationEmail,phone,isUnlimited)
-    def getUser_all(self):
-        return AccountUserRequest.get_users(self.urlApi,self.get_token(),"All")
-    def getUser_by_idUser(self,idUser):
-        return AccountUserRequest.get_users(self.urlApi,self.get_token(),"IdUser",idUser)
-    def getUser_by_email(self, email):
-        return AccountUserRequest.get_users(self.urlApi,self.get_token(),"Email",None,email)
-    def getUser_by_taxId(self, taxId):
-        return AccountUserRequest.get_users(self.urlApi,self.get_token(),"TaxId",None,None,taxId)
-    def getUser_by_isActive(self, isActive):
-        return AccountUserRequest.get_users(self.urlApi,self.get_token(),"IsActive",None,None,None,isActive)
+    def getUser_all(self,page=None,perPage=None):
+        return AccountUserRequest.get_users(self.urlApi,self.get_token(),"All",page=page,perPage=perPage)
+    def getUser_by_idUser(self,idUser,page=None,perPage=None):
+        return AccountUserRequest.get_users(self.urlApi,self.get_token(),"IdUser",idUser,page=page,perPage=perPage)
+    def getUser_by_email(self, email,page=None,perPage=None):
+        return AccountUserRequest.get_users(self.urlApi,self.get_token(),"Email",None,email,page=page,perPage=perPage)
+    def getUser_by_taxId(self, taxId,page=None,perPage=None):
+        return AccountUserRequest.get_users(self.urlApi,self.get_token(),"TaxId",None,None,taxId,page=page,perPage=perPage)
+    def getUser_by_isActive(self, isActive,page=None,perPage=None):
+        return AccountUserRequest.get_users(self.urlApi,self.get_token(),"IsActive",None,None,None,isActive,page=page,perPage=perPage)
+    def getUser_by_name(self, name,page=None,perPage=None):
+        return AccountUserRequest.get_users(self.urlApi,self.get_token(),"Name",None,None,None,None,name,page,perPage)
