@@ -26,7 +26,7 @@ class BalanceRequest:
         }
         if action == "Add":
             response = RequestHelper.post_json_request(endpoint,token,payload)
-        elif action == "Remove":
+        else:
             response = RequestHelper.delete_json_request(endpoint, token, payload)
         return AccountBalanceResponse(response)
     
