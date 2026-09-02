@@ -10,8 +10,13 @@ from Stamp_Retentions.Stamp_Retentions import Stamp_Retentions
 
 class TestStampRetentions(unittest.TestCase):
     expected = "success"
-    message = "307. El comprobante contiene un timbre previo."
-    messageAuth = "401 - El rango de la fecha de generación no debe de ser mayor a 72 horas para la emisión del timbre."
+    expectedError = "error"
+    url = "https://services.test.sw.com.mx"
+    #retenciones20.xml viene sellado con su FechaExp, y el servicio valida el sello,
+    #de modo que la suite no puede refrescar la fecha: el servicio contesta 307 si la
+    #retencion ya se timbro, o 401 cuando la fecha del fixture rebasa las 72 horas.
+    codeStamped = "307"
+    codeExpired = "401"
 
     @staticmethod
     def open_file(pathFile):
@@ -22,54 +27,68 @@ class TestStampRetentions(unittest.TestCase):
     def testStampRetentions_xml(self):
         """Prueba timbrado con XML usando token"""
         
-        stamp = Stamp_Retentions("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
+        stamp = Stamp_Retentions(TestStampRetentions.url, os.environ["SDKTEST_TOKEN"])
         xml_content = TestStampRetentions.open_file("Test/resources/retenciones20.xml")
         response = stamp.stamp_retetions_v3(xml_content)
-        if response.get_status() == "error":
-            self.assertTrue(self.message == response.get_message() or self.messageAuth == response.get_message())
+        if response.get_status() == self.expectedError:
+            self.assertTrue(self.codeStamped in response.get_message() or self.codeExpired in response.get_message())
         else:
-            self.assertTrue(self.expected == response.get_status())
+            self.assertEqual(self.expected, response.get_status())
+            self.assertIsNotNone(response.get_data())
 
     def testStampRetentions_xml_Error(self):
         """Prueba error timbrado con XML CFDI"""
 
-        stamp = Stamp_Retentions("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
+        stamp = Stamp_Retentions(TestStampRetentions.url, os.environ["SDKTEST_TOKEN"])
         xml_content = TestStampRetentions.open_file("Test/resources/xml40.xml")
         response = stamp.stamp_retetions_v3(xml_content)
-        self.assertTrue(self.expected != response.get_status())
+        self.assertEqual(self.expectedError, response.get_status())
+        self.assertIsNotNone(response.get_message())
 
     def testStampRetentions_auth(self):
         """Prueba timbrado con autenticación de cuenta"""
         
         stamp = Stamp_Retentions(
-            "https://services.test.sw.com.mx",
+            TestStampRetentions.url,
             None,
             os.environ["SDKTEST_USER"],
             os.environ["SDKTEST_PASSWORD"]
         )
         xml_content = TestStampRetentions.open_file("Test/resources/retenciones20.xml")
         response = stamp.stamp_retetions_v3(xml_content)
-        if response.get_status() == "error":
-              self.assertTrue(self.message == response.get_message() or self.messageAuth == response.get_message())
+        if response.get_status() == self.expectedError:
+            self.assertTrue(self.codeStamped in response.get_message() or self.codeExpired in response.get_message())
         else:
-            self.assertTrue(self.expected == response.get_status())
+            self.assertEqual(self.expected, response.get_status())
+            self.assertIsNotNone(response.get_data())
 
     def testStampRetentions_authError(self):
         """Prueba error timbrado con autenticación de cuenta"""
         
         stamp = Stamp_Retentions(
-            "https://services.test.sw.com.mx",
+            TestStampRetentions.url,
             None,
             "wrongUser",
             os.environ["SDKTEST_PASSWORD"]
         )
         xml_content = TestStampRetentions.open_file("Test/resources/retenciones20.xml")
         response = stamp.stamp_retetions_v3(xml_content)
-        self.assertTrue(self.expected != response.get_status())
+        self.assertEqual(self.expectedError, response.get_status())
+        self.assertIsNotNone(response.get_message())
+
+
+    def testStampRetentions_invalidToken(self):
+        """Prueba error con un token invalido"""
+        stamp = Stamp_Retentions(TestStampRetentions.url, "token-invalido")
+        xml_content = TestStampRetentions.open_file("Test/resources/retenciones20.xml")
+        response = stamp.stamp_retetions_v3(xml_content)
+        self.assertEqual(self.expectedError, response.get_status())
+        self.assertIsNotNone(response.get_message())
 
 
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestStampRetentions)
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    sys.exit(not result.wasSuccessful())
 
 
