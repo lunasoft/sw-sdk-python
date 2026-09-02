@@ -17,16 +17,24 @@ class BalanceRequest:
         return BalanceResponse(response)
 
     @staticmethod
-    def stamp_distribution(urlApi, token, userId, stamps, comment,action):
-        """Asigna o remueve timbres de una cuenta hija."""
+    def add_stamps(urlApi, token, userId, stamps, comment):
+        """Asigna timbres a una cuenta hija."""
         endpoint = f"{urlApi}/management/v2/api/dealers/users/{userId}/stamps"
         payload = {
             "stamps": stamps,
             "comment": comment
         }
-        if action == "Add":
-            response = RequestHelper.post_json_request(endpoint,token,payload)
-        else:
-            response = RequestHelper.delete_json_request(endpoint, token, payload)
+        response = RequestHelper.post_json_request(endpoint,token,payload)
+        return AccountBalanceResponse(response)
+
+    @staticmethod
+    def remove_stamps(urlApi, token, userId, stamps, comment):
+        """Remueve timbres de una cuenta hija."""
+        endpoint = f"{urlApi}/management/v2/api/dealers/users/{userId}/stamps"
+        payload = {
+            "stamps": stamps,
+            "comment": comment
+        }
+        response = RequestHelper.delete_json_request(endpoint, token, payload)
         return AccountBalanceResponse(response)
     
