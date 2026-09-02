@@ -2,6 +2,7 @@ import unittest
 import os
 import sys
 import uuid
+from datetime import datetime, timedelta
 import requests
 
 #Función para poder importar módulos necesarios.
@@ -9,34 +10,53 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir
 sys.path.append(PROJECT_ROOT)
 
 from Storage.Storage import Storage
+from Utils.requestHelper import RequestHelper
 
 class TestStorage(unittest.TestCase):
     expected = "success"
     url = "https://services.test.sw.com.mx"
     urlApi = "https://api.test.sw.com.mx"
-    #SDKTEST_UUID: UUID de un CFDI timbrado en la cuenta de pruebas, nunca de un cliente real.
     uuidNotFound = "00000000-0000-0000-0000-000000000000"
     uuidInvalid = "no-es-uuid"
+    _uuidTimbrado = None
+
+    @classmethod
+    def stamped_uuid(cls):
+        #El UUID se toma de un CFDI timbrado en la propia cuenta, nunca se hardcodea:
+        #se consultan los timbrados de los ultimos 30 dias por rango de fechas.
+        if cls._uuidTimbrado is None:
+            hasta = datetime.now()
+            desde = hasta - timedelta(days=30)
+            endpoint = (f"{cls.urlApi}/datawarehouse/v1/live/"
+                        f"?startDate={desde.strftime('%Y-%m-%d')}&endDate={hasta.strftime('%Y-%m-%d')}")
+            registros = RequestHelper.get_json_request(endpoint, os.environ["SDKTEST_TOKEN"]).json()
+            registros = registros.get("data", {}).get("records", [])
+            if not registros:
+                raise unittest.SkipTest("La cuenta de pruebas no tiene CFDI timbrados en los ultimos 30 dias")
+            cls._uuidTimbrado = registros[0]["uuid"]
+        return cls._uuidTimbrado
 
     #UT Recuperación de XML por UUID
     def test_get_by_uuid(self):
         storage_obj = Storage(TestStorage.url, TestStorage.urlApi, os.environ["SDKTEST_TOKEN"])
-        response = storage_obj.get_by_uuid(os.environ["SDKTEST_UUID"])
+        uuidTimbrado = self.stamped_uuid()
+        response = storage_obj.get_by_uuid(uuidTimbrado)
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue(len(response.get_records()) > 0)
-        self.assertTrue(os.environ["SDKTEST_UUID"] == response.get_first_record()["uuid"])
+        self.assertTrue(uuidTimbrado == response.get_first_record()["uuid"])
         self.assertIsNotNone(response.get_url_xml(), "El valor de urlXml esta vacio")
 
     def test_get_by_uuid_uuidObject(self):
         #El UUID también se acepta como uuid.UUID, no sólo como cadena.
         storage_obj = Storage(TestStorage.url, TestStorage.urlApi, os.environ["SDKTEST_TOKEN"])
-        response = storage_obj.get_by_uuid(uuid.UUID(os.environ["SDKTEST_UUID"]))
+        uuidTimbrado = self.stamped_uuid()
+        response = storage_obj.get_by_uuid(uuid.UUID(uuidTimbrado))
         self.assertTrue(self.expected == response.get_status())
-        self.assertTrue(os.environ["SDKTEST_UUID"] == response.get_first_record()["uuid"])
+        self.assertTrue(uuidTimbrado == response.get_first_record()["uuid"])
 
     def test_get_by_uuid_auth(self):
         storage_obj = Storage(TestStorage.url, TestStorage.urlApi, None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = storage_obj.get_by_uuid(os.environ["SDKTEST_UUID"])
+        response = storage_obj.get_by_uuid(self.stamped_uuid())
         self.assertTrue(self.expected == response.get_status())
 
     #UT Consultas sin coincidencias

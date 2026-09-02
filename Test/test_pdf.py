@@ -4,19 +4,39 @@ import sys
 import time
 import uuid
 from base64 import b64decode
+from datetime import datetime, timedelta
 
 #Función para poder importar módulos necesarios.
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
 from Pdf.Pdf import Pdf
+from Utils.requestHelper import RequestHelper
 
 class TestPdf(unittest.TestCase):
     url = "https://services.test.sw.com.mx"
     urlApi = "https://api.test.sw.com.mx"
-    uuidTest = "3001449c-ef91-4bd5-a698-687bdea46414"
     uuidNotFound = "00000000-0000-0000-0000-000000000000"
     uuidInvalid = "no-es-uuid"
+    _uuidTimbrado = None
+
+    @classmethod
+    def stamped_uuid(cls):
+        #El UUID se toma de un CFDI timbrado en la propia cuenta, nunca se hardcodea:
+        #se consultan los timbrados de los ultimos 30 dias y se prefiere uno que ya
+        #tenga PDF, que es el caso que ejercita la regeneracion.
+        if cls._uuidTimbrado is None:
+            hasta = datetime.now()
+            desde = hasta - timedelta(days=30)
+            endpoint = (f"{cls.urlApi}/datawarehouse/v1/live/"
+                        f"?startDate={desde.strftime('%Y-%m-%d')}&endDate={hasta.strftime('%Y-%m-%d')}")
+            registros = RequestHelper.get_json_request(endpoint, os.environ["SDKTEST_TOKEN"]).json()
+            registros = registros.get("data", {}).get("records", [])
+            if not registros:
+                raise unittest.SkipTest("La cuenta de pruebas no tiene CFDI timbrados en los ultimos 30 dias")
+            conPdf = [r for r in registros if r.get("urlPDF") or r.get("urlPdf")]
+            cls._uuidTimbrado = (conPdf or registros)[0]["uuid"]
+        return cls._uuidTimbrado
 
     @staticmethod
     def open_file(pathFile):
@@ -104,7 +124,7 @@ class TestPdf(unittest.TestCase):
     def test_regenerate_pdf_token(self):
         TestPdf.esperar_limite()
         pdf = Pdf(TestPdf.url, TestPdf.urlApi, os.environ['SDKTEST_TOKEN'])
-        response = pdf.regenerate_pdf(TestPdf.uuidTest)
+        response = pdf.regenerate_pdf(self.stamped_uuid())
         self.assertTrue(response.get_status() == "success")
         self.assertTrue(200 == response.get_status_code())
         self.assertIn("correctamente", response.get_message())
@@ -112,13 +132,13 @@ class TestPdf(unittest.TestCase):
     def test_regenerate_pdf_auth(self):
         TestPdf.esperar_limite()
         pdf = Pdf(TestPdf.url, TestPdf.urlApi, None, os.environ['SDKTEST_USER'], os.environ['SDKTEST_PASSWORD'])
-        response = pdf.regenerate_pdf(TestPdf.uuidTest)
+        response = pdf.regenerate_pdf(self.stamped_uuid())
         self.assertTrue(response.get_status() == "success")
 
     def test_regenerate_pdf_uuidObject(self):
         TestPdf.esperar_limite()
         pdf = Pdf(TestPdf.url, TestPdf.urlApi, os.environ['SDKTEST_TOKEN'])
-        response = pdf.regenerate_pdf(uuid.UUID(TestPdf.uuidTest))
+        response = pdf.regenerate_pdf(uuid.UUID(self.stamped_uuid()))
         self.assertTrue(response.get_status() == "success")
 
     def test_regenerate_pdf_template_extras(self):
@@ -127,7 +147,7 @@ class TestPdf(unittest.TestCase):
         }
         TestPdf.esperar_limite()
         pdf = Pdf(TestPdf.url, TestPdf.urlApi, os.environ['SDKTEST_TOKEN'])
-        response = pdf.regenerate_pdf(TestPdf.uuidTest, None, "cfdi40", extras)
+        response = pdf.regenerate_pdf(self.stamped_uuid(), None, "cfdi40", extras)
         self.assertTrue(response.get_status() == "success")
 
     #UT de Error
@@ -155,7 +175,7 @@ class TestPdf(unittest.TestCase):
 
     def test_regenerate_pdf_invalidToken(self):
         pdf = Pdf(TestPdf.url, TestPdf.urlApi, "T2lYQ0t4.....")
-        response = pdf.regenerate_pdf(TestPdf.uuidTest)
+        response = pdf.regenerate_pdf(self.stamped_uuid())
         self.assertTrue(response.get_status() == "error")
         self.assertIsNotNone(response.get_message(), "El valor de message esta vacio")
 
