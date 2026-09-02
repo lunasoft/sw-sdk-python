@@ -27,4 +27,4 @@ class AccountUser(Services):
     def getUser_by_isActive(self, isActive,page=None,perPage=None):
         return AccountUserRequest.get_users(self.urlApi,self.get_token(),"IsActive",None,None,None,isActive,page=page,perPage=perPage)
     def getUser_by_name(self, name,page=None,perPage=None):
-        return AccountUserRequest.get_users(self.urlApi,self.get_token(),"Name",None,None,None,None,name,page,perPage)
+        return AccountUserRequest.get_users(self.urlApi,self.get_token(),"Name",name=name,page=page,perPage=perPage)
