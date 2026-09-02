@@ -43,5 +43,7 @@ class TestValidate(unittest.TestCase):
         self.assertTrue("No Aplica"== response.response['statusSat'])
         self.assertTrue("No Aplica"== response.response['statusCodeSat'])
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestValidate)
-unittest.TextTestRunner(verbosity=2).run(suite)
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestValidate)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    sys.exit(not result.wasSuccessful())

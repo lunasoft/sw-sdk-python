@@ -25,5 +25,7 @@ class TestPendings(unittest.TestCase):
         response = pendings.pendings("EKU9003173C9")
         self.assertTrue(self.expected == response.get_status())
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestPendings)
-unittest.TextTestRunner(verbosity=2).run(suite)
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestPendings)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    sys.exit(not result.wasSuccessful())

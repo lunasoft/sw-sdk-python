@@ -45,5 +45,7 @@ class TestCancelationRetentions(unittest.TestCase):
         response = cancel.CancelaUnoPFX("578052ce-710f-4d0b-9ffc-6ca73daf92a5", "EKU9003173C9", TestCancelationRetentions.open_file("Test/resources/b64Pfx.txt"), "12345678a", "02", "")
         self.assertTrue(self.expected == response.get_status())
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestCancelationRetentions)
-unittest.TextTestRunner(verbosity=2).run(suite)
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestCancelationRetentions)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    sys.exit(not result.wasSuccessful())

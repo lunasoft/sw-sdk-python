@@ -43,6 +43,8 @@ class TestRelations(unittest.TestCase):
         relations = Relations("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
         response = relations.relations_uuid("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90")
         self.assertTrue(self.expected == response.get_status())
-        
-suite = unittest.TestLoader().loadTestsFromTestCase(TestRelations)
-unittest.TextTestRunner(verbosity=2).run(suite)
+
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestRelations)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    sys.exit(not result.wasSuccessful())

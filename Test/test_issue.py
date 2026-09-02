@@ -63,6 +63,8 @@ class TestIssue(unittest.TestCase):
             self.assertTrue(self.message == response.get_message())
         else:
             self.assertTrue(self.expected == response.get_status())
-    
-suite = unittest.TestLoader().loadTestsFromTestCase(TestIssue)
-unittest.TextTestRunner(verbosity=2).run(suite)
+
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestIssue)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    sys.exit(not result.wasSuccessful())

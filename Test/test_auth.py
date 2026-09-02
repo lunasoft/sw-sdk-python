@@ -22,6 +22,8 @@ class TestAuth(unittest.TestCase):
         response = auth.authentication()
         self.assertTrue(self.expectedError == response.get_status())
         self.assertIsNotNone(response.get_message(),"El valor de message esta vacio")
-        
-suite = unittest.TestLoader().loadTestsFromTestCase(TestAuth)
-unittest.TextTestRunner(verbosity=2).run(suite)
+
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestAuth)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    sys.exit(not result.wasSuccessful())

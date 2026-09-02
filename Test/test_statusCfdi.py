@@ -18,5 +18,7 @@ class TestStatusCfdi(unittest.TestCase):
         self.assertIsNotNone(objStatus.esCancelable)
         self.assertIsNotNone(objStatus.estado)
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestStatusCfdi)
-unittest.TextTestRunner(verbosity=2).run(suite)
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestStatusCfdi)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    sys.exit(not result.wasSuccessful())
