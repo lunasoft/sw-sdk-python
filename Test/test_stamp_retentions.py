@@ -18,7 +18,7 @@ class TestStampRetentions(unittest.TestCase):
         try:
             return open(pathFile, "r", encoding='utf-8').read()
         except UnicodeDecodeError:
-            return open(pathFile, "r", encoding='latin_1', errors='ignore').read()
+            return open(pathFile, "r", encoding='utf-8').read()
 
     def testStampRetentions_xml(self):
         """Prueba timbrado con XML usando token"""

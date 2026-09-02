@@ -12,7 +12,7 @@ sys.path.append(PROJECT_ROOT)
 from Pdf.Pdf import Pdf
 
 class TestPdf(unittest.TestCase):
-    url = "https://services.test.sw.com.mx"
+    url = "http://services.test.sw.com.mx"
     urlApi = "https://api.test.sw.com.mx"
     uuidTest = "3001449c-ef91-4bd5-a698-687bdea46414"
     uuidNotFound = "00000000-0000-0000-0000-000000000000"
@@ -20,7 +20,8 @@ class TestPdf(unittest.TestCase):
 
     @staticmethod
     def open_file(pathFile):
-        out = open(pathFile,"r", encoding='latin_1', errors='ignore').read()
+        with open(pathFile, "r", encoding='utf-8') as file:
+            out = file.read()
         return out
     
     @staticmethod

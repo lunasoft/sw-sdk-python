@@ -12,7 +12,8 @@ class TestValidate(unittest.TestCase):
     expected = "success"
     @staticmethod
     def open_file(pathFile):
-        out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
+        with open(pathFile, "r", encoding='utf-8') as file:
+            out = file.read()
         return out
     
     def testValidateXml_Auth(self):

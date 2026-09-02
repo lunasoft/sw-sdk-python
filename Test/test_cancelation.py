@@ -12,7 +12,8 @@ class TestCancelation(unittest.TestCase):
     expected = "success"
     @staticmethod
     def open_file(pathFile):
-        out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
+        with open(pathFile, "r", encoding='utf-8') as file:
+            out = file.read()
         return out
     
     def testCancelXml_auth(self):
@@ -37,12 +38,12 @@ class TestCancelation(unittest.TestCase):
         
     def testCancelPfx_auth(self):
         cancel = Cancelation("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = cancel.CancelPfx("3dda215e-4c77-4923-94a1-627e0a04378c", "EKU9003173C9", TestCancelation.open_file("Test/resources/b64PFX.txt"), "12345678a", "02", "")
+        response = cancel.CancelPfx("3dda215e-4c77-4923-94a1-627e0a04378c", "EKU9003173C9", TestCancelation.open_file("Test/resources/b64Pfx.txt"), "12345678a", "02", "")
         self.assertTrue(self.expected == response.get_status())
 
     def testCancelPfx(self):
         cancel = Cancelation("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
-        response = cancel.CancelPfx("3dda215e-4c77-4923-94a1-627e0a04378c", "EKU9003173C9", TestCancelation.open_file("Test/resources/b64PFX.txt"), "12345678a", "02", "")
+        response = cancel.CancelPfx("3dda215e-4c77-4923-94a1-627e0a04378c", "EKU9003173C9", TestCancelation.open_file("Test/resources/b64Pfx.txt"), "12345678a", "02", "")
         self.assertTrue(self.expected == response.get_status())
     
     def testCancelUuid_auth(self):

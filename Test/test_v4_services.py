@@ -22,7 +22,7 @@ from Utils.response_version import ResponseVersion
 class TestV4Basic(unittest.TestCase):
 
     def setUp(self):
-        self.url = "https://services.test.sw.com.mx"
+        self.url = "http://services.test.sw.com.mx"
         self.urlApi = "https://api.test.sw.com.mx"
         self.user = os.environ.get("SDKTEST_USER")
         self.password = os.environ.get("SDKTEST_PASSWORD")

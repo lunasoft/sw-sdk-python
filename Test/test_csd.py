@@ -10,12 +10,12 @@ from Csd.Csd import Csd
 
 class TestCsd(unittest.TestCase):
     expected = "success"
-    url = "https://services.test.sw.com.mx"
+    url = "http://services.test.sw.com.mx"
     #Certificado de pruebas Test/resources/b64CSD.txt
     noCertificado = "30001000000500003416"
     @staticmethod
     def open_file(pathFile):
-        with open(pathFile, "r", encoding='ansi', errors='ignore') as file:
+        with open(pathFile, "r", encoding='utf-8') as file:
             out = file.read()
         return out
     

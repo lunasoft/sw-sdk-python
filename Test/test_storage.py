@@ -12,7 +12,7 @@ from Storage.Storage import Storage
 
 class TestStorage(unittest.TestCase):
     expected = "success"
-    url = "https://services.test.sw.com.mx"
+    url = "http://services.test.sw.com.mx"
     urlApi = "https://api.test.sw.com.mx"
     #SDKTEST_UUID: UUID de un CFDI timbrado en la cuenta de pruebas, nunca de un cliente real.
     uuidNotFound = "00000000-0000-0000-0000-000000000000"

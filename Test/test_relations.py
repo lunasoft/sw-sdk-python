@@ -11,7 +11,8 @@ class TestRelations(unittest.TestCase):
     expected = "success"
     @staticmethod
     def open_file(pathFile):
-        out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
+        with open(pathFile, "r", encoding='utf-8') as file:
+            out = file.read()
         return out
     
     def testRelationsCsd_auth(self):
@@ -26,12 +27,12 @@ class TestRelations(unittest.TestCase):
         
     def testRelationsPfx_auth(self):
         relations = Relations("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = relations.relations_pfx("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90",TestRelations.open_file("Test/resources/b64PFX.txt"),"12345678a")
+        response = relations.relations_pfx("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90",TestRelations.open_file("Test/resources/b64Pfx.txt"),"12345678a")
         self.assertTrue(self.expected == response.get_status())
         
     def testRelationsPfx(self):
         relations = Relations("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
-        response = relations.relations_pfx("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90",TestRelations.open_file("Test/resources/b64PFX.txt"),"12345678a")
+        response = relations.relations_pfx("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90",TestRelations.open_file("Test/resources/b64Pfx.txt"),"12345678a")
         self.assertTrue(self.expected == response.get_status())
         
     def testRelationsUuid_auth(self):

@@ -12,7 +12,8 @@ class TestStamp(unittest.TestCase):
     message = "307. El comprobante contiene un timbre previo."
     @staticmethod
     def open_file(pathFile):
-        out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
+        with open(pathFile, "r", encoding='utf-8') as file:
+            out = file.read()
         return out
     
     def testStamp_auth(self):
