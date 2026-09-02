@@ -49,7 +49,7 @@ class TestIssue(unittest.TestCase):
         
     def testIssue(self):
         xml_path = self.update_date_xml("Test/resources/xml40.xml")
-        issue = Issue("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        issue = Issue("https://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = issue.issue_v4(xml_path)
         if response.get_status() == "error":
             self.assertTrue(self.message == response.get_message())
@@ -58,7 +58,7 @@ class TestIssue(unittest.TestCase):
                    
     def testIssueJson(self):
         json_path = self.update_date_json("Test/resources/cfdi.json")
-        issue = Issue("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        issue = Issue("https://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = issue.issue_json_v4(json_path)
         if response.get_status() == "error":
             self.assertTrue(self.message == response.get_message())

@@ -17,32 +17,32 @@ class TestCancelationRetentions(unittest.TestCase):
         return out
     
     def testCancelaUno_auth(self):
-        cancel = CancelationRetentions("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        cancel = CancelationRetentions("https://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = cancel.CancelaUno(TestCancelationRetentions.open_file("Test/resources/cancelRetByXml.xml"))
         self.assertTrue(self.expected == response.get_status())
         
     def testCancelaUno(self):
-        cancel = CancelationRetentions("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
+        cancel = CancelationRetentions("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
         response = cancel.CancelaUno(TestCancelationRetentions.open_file("Test/resources/cancelRetByXml.xml"))
         self.assertTrue(self.expected == response.get_status())
     
     def testCancelaUnoCSD_auth(self):
-        cancel = CancelationRetentions("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        cancel = CancelationRetentions("https://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = cancel.CancelaUnoCSD("578052ce-710f-4d0b-9ffc-6ca73daf92a5", "EKU9003173C9", TestCancelationRetentions.open_file("Test/resources/b64CSD.txt"), TestCancelationRetentions.open_file("Test/resources/b64Key.txt"),"12345678a", "02", "")
         self.assertTrue(self.expected == response.get_status())
 
     def testCancelaUnoCSD(self):
-        cancel = CancelationRetentions("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
+        cancel = CancelationRetentions("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
         response = cancel.CancelaUnoCSD("578052ce-710f-4d0b-9ffc-6ca73daf92a5", "EKU9003173C9", TestCancelationRetentions.open_file("Test/resources/b64CSD.txt"), TestCancelationRetentions.open_file("Test/resources/b64Key.txt"),"12345678a", "02", "")
         self.assertTrue(self.expected == response.get_status())
         
     def testCancelaUnoPFX_auth(self):
-        cancel = CancelationRetentions("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        cancel = CancelationRetentions("https://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = cancel.CancelaUnoPFX("578052ce-710f-4d0b-9ffc-6ca73daf92a5", "EKU9003173C9", TestCancelationRetentions.open_file("Test/resources/b64Pfx.txt"), "12345678a", "02", "")
         self.assertTrue(self.expected == response.get_status())
 
     def testCancelaUnoPFX(self):
-        cancel = CancelationRetentions("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
+        cancel = CancelationRetentions("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
         response = cancel.CancelaUnoPFX("578052ce-710f-4d0b-9ffc-6ca73daf92a5", "EKU9003173C9", TestCancelationRetentions.open_file("Test/resources/b64Pfx.txt"), "12345678a", "02", "")
         self.assertTrue(self.expected == response.get_status())
 

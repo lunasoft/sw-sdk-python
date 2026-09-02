@@ -17,7 +17,7 @@ class TestStamp(unittest.TestCase):
         return out
     
     def testStamp_auth(self):
-        stamp = Stamp("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        stamp = Stamp("https://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = stamp.stamp_v4(TestStamp.open_file("Test/resources/xml40Stamp.xml"))
         if response.get_status() == "error":
             self.assertTrue(self.message == response.get_message())
@@ -25,7 +25,7 @@ class TestStamp(unittest.TestCase):
             self.assertTrue(self.expected == response.get_status())
             
     def testStamp(self):
-        stamp = Stamp("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
+        stamp = Stamp("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
         response = stamp.stamp_v4(TestStamp.open_file("Test/resources/xml40Stamp.xml"))
         if response.get_status() == "error":
             self.assertTrue(self.message == response.get_message())

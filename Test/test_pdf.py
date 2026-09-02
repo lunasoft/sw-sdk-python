@@ -12,7 +12,7 @@ sys.path.append(PROJECT_ROOT)
 from Pdf.Pdf import Pdf
 
 class TestPdf(unittest.TestCase):
-    url = "http://services.test.sw.com.mx"
+    url = "https://services.test.sw.com.mx"
     urlApi = "https://api.test.sw.com.mx"
     uuidTest = "3001449c-ef91-4bd5-a698-687bdea46414"
     uuidNotFound = "00000000-0000-0000-0000-000000000000"
@@ -40,7 +40,7 @@ class TestPdf(unittest.TestCase):
         xml = TestPdf.open_file("Test/resources/filePdf.xml")
         logo = None
         extras = None
-        pdf = Pdf("http://services.test.sw.com.mx","https://api.test.sw.com.mx", None, os.environ['SDKTEST_USER'], os.environ['SDKTEST_PASSWORD'])
+        pdf = Pdf("https://services.test.sw.com.mx","https://api.test.sw.com.mx", None, os.environ['SDKTEST_USER'], os.environ['SDKTEST_PASSWORD'])
         response = pdf.generate_pdf(xml,logo, "cfdi40",extras)
         self.assertTrue(response.get_status() == "success")
         
@@ -48,7 +48,7 @@ class TestPdf(unittest.TestCase):
         xml = TestPdf.open_file("Test/resources/filePdf.xml")
         logo = None
         extras = None
-        pdf = Pdf("http://services.test.sw.com.mx","https://api.test.sw.com.mx",os.environ['SDKTEST_TOKEN'])
+        pdf = Pdf("https://services.test.sw.com.mx","https://api.test.sw.com.mx",os.environ['SDKTEST_TOKEN'])
         response = pdf.generate_pdf(xml,logo,"cfdi40",extras)
         self.assertTrue(response.get_status() == "success")
         
@@ -56,7 +56,7 @@ class TestPdf(unittest.TestCase):
         xml = TestPdf.open_file("Test/resources/filePdf.xml")
         logo = None
         extras = None
-        pdf = Pdf("http://services.test.sw.com.mx","https://api.test.sw.com.mx","T2lYQ0t4.....")
+        pdf = Pdf("https://services.test.sw.com.mx","https://api.test.sw.com.mx","T2lYQ0t4.....")
         response = pdf.generate_pdf(xml,logo,"cfdi40",extras)
         self.assertTrue(response.get_status() == "error")
         
@@ -66,7 +66,7 @@ class TestPdf(unittest.TestCase):
         extras = {
             'REFERENCIA': "Referencia de pruebas"
         }
-        pdf = Pdf("http://services.test.sw.com.mx","https://api.test.sw.com.mx",os.environ['SDKTEST_TOKEN'])
+        pdf = Pdf("https://services.test.sw.com.mx","https://api.test.sw.com.mx",os.environ['SDKTEST_TOKEN'])
         response = pdf.generate_pdf(xml,logo,"cfdi40",extras)
         TestPdf.save_pdf(response.data['contentB64'])
         self.assertTrue(response.get_status() == "success")
@@ -75,7 +75,7 @@ class TestPdf(unittest.TestCase):
         xml = TestPdf.open_file("Test/resources/filePdf.xml")
         logo = None
         extras = None
-        pdf = Pdf("http://services.test.sw.com.mx","https://api.test.sw.com.mx",os.environ['SDKTEST_TOKEN'])
+        pdf = Pdf("https://services.test.sw.com.mx","https://api.test.sw.com.mx",os.environ['SDKTEST_TOKEN'])
         response = pdf.generate_pdf(xml,logo,"cfdi40",extras)
         self.assertTrue(response.get_status() == "success")
         print("Datos")
@@ -96,7 +96,7 @@ class TestPdf(unittest.TestCase):
         extras = {
             'REFERENCIA': "Referencia de pruebas"
         }
-        pdf = Pdf("http://services.test.sw.com.mx","https://api.test.sw.com.mx",os.environ['SDKTEST_TOKEN'])
+        pdf = Pdf("https://services.test.sw.com.mx","https://api.test.sw.com.mx",os.environ['SDKTEST_TOKEN'])
         response = pdf.generate_pdf(xml,logo,"cfdi40",extras)
         self.assertTrue(response.get_status() == "success")
         print("Datos")

@@ -24,7 +24,7 @@ class TestStampRetentions(unittest.TestCase):
         """Prueba timbrado con XML usando token"""
         print("\n=== Prueba: Timbrado con XML (token) ===")
         
-        stamp = Stamp_Retentions("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
+        stamp = Stamp_Retentions("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
         xml_content = TestStampRetentions.open_file("Test/resources/retenciones20.xml")
         response = stamp.stamp_retetions_v3(xml_content)
         
@@ -38,7 +38,7 @@ class TestStampRetentions(unittest.TestCase):
         """Prueba error timbrado con XML CFDI"""
         print("\n=== Prueba: Timbrado con XML (token) ===")
 
-        stamp = Stamp_Retentions("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
+        stamp = Stamp_Retentions("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
         xml_content = TestStampRetentions.open_file("Test/resources/xml40.xml")
         response = stamp.stamp_retetions_v3(xml_content)
 
@@ -50,7 +50,7 @@ class TestStampRetentions(unittest.TestCase):
         print("\n=== Prueba: Timbrado con auth ===")
         
         stamp = Stamp_Retentions(
-            "http://services.test.sw.com.mx",
+            "https://services.test.sw.com.mx",
             None,
             os.environ["SDKTEST_USER"],
             os.environ["SDKTEST_PASSWORD"]
@@ -69,7 +69,7 @@ class TestStampRetentions(unittest.TestCase):
         print("\n=== Prueba: Timbrado con auth ===")
         
         stamp = Stamp_Retentions(
-            "http://services.test.sw.com.mx",
+            "https://services.test.sw.com.mx",
             None,
             "wrongUser",
             os.environ["SDKTEST_PASSWORD"]

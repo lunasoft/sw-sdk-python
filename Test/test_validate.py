@@ -17,28 +17,28 @@ class TestValidate(unittest.TestCase):
         return out
     
     def testValidateXml_Auth(self):
-        validate = Validate("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        validate = Validate("https://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = validate.ValidateXml(TestValidate.open_file("Test/resources/xml40Stamp.xml"))
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue("Vigente"== response.response['statusSat'])
         self.assertTrue("S - Comprobante obtenido satisfactoriamente"== response.response['statusCodeSat'])
         
     def testValidateXml(self):
-        validate = Validate("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
+        validate = Validate("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
         response = validate.ValidateXml(TestValidate.open_file("Test/resources/xml40Stamp.xml"))
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue("Vigente"== response.response['statusSat'])
         self.assertTrue("S - Comprobante obtenido satisfactoriamente"== response.response['statusCodeSat'])
         
     def testValidateXml_WithStatus(self):
-        validate = Validate("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
+        validate = Validate("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
         response = validate.ValidateXml(TestValidate.open_file("Test/resources/xml40Stamp.xml"),True)
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue("Vigente"== response.response['statusSat'])
         self.assertTrue("S - Comprobante obtenido satisfactoriamente"== response.response['statusCodeSat'])
         
     def testValidateXml_WithoutStatus(self):
-        validate = Validate("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
+        validate = Validate("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
         response = validate.ValidateXml(TestValidate.open_file("Test/resources/xml40Stamp.xml"),False)
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue("No Aplica"== response.response['statusSat'])

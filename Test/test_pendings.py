@@ -17,12 +17,12 @@ class TestPendings(unittest.TestCase):
         return out
     
     def testPendings_auth(self):
-        pendings = Pendings("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        pendings = Pendings("https://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
         response = pendings.pendings("EKU9003173C9")
         self.assertTrue(self.expected == response.get_status())
         
     def testPendings(self):
-        pendings = Pendings("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
+        pendings = Pendings("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
         response = pendings.pendings("EKU9003173C9")
         self.assertTrue(self.expected == response.get_status())
 
