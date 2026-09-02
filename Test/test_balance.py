@@ -133,8 +133,10 @@ class TestBalance(unittest.TestCase):
         idUser = uuid.UUID(self.child_user_id())
         balance = Balance(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
         add = balance.add_stamps(idUser, 1, self.comment)
-        self.assertEqual(self.expected, add.get_status())
-        remove = balance.remove_stamps(idUser, 1, self.comment)
+        try:
+            self.assertEqual(self.expected, add.get_status())
+        finally:
+            remove = balance.remove_stamps(idUser, 1, self.comment)
         self.assertEqual(self.expected, remove.get_status())
         self.assertEqual(add.get_data() - 1, remove.get_data())
 
@@ -143,8 +145,10 @@ class TestBalance(unittest.TestCase):
         idUser = self.child_user_id()
         balance = Balance(self.url, self.urlApi, os.environ["SDKTEST_TOKEN"])
         add = balance.add_stamps(idUser, 1, None)
-        self.assertEqual(self.expected, add.get_status())
-        remove = balance.remove_stamps(idUser, 1, "")
+        try:
+            self.assertEqual(self.expected, add.get_status())
+        finally:
+            remove = balance.remove_stamps(idUser, 1, "")
         self.assertEqual(self.expected, remove.get_status())
         self.assertEqual(add.get_data() - 1, remove.get_data())
 
