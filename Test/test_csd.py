@@ -13,6 +13,9 @@ class TestCsd(unittest.TestCase):
     url = "https://services.test.sw.com.mx"
     #Certificado de pruebas Test/resources/b64CSD.txt
     noCertificado = "30001000000500003416"
+    #Contrasena del CSD publico de pruebas del SAT, no de una cuenta: se puede
+    #sobrescribir con SDKTEST_CSD_PASSWORD.
+    passwordCsd = os.environ.get("SDKTEST_CSD_PASSWORD", "12345678a")
     @staticmethod
     def open_file(pathFile):
         with open(pathFile, "r", encoding='utf-8') as file:
@@ -21,12 +24,12 @@ class TestCsd(unittest.TestCase):
     
     def testUploadCsd_auth(self):
         csd_obj = Csd("https://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"),"12345678a")
+        response = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"),TestCsd.passwordCsd)
         self.assertTrue(self.expected == response.get_status())
         
     def testUploadCsd(self):
         csd_obj = Csd("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
-        response = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"),"12345678a")
+        response = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"),TestCsd.passwordCsd)
         self.assertTrue(self.expected == response.get_status())
 
     #UT Consulta de certificados
@@ -105,7 +108,7 @@ class TestCsd(unittest.TestCase):
     @unittest.skipUnless(os.environ.get("SDKTEST_CSD_DELETE"), "Prueba destructiva, definir SDKTEST_CSD_DELETE para ejecutarla")
     def testDisableCsd(self):
         csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
-        upload = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"), "12345678a")
+        upload = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"), TestCsd.passwordCsd)
         self.assertTrue(self.expected == upload.get_status())
         certificate_number = TestCsd.noCertificado
         response = csd_obj.disable_csd(certificate_number)
