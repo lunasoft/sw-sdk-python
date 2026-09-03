@@ -12,9 +12,12 @@ class Balance(Services):
     
     def get_balance(self):
         return BalanceRequest.account_balance(self.urlApi, self.get_token())
-    
+
+    def get_balance_by_id(self, idUser):
+        return BalanceRequest.account_balance_by_id(self.urlApi, self.get_token(), idUser)
+
     def add_stamps(self, userId, stamps, comment):
-        return BalanceRequest.stamp_distribution(self.urlApi, self.get_token(), userId, stamps, comment,"Add")
+        return BalanceRequest.add_stamps(self.urlApi, self.get_token(), userId, stamps, comment)
 
     def remove_stamps(self, userId, stamps, comment):
-        return BalanceRequest.stamp_distribution(self.urlApi, self.get_token(), userId, stamps, comment,"Remove")
+        return BalanceRequest.remove_stamps(self.urlApi, self.get_token(), userId, stamps, comment)

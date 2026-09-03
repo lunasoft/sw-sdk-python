@@ -563,7 +563,7 @@ if objResponseAccountUser.get_status() ==  "error":
 else:
 	#Procesamiento de la respuesta
 	for Key,Value in objResponseAccountUser.response["data"].items():
-  		print (Key,"=",Value)
+		print (Key,"=",Value)
 ```
 
 **Ejemplo de consumo de la libreria para crear un usuario mediante token**
@@ -588,7 +588,7 @@ if objResponseAccountUser.get_status() ==  "error":
 else:
 	#Procesamiento de la respuesta
 	for Key,Value in objResponseAccountUser.response["data"].items():
-  		print (Key,"=",Value)
+		print (Key,"=",Value)
 ```
 
 :pushpin: ***NOTA:*** La contraseña debe cumplir con las siguientes politicas:
@@ -720,10 +720,17 @@ else:
 <details>
   <summary>Obtener todos los usuarios</summary>
 
-<br>Este método recibe los siguientes parametros:
+<br>La consulta regresa los usuarios asociados al token de la petición, es decir las cuentas hijas de la cuenta padre autenticada.
+
+Este método recibe los siguientes parametros:
 * Usuario y contraseña o Token de la cuenta padre.
 * Url Servicios SW
 * Url Api
+* Página a consultar, opcional
+* Número de registros por página, opcional, hasta 50
+
+> [!NOTE]
+> La consulta viene paginada. Si no se indica el tamaño de página, el servicio regresa los primeros 10 registros y en `get_meta()` se puede consultar cuántos hay en total.
 
 **Ejemplo de consumo de la libreria para obtener todos los usarios de una cuenta administradora o padre**
 ```py
@@ -738,19 +745,19 @@ if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_messageDetail())
 else:
 	#Obtenemos los datos de los usuarios
-	for user in response.data.items:
-        print("\tName: ",user.name)
-        print("\tIdDelear: ",user.idDealer)
-        print("\tIdUser: ",user.idUser)
-        print("\t taxId: ",user.taxId)
-        print("\t username: ",user.username)
-        print("\t email: ",user.email)
-        print("\t profile: ",user.profile)
-        print("\t isAcrtive: ",user.isActive)
-        print("\t accessToken: ",user.accessToken)
-        print("\t stamps: ",user.stamps)
-        print("\t phone: ",user.phone)
-        print("\t isUnlimited: ",user.isUnlimited)
+	for user in objResponseAccountUser.data.items:
+		print("\tName: ",user.name)
+		print("\tIdDelear: ",user.idDealer)
+		print("\tIdUser: ",user.idUser)
+		print("\t taxId: ",user.taxId)
+		print("\t username: ",user.username)
+		print("\t email: ",user.email)
+		print("\t profile: ",user.profile)
+		print("\t isAcrtive: ",user.isActive)
+		print("\t accessToken: ",user.accessToken)
+		print("\t stamps: ",user.stamps)
+		print("\t phone: ",user.phone)
+		print("\t isUnlimited: ",user.isUnlimited)
 ```
 **Ejemplo de consumo de la libreria para obtener todos los usarios de una cuenta administradora o padre mediante token**
 ```py
@@ -765,19 +772,42 @@ if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_messageDetail())
 else:
 	#Obtenemos los datos de los usuarios
-	for user in response.data.items:
-        print("\tName: ",user.name)
-        print("\tIdDelear: ",user.idDealer)
-        print("\tIdUser: ",user.idUser)
-        print("\t taxId: ",user.taxId)
-        print("\t username: ",user.username)
-        print("\t email: ",user.email)
-        print("\t profile: ",user.profile)
-        print("\t isAcrtive: ",user.isActive)
-        print("\t accessToken: ",user.accessToken)
-        print("\t stamps: ",user.stamps)
-        print("\t phone: ",user.phone)
-        print("\t isUnlimited: ",user.isUnlimited)
+	for user in objResponseAccountUser.data.items:
+		print("\tName: ",user.name)
+		print("\tIdDelear: ",user.idDealer)
+		print("\tIdUser: ",user.idUser)
+		print("\t taxId: ",user.taxId)
+		print("\t username: ",user.username)
+		print("\t email: ",user.email)
+		print("\t profile: ",user.profile)
+		print("\t isAcrtive: ",user.isActive)
+		print("\t accessToken: ",user.accessToken)
+		print("\t stamps: ",user.stamps)
+		print("\t phone: ",user.phone)
+		print("\t isUnlimited: ",user.isUnlimited)
+```
+
+**Ejemplo de consumo de la libreria para recorrer la consulta por páginas**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AccountUser.AccountUser import AccountUser
+
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",token)
+objResponseAccountUser = objAccountUser.getUser_all(1, 50)
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
+else:
+	#Obtenemos la paginación de la consulta
+	meta = objResponseAccountUser.get_meta()
+	print("\t Página: ",meta["page"])
+	print("\t Registros por página: ",meta["perPage"])
+	print("\t Total de registros: ",meta["totalCount"])
+	print("\t Total de páginas: ",meta["totalPages"])
+	#Con el total de páginas se recorren las siguientes
+	for user in objResponseAccountUser.data.items:
+		print("\tName: ",user.name)
 ```
 
 </details>
@@ -789,6 +819,8 @@ else:
 * Url Servicios SW
 * Url Api
 * IdUser
+* Página a consultar, opcional
+* Número de registros por página, opcional, hasta 50
 
 **Ejemplo de consumo de la libreria para obtener usuario por ID**
 ```py
@@ -804,19 +836,19 @@ if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_messageDetail())
 else:
 	#Obtenemos la respuesta
-	for user in response.data.items:
-        print("\tName: ",user.name)
-        print("\tIdDelear: ",user.idDealer)
-        print("\tIdUser: ",user.idUser)
-        print("\t taxId: ",user.taxId)
-        print("\t username: ",user.username)
-        print("\t email: ",user.email)
-        print("\t profile: ",user.profile)
-        print("\t isAcrtive: ",user.isActive)
-        print("\t accessToken: ",user.accessToken)
-        print("\t stamps: ",user.stamps)
-        print("\t phone: ",user.phone)
-        print("\t isUnlimited: ",user.isUnlimited)
+	for user in objResponseAccountUser.data.items:
+		print("\tName: ",user.name)
+		print("\tIdDelear: ",user.idDealer)
+		print("\tIdUser: ",user.idUser)
+		print("\t taxId: ",user.taxId)
+		print("\t username: ",user.username)
+		print("\t email: ",user.email)
+		print("\t profile: ",user.profile)
+		print("\t isAcrtive: ",user.isActive)
+		print("\t accessToken: ",user.accessToken)
+		print("\t stamps: ",user.stamps)
+		print("\t phone: ",user.phone)
+		print("\t isUnlimited: ",user.isUnlimited)
 ```
 **Ejemplo de consumo de la libreria para obtener usuario por ID mediante el token**
 ```py
@@ -832,19 +864,19 @@ if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_messageDetail())
 else:
 	#Obtenemos la respuesta
-	for user in response.data.items:
-        print("\tName: ",user.name)
-        print("\tIdDelear: ",user.idDealer)
-        print("\tIdUser: ",user.idUser)
-        print("\t taxId: ",user.taxId)
-        print("\t username: ",user.username)
-        print("\t email: ",user.email)
-        print("\t profile: ",user.profile)
-        print("\t isAcrtive: ",user.isActive)
-        print("\t accessToken: ",user.accessToken)
-        print("\t stamps: ",user.stamps)
-        print("\t phone: ",user.phone)
-        print("\t isUnlimited: ",user.isUnlimited)
+	for user in objResponseAccountUser.data.items:
+		print("\tName: ",user.name)
+		print("\tIdDelear: ",user.idDealer)
+		print("\tIdUser: ",user.idUser)
+		print("\t taxId: ",user.taxId)
+		print("\t username: ",user.username)
+		print("\t email: ",user.email)
+		print("\t profile: ",user.profile)
+		print("\t isAcrtive: ",user.isActive)
+		print("\t accessToken: ",user.accessToken)
+		print("\t stamps: ",user.stamps)
+		print("\t phone: ",user.phone)
+		print("\t isUnlimited: ",user.isUnlimited)
 ```
 </details>
 <details>
@@ -855,6 +887,8 @@ else:
 * Url Servicios SW
 * Url Api
 * Email del usuario a consulta.
+* Página a consultar, opcional
+* Número de registros por página, opcional, hasta 50
 
 **Ejemplo de consumo de la libreria para obtener todos los usuarios**
 ```py
@@ -870,19 +904,19 @@ if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_messageDetail())
 else:
 	#Obtenemos la respuesta
-	for user in response.data.items:
-        print("\tName: ",user.name)
-        print("\tIdDelear: ",user.idDealer)
-        print("\tIdUser: ",user.idUser)
-        print("\t taxId: ",user.taxId)
-        print("\t username: ",user.username)
-        print("\t email: ",user.email)
-        print("\t profile: ",user.profile)
-        print("\t isAcrtive: ",user.isActive)
-        print("\t accessToken: ",user.accessToken)
-        print("\t stamps: ",user.stamps)
-        print("\t phone: ",user.phone)
-        print("\t isUnlimited: ",user.isUnlimited)
+	for user in objResponseAccountUser.data.items:
+		print("\tName: ",user.name)
+		print("\tIdDelear: ",user.idDealer)
+		print("\tIdUser: ",user.idUser)
+		print("\t taxId: ",user.taxId)
+		print("\t username: ",user.username)
+		print("\t email: ",user.email)
+		print("\t profile: ",user.profile)
+		print("\t isAcrtive: ",user.isActive)
+		print("\t accessToken: ",user.accessToken)
+		print("\t stamps: ",user.stamps)
+		print("\t phone: ",user.phone)
+		print("\t isUnlimited: ",user.isUnlimited)
 ```
 **Ejemplo de consumo de la libreria para obtener todos los usuarios mediante token**
 ```py
@@ -898,19 +932,19 @@ if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_messageDetail())
 else:
 	#Obtenemos la respuesta
-	for user in response.data.items:
-        print("\tName: ",user.name)
-        print("\tIdDelear: ",user.idDealer)
-        print("\tIdUser: ",user.idUser)
-        print("\t taxId: ",user.taxId)
-        print("\t username: ",user.username)
-        print("\t email: ",user.email)
-        print("\t profile: ",user.profile)
-        print("\t isAcrtive: ",user.isActive)
-        print("\t accessToken: ",user.accessToken)
-        print("\t stamps: ",user.stamps)
-        print("\t phone: ",user.phone)
-        print("\t isUnlimited: ",user.isUnlimited)
+	for user in objResponseAccountUser.data.items:
+		print("\tName: ",user.name)
+		print("\tIdDelear: ",user.idDealer)
+		print("\tIdUser: ",user.idUser)
+		print("\t taxId: ",user.taxId)
+		print("\t username: ",user.username)
+		print("\t email: ",user.email)
+		print("\t profile: ",user.profile)
+		print("\t isAcrtive: ",user.isActive)
+		print("\t accessToken: ",user.accessToken)
+		print("\t stamps: ",user.stamps)
+		print("\t phone: ",user.phone)
+		print("\t isUnlimited: ",user.isUnlimited)
 ```
 </details>
 <details>
@@ -921,6 +955,8 @@ else:
 * Url Servicios SW
 * Url Api
 * RFC del usuario a consultar.
+* Página a consultar, opcional
+* Número de registros por página, opcional, hasta 50
 
 **Ejemplo de consumo de la libreria para obtener todos los usuarios**
 ```py
@@ -936,19 +972,19 @@ if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_messageDetail())
 else:
 	#Obtenemos la respuesta
-	for user in response.data.items:
-        print("\tName: ",user.name)
-        print("\tIdDelear: ",user.idDealer)
-        print("\tIdUser: ",user.idUser)
-        print("\t taxId: ",user.taxId)
-        print("\t username: ",user.username)
-        print("\t email: ",user.email)
-        print("\t profile: ",user.profile)
-        print("\t isAcrtive: ",user.isActive)
-        print("\t accessToken: ",user.accessToken)
-        print("\t stamps: ",user.stamps)
-        print("\t phone: ",user.phone)
-        print("\t isUnlimited: ",user.isUnlimited)
+	for user in objResponseAccountUser.data.items:
+		print("\tName: ",user.name)
+		print("\tIdDelear: ",user.idDealer)
+		print("\tIdUser: ",user.idUser)
+		print("\t taxId: ",user.taxId)
+		print("\t username: ",user.username)
+		print("\t email: ",user.email)
+		print("\t profile: ",user.profile)
+		print("\t isAcrtive: ",user.isActive)
+		print("\t accessToken: ",user.accessToken)
+		print("\t stamps: ",user.stamps)
+		print("\t phone: ",user.phone)
+		print("\t isUnlimited: ",user.isUnlimited)
 ```
 **Ejemplo de consumo de la libreria para obtener todos los usuarios mediante token**
 ```py
@@ -964,19 +1000,19 @@ if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_messageDetail())
 else:
 	#Obtenemos la respuesta
-	for user in response.data.items:
-        print("\tName: ",user.name)
-        print("\tIdDelear: ",user.idDealer)
-        print("\tIdUser: ",user.idUser)
-        print("\t taxId: ",user.taxId)
-        print("\t username: ",user.username)
-        print("\t email: ",user.email)
-        print("\t profile: ",user.profile)
-        print("\t isAcrtive: ",user.isActive)
-        print("\t accessToken: ",user.accessToken)
-        print("\t stamps: ",user.stamps)
-        print("\t phone: ",user.phone)
-        print("\t isUnlimited: ",user.isUnlimited)
+	for user in objResponseAccountUser.data.items:
+		print("\tName: ",user.name)
+		print("\tIdDelear: ",user.idDealer)
+		print("\tIdUser: ",user.idUser)
+		print("\t taxId: ",user.taxId)
+		print("\t username: ",user.username)
+		print("\t email: ",user.email)
+		print("\t profile: ",user.profile)
+		print("\t isAcrtive: ",user.isActive)
+		print("\t accessToken: ",user.accessToken)
+		print("\t stamps: ",user.stamps)
+		print("\t phone: ",user.phone)
+		print("\t isUnlimited: ",user.isUnlimited)
 ```
 </details>
 <details>
@@ -987,6 +1023,8 @@ else:
 * Url Servicios SW
 * Url Api
 * Indica si el Usuario es activo o no (true o false)
+* Página a consultar, opcional
+* Número de registros por página, opcional, hasta 50
 
 **Ejemplo de consumo de la libreria para obtener todos los usuarios**
 ```py
@@ -1001,19 +1039,19 @@ if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_messageDetail())
 else:
 	#Obtenemos la respuesta
-	for user in response.data.items:
-        print("\tName: ",user.name)
-        print("\tIdDelear: ",user.idDealer)
-        print("\tIdUser: ",user.idUser)
-        print("\t taxId: ",user.taxId)
-        print("\t username: ",user.username)
-        print("\t email: ",user.email)
-        print("\t profile: ",user.profile)
-        print("\t isAcrtive: ",user.isActive)
-        print("\t accessToken: ",user.accessToken)
-        print("\t stamps: ",user.stamps)
-        print("\t phone: ",user.phone)
-        print("\t isUnlimited: ",user.isUnlimited)
+	for user in objResponseAccountUser.data.items:
+		print("\tName: ",user.name)
+		print("\tIdDelear: ",user.idDealer)
+		print("\tIdUser: ",user.idUser)
+		print("\t taxId: ",user.taxId)
+		print("\t username: ",user.username)
+		print("\t email: ",user.email)
+		print("\t profile: ",user.profile)
+		print("\t isAcrtive: ",user.isActive)
+		print("\t accessToken: ",user.accessToken)
+		print("\t stamps: ",user.stamps)
+		print("\t phone: ",user.phone)
+		print("\t isUnlimited: ",user.isUnlimited)
 ```
 **Ejemplo de consumo de la libreria para obtener todos los usuarios mediante token**
 ```py
@@ -1028,19 +1066,70 @@ if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_messageDetail())
 else:
 	#Obtenemos la respuesta
-	for user in response.data.items:
-        print("\tName: ",user.name)
-        print("\tIdDelear: ",user.idDealer)
-        print("\tIdUser: ",user.idUser)
-        print("\t taxId: ",user.taxId)
-        print("\t username: ",user.username)
-        print("\t email: ",user.email)
-        print("\t profile: ",user.profile)
-        print("\t isAcrtive: ",user.isActive)
-        print("\t accessToken: ",user.accessToken)
-        print("\t stamps: ",user.stamps)
-        print("\t phone: ",user.phone)
-        print("\t isUnlimited: ",user.isUnlimited)
+	for user in objResponseAccountUser.data.items:
+		print("\tName: ",user.name)
+		print("\tIdDelear: ",user.idDealer)
+		print("\tIdUser: ",user.idUser)
+		print("\t taxId: ",user.taxId)
+		print("\t username: ",user.username)
+		print("\t email: ",user.email)
+		print("\t profile: ",user.profile)
+		print("\t isAcrtive: ",user.isActive)
+		print("\t accessToken: ",user.accessToken)
+		print("\t stamps: ",user.stamps)
+		print("\t phone: ",user.phone)
+		print("\t isUnlimited: ",user.isUnlimited)
+```
+</details>
+<details>
+  <summary>Obtener usuarios por nombre</summary>
+
+<br>Este método recibe los siguientes parametros:
+* Usuario y contraseña o Token de la cuenta padre.
+* Url Servicios SW
+* Url Api
+* Nombre del usuario a consultar
+* Página a consultar, opcional
+* Número de registros por página, opcional, hasta 50
+
+**Ejemplo de consumo de la libreria para obtener los usuarios por nombre**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AccountUser.AccountUser import AccountUser
+
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",None,user,password)
+objResponseAccountUser = objAccountUser.getUser_by_name("Cliente de prueba")
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
+else:
+	#Una consulta sin coincidencias regresa la lista vacía
+	for user in objResponseAccountUser.data.items:
+		print("\tName: ",user.name)
+		print("\tIdUser: ",user.idUser)
+		print("\t taxId: ",user.taxId)
+		print("\t email: ",user.email)
+```
+
+**Ejemplo de consumo de la libreria para obtener los usuarios por nombre mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from AccountUser.AccountUser import AccountUser
+
+objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",token)
+objResponseAccountUser = objAccountUser.getUser_by_name("Cliente de prueba")
+#En caso de error, obtenemos el mensaje
+if objResponseAccountUser.get_status() ==  "error":
+	print(objResponseAccountUser.get_message())
+	print(objResponseAccountUser.get_messageDetail())
+else:
+	#Una consulta sin coincidencias regresa la lista vacía
+	for user in objResponseAccountUser.data.items:
+		print("\tName: ",user.name)
+		print("\tIdUser: ",user.idUser)
+		print("\t taxId: ",user.taxId)
+		print("\t email: ",user.email)
 ```
 </details>
 
@@ -1073,7 +1162,7 @@ else:
 	#Obtenemos los datos
 	print(objResponseBalance.data.idUser)
 	print(objResponseBalance.data.idUserBalance)
-    print(objResponseBalance.data.stampsAssigned)
+	print(objResponseBalance.data.stampsAssigned)
 	print(objResponseBalance.data.stampsUsed)
 	print(objResponseBalance.data.stampsBalance)
 ```
@@ -1093,7 +1182,57 @@ else:
 	#Obtenemos los datos
 	print(objResponseBalance.data.idUser)
 	print(objResponseBalance.data.idUserBalance)
-    print(objResponseBalance.data.stampsAssigned)
+	print(objResponseBalance.data.stampsAssigned)
+	print(objResponseBalance.data.stampsUsed)
+	print(objResponseBalance.data.stampsBalance)
+```
+</details>
+
+<details>
+  <summary>Consulta de timbres por ID</summary>
+
+<br>Este método recibe los siguientes parametros:
+* Usuario y contraseña o Token
+* Url Servicios SW
+* Url Api
+* IdUser de la cuenta hija a consultar, como cadena o como uuid.UUID
+
+**Ejemplo de consumo de la libreria para consultar el saldo de una cuenta hija mediante usuario y contraseña**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Balance.Balance import Balance
+
+objBalance = Balance("https://services.test.sw.com.mx","https://api.test.sw.com.mx", None, user, password)
+objResponseBalance = objBalance.get_balance_by_id("32501CF2-DC62-4370-B47D-25024C44E131")
+#En caso de error, obtenemos el mensaje
+if objResponseBalance.get_status() ==  "error":
+	print(objResponseBalance.get_message())
+	print(objResponseBalance.get_messageDetail())
+else:
+	#Obtenemos los datos
+	print(objResponseBalance.data.idUser)
+	print(objResponseBalance.data.idUserBalance)
+	print(objResponseBalance.data.stampsAssigned)
+	print(objResponseBalance.data.stampsUsed)
+	print(objResponseBalance.data.stampsBalance)
+```
+
+**Ejemplo de consumo de la libreria para consultar el saldo de una cuenta hija mediante token**
+```py
+#Importar la clase al comienzo de nuestro programa de la siguiente manera
+from Balance.Balance import Balance
+
+objBalance = Balance("https://services.test.sw.com.mx","https://api.test.sw.com.mx", token)
+objResponseBalance = objBalance.get_balance_by_id("32501CF2-DC62-4370-B47D-25024C44E131")
+#En caso de error, obtenemos el mensaje
+if objResponseBalance.get_status() ==  "error":
+	print(objResponseBalance.get_message())
+	print(objResponseBalance.get_messageDetail())
+else:
+	#Obtenemos los datos
+	print(objResponseBalance.data.idUser)
+	print(objResponseBalance.data.idUserBalance)
+	print(objResponseBalance.data.stampsAssigned)
 	print(objResponseBalance.data.stampsUsed)
 	print(objResponseBalance.data.stampsBalance)
 ```
@@ -1106,9 +1245,9 @@ else:
 * Usuario y contraseña o Token
 * Url Servicios SW
 * Url Api
-* IdUser
+* IdUser de la cuenta hija, como cadena o como uuid.UUID
 * Número de timbres
-* Comentario
+* Comentario del movimiento, opcional
 
 > [!NOTE] 
 > El servicio regresa unicamente la cantidad de timbres despues del abono de timbres.
@@ -1151,9 +1290,9 @@ else:
 * Usuario y contraseña o Token
 * Url Servicios SW
 * Url Api
-* IdUser
+* IdUser de la cuenta hija, como cadena o como uuid.UUID
 * Número de timbres
-* Comentario
+* Comentario del movimiento, opcional
 
 > [!NOTE]
 > El servicio regresa unicamente la cantidad de timbres despues de remover los timbres.

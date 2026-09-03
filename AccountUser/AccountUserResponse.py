@@ -3,6 +3,8 @@ import traceback
 from Utils.response import Response
 
 class AccountUserResponse(Response):
+    meta = None
+    links = None
     def __init__(self, response):
         try:
             self.status_code = response.status_code
@@ -13,8 +15,10 @@ class AccountUserResponse(Response):
                         self.data = DataItem(self.response["data"])
                     elif isinstance(self.response["data"], list):
                         self.data = DataList(self.response["data"])
-                    elif isinstance(self.response["data"], str):
+                    else:
                         self.data = self.response["data"]
+                    self.meta = self.response.get("meta")
+                    self.links = self.response.get("links")
                     self.status = self.response["status"]
                 else:
                     self.status = self.response["status"]
@@ -31,7 +35,14 @@ class AccountUserResponse(Response):
                 self.messageDetail = response.request
         except Exception:
             traceback.print_exc()
-            
+
+    def get_meta(self):
+        return self.meta
+
+    def get_links(self):
+        return self.links
+
+
 class DataItem:
     def __init__(self, data):
         self.idUser = data.get("idUser", "")
