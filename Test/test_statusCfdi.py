@@ -17,6 +17,9 @@ class TestStatusCfdi(unittest.TestCase):
         self.assertIsNotNone(objStatus.codigoEstatus)
         self.assertIsNotNone(objStatus.esCancelable)
         self.assertIsNotNone(objStatus.estado)
+        #El SAT manda EstatusCancelacion vacio mientras el comprobante sigue vigente, de
+        #modo que la prueba afirma que el campo se expone, no que traiga valor.
+        self.assertTrue(hasattr(objStatus, "estatusCancelacion"))
 
     def testStatusCfdi_notFound(self):
         #Un UUID que no existe responde igual con 200, con el codigo de estatus del SAT.
