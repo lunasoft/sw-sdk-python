@@ -17,6 +17,24 @@ class TestStatusCfdi(unittest.TestCase):
         self.assertIsNotNone(objStatus.codigoEstatus)
         self.assertIsNotNone(objStatus.esCancelable)
         self.assertIsNotNone(objStatus.estado)
+        #El SAT manda EstatusCancelacion vacío mientras el comprobante sigue vigente, de
+        #modo que la prueba afirma que el campo se expone, no que traiga valor.
+        self.assertTrue(hasattr(objStatus, "estatusCancelacion"))
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestStatusCfdi)
-unittest.TextTestRunner(verbosity=2).run(suite)
+    def testStatusCfdi_notFound(self):
+        #Un UUID que no existe responde igual con 200, con el código de estatus del SAT.
+        objStatus = StatusCfdi.status("CAU180123GEA", "GACM650215GH9", "398.39",
+                                      "00000000-0000-0000-0000-000000000000", self.urlProd, self.soapAction)
+        self.assertTrue(objStatus.status_code == 200)
+        self.assertIsNotNone(objStatus.codigoEstatus)
+
+    def testStatusCfdi_totalDistinto(self):
+        objStatus = StatusCfdi.status("CAU180123GEA", "GACM650215GH9", "1.00",
+                                      "699628be-2f06-4bc9-adc2-860b51eecbca", self.urlProd, self.soapAction)
+        self.assertTrue(objStatus.status_code == 200)
+        self.assertIsNotNone(objStatus.codigoEstatus)
+
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestStatusCfdi)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    sys.exit(not result.wasSuccessful())
