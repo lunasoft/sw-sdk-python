@@ -14,9 +14,9 @@ class TestPendings(unittest.TestCase):
     url = "https://services.test.sw.com.mx"
     #RFC del certificado de pruebas Test/resources/b64CSD.txt.
     rfc = "EKU9003173C9"
-    #RFC generico sin comprobantes pendientes en la cuenta.
+    #RFC genérico sin comprobantes pendientes en la cuenta.
     rfcNotFound = "XAXX010101000"
-    #Las credenciales de la cuenta de pruebas nunca van en el codigo.
+    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")
@@ -47,12 +47,12 @@ class TestPendings(unittest.TestCase):
 
     #UT de Error
     def testPendings_rfcNotFound(self):
-        pendings = Pendings(TestPendings.url, self.token)
+        pendings = Pendings(self.url, self.token)
         response = pendings.pendings(self.rfcNotFound)
         self.assertIsNotNone(response.get_status())
 
     def testPendings_invalidToken(self):
-        pendings = Pendings(TestPendings.url, "token-invalido")
+        pendings = Pendings(self.url, "token-invalido")
         response = pendings.pendings(self.rfc)
         self.assertTrue(self.expectedError == response.get_status())
         self.assertIsNotNone(response.get_message())

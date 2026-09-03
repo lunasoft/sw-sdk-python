@@ -12,7 +12,7 @@ class TestValidate(unittest.TestCase):
     expected = "success"
     expectedError = "error"
     url = "https://services.test.sw.com.mx"
-    #Las credenciales de la cuenta de pruebas nunca van en el codigo.
+    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")
@@ -36,8 +36,8 @@ class TestValidate(unittest.TestCase):
         response = validate.ValidateXml(TestValidate.open_file("Test/resources/xml40Stamp.xml"))
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue("Vigente"== response.response['statusSat'])
-        #statusCodeSat llega como "<codigo> - <texto>": el texto es del servicio, asi que
-        #la prueba afirma unicamente el codigo.
+        #statusCodeSat llega como "<código> - <texto>": el texto es del servicio, así que
+        #la prueba afirma únicamente el código.
         self.assertEqual("S", response.response['statusCodeSat'].split(" - ")[0])
         
     def testValidateXml(self):
@@ -45,8 +45,8 @@ class TestValidate(unittest.TestCase):
         response = validate.ValidateXml(TestValidate.open_file("Test/resources/xml40Stamp.xml"))
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue("Vigente"== response.response['statusSat'])
-        #statusCodeSat llega como "<codigo> - <texto>": el texto es del servicio, asi que
-        #la prueba afirma unicamente el codigo.
+        #statusCodeSat llega como "<código> - <texto>": el texto es del servicio, así que
+        #la prueba afirma únicamente el código.
         self.assertEqual("S", response.response['statusCodeSat'].split(" - ")[0])
         
     def testValidateXml_WithStatus(self):
@@ -54,8 +54,8 @@ class TestValidate(unittest.TestCase):
         response = validate.ValidateXml(TestValidate.open_file("Test/resources/xml40Stamp.xml"),True)
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue("Vigente"== response.response['statusSat'])
-        #statusCodeSat llega como "<codigo> - <texto>": el texto es del servicio, asi que
-        #la prueba afirma unicamente el codigo.
+        #statusCodeSat llega como "<código> - <texto>": el texto es del servicio, así que
+        #la prueba afirma únicamente el código.
         self.assertEqual("S", response.response['statusCodeSat'].split(" - ")[0])
         
     def testValidateXml_WithoutStatus(self):
@@ -67,13 +67,13 @@ class TestValidate(unittest.TestCase):
 
     #UT de Error
     def testValidateXml_invalidXml(self):
-        validate = Validate(TestValidate.url, self.token)
+        validate = Validate(self.url, self.token)
         response = validate.ValidateXml("<xml>no es un cfdi</xml>")
         self.assertTrue(self.expectedError == response.get_status())
         self.assertIsNotNone(response.get_message())
 
     def testValidateXml_invalidToken(self):
-        validate = Validate(TestValidate.url, "token-invalido")
+        validate = Validate(self.url, "token-invalido")
         response = validate.ValidateXml(TestValidate.open_file("Test/resources/xml40Stamp.xml"))
         self.assertTrue(self.expectedError == response.get_status())
         self.assertIsNotNone(response.get_message())

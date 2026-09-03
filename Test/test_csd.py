@@ -13,10 +13,10 @@ class TestCsd(unittest.TestCase):
     url = "https://services.test.sw.com.mx"
     #Certificado de pruebas Test/resources/b64CSD.txt
     noCertificado = "30001000000500003416"
-    #Contrasena del CSD publico de pruebas del SAT, no de una cuenta: se puede
+    #Contraseña del CSD público de pruebas del SAT, no de una cuenta: se puede
     #sobrescribir con SDKTEST_CSD_PASSWORD.
     passwordCsd = os.environ.get("SDKTEST_CSD_PASSWORD", "12345678a")
-    #Las credenciales de la cuenta de pruebas nunca van en el codigo.
+    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")

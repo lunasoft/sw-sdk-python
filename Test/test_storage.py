@@ -20,7 +20,7 @@ class TestStorage(unittest.TestCase):
     uuidInvalid = "no-es-uuid"
     _uuidTimbrado = None
 
-    #Las credenciales de la cuenta de pruebas nunca van en el codigo.
+    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")
@@ -36,7 +36,7 @@ class TestStorage(unittest.TestCase):
     @classmethod
     def stamped_uuid(cls):
         #El UUID se toma de un CFDI timbrado en la propia cuenta, nunca se hardcodea:
-        #se consultan los timbrados de los ultimos 30 dias por rango de fechas.
+        #se consultan los timbrados de los últimos 30 días por rango de fechas.
         if cls._uuidTimbrado is None:
             hasta = datetime.now()
             desde = hasta - timedelta(days=30)

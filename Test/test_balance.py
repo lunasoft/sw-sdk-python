@@ -21,7 +21,7 @@ class TestBalance(unittest.TestCase):
     notFoundId = "00000000-0000-0000-0000-000000000000"
     _childUserId = None
 
-    #Las credenciales de la cuenta de pruebas nunca van en el codigo.
+    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")

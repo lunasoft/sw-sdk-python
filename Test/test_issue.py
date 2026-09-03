@@ -17,10 +17,10 @@ class TestIssue(unittest.TestCase):
     expected = "success"
     expectedError = "error"
     url = "https://services.test.sw.com.mx"
-    #El servicio contesta este codigo cuando el comprobante ya tiene un timbre.
+    #El servicio contesta este código cuando el comprobante ya tiene un timbre.
     codeStamped = "307"
     
-    #Las credenciales de la cuenta de pruebas nunca van en el codigo.
+    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")
@@ -77,7 +77,7 @@ class TestIssue(unittest.TestCase):
         self.assertEmision(response)
 
     def testIssue_b64(self):
-        #El servicio tambien acepta el XML en base 64.
+        #El servicio también acepta el XML en base 64.
         xml = self.update_date_xml("Test/resources/xml40.xml")
         issue = Issue(self.url, self.token)
         response = issue.issue_v4(b64encode(xml.encode("utf-8")).decode("utf-8"), True)
@@ -110,7 +110,7 @@ class TestIssue(unittest.TestCase):
 
     def assertEmision(self, response):
         #Reemitir el mismo comprobante responde con el timbre previo, y es un
-        #resultado valido para la prueba.
+        #resultado válido para la prueba.
         if response.get_status() == self.expectedError:
             self.assertIn(self.codeStamped, response.get_message())
         else:

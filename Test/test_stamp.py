@@ -16,7 +16,7 @@ class TestStamp(unittest.TestCase):
     #que la suite no puede reemitirlo: el resultado esperado es el timbre previo.
     codeStamped = "307"
 
-    #Las credenciales de la cuenta de pruebas nunca van en el codigo.
+    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")
@@ -35,6 +35,7 @@ class TestStamp(unittest.TestCase):
             out = file.read()
         return out
 
+    #UT de Timbrado
     def testStamp_auth(self):
         stamp = Stamp(self.url, None, self.user, self.password)
         response = stamp.stamp_v4(TestStamp.open_file("Test/resources/xml40Stamp.xml"))
@@ -54,7 +55,7 @@ class TestStamp(unittest.TestCase):
             self.assertIsNotNone(response.get_data())
 
     def testStamp_b64(self):
-        #El servicio tambien acepta el XML en base 64.
+        #El servicio también acepta el XML en base 64.
         stamp = Stamp(self.url, self.token)
         xml = TestStamp.open_file("Test/resources/xml40Stamp.xml")
         response = stamp.stamp_v4(b64encode(xml.encode("utf-8")).decode("utf-8"), True)
@@ -63,6 +64,7 @@ class TestStamp(unittest.TestCase):
         else:
             self.assertEqual(self.expected, response.get_status())
 
+    #UT de Error
     def testStamp_invalidXml(self):
         stamp = Stamp(self.url, self.token)
         response = stamp.stamp_v4("<xml>no es un cfdi</xml>")

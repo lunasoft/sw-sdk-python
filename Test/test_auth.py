@@ -8,11 +8,11 @@ sys.path.append(PROJECT_ROOT)
 from Auth.Auth import Auth
 
 class TestAuth(unittest.TestCase):
-    expectedSucces = "success"
+    expected = "success"
     expectedError = "error"
     url = "https://services.test.sw.com.mx"
     
-    #Las credenciales de la cuenta de pruebas nunca van en el codigo.
+    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
 
@@ -23,32 +23,34 @@ class TestAuth(unittest.TestCase):
             if not valor:
                 raise ValueError(f"Falta la variable de entorno {nombre}")
 
+    #UT de Autenticación
     def testAuth_success(self):
         auth = Auth(self.url, None , self.user, self.password)
         response = auth.authentication()
-        self.assertTrue(self.expectedSucces == response.get_status())
+        self.assertTrue(self.expected == response.get_status())
         self.assertIsNotNone(response.get_token(),"El valor de token esta vacio")
-        
+
+    def testAuth_expiration(self):
+        auth = Auth(self.url, None , self.user, self.password)
+        response = auth.authentication()
+        self.assertTrue(self.expected == response.get_status())
+        self.assertIsNotNone(response.get_time_expire(),"El valor de expiration esta vacio")
+
+    #UT de Error
     def testAuth_emailError(self):
         auth = Auth(self.url, None , self.user, "wrongPassword")
         response = auth.authentication()
         self.assertTrue(self.expectedError == response.get_status())
         self.assertIsNotNone(response.get_message(),"El valor de message esta vacio")
 
-    def testAuth_expiration(self):
-        auth = Auth(TestAuth.url, None , self.user, self.password)
-        response = auth.authentication()
-        self.assertTrue(self.expectedSucces == response.get_status())
-        self.assertIsNotNone(response.get_time_expire(),"El valor de expiration esta vacio")
-
     def testAuth_userError(self):
-        auth = Auth(TestAuth.url, None , "usuario.inexistente@example.com", self.password)
+        auth = Auth(self.url, None , "usuario.inexistente@example.com", self.password)
         response = auth.authentication()
         self.assertTrue(self.expectedError == response.get_status())
         self.assertIsNotNone(response.get_message(),"El valor de message esta vacio")
 
     def testAuth_emptyCredentials(self):
-        auth = Auth(TestAuth.url, None , "", "")
+        auth = Auth(self.url, None , "", "")
         response = auth.authentication()
         self.assertTrue(self.expectedError == response.get_status())
         self.assertIsNotNone(response.get_message(),"El valor de message esta vacio")
