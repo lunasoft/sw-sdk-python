@@ -21,15 +21,20 @@ from Utils.response_version import ResponseVersion
 
 class TestV4Basic(unittest.TestCase):
 
-    def setUp(self):
-        self.url = "https://services.test.sw.com.mx"
-        self.urlApi = "https://api.test.sw.com.mx"
-        self.user = os.environ.get("SDKTEST_USER")
-        self.password = os.environ.get("SDKTEST_PASSWORD")
-        self.token = os.environ.get("SDKTEST_TOKEN")
+    url = "https://services.test.sw.com.mx"
+    urlApi = "https://api.test.sw.com.mx"
+    #Las credenciales de la cuenta de pruebas nunca van en el codigo.
+    user = os.environ.get("SDKTEST_USER")
+    password = os.environ.get("SDKTEST_PASSWORD")
+    token = os.environ.get("SDKTEST_TOKEN")
 
-        if not all([self.user, self.password, self.token]):
-            raise ValueError("Faltan variables de entorno necesarias: SDKTEST_USER, SDKTEST_PASSWORD, SDKTEST_TOKEN")
+    @classmethod
+    def setUpClass(cls):
+        for nombre, valor in (("SDKTEST_USER", cls.user),
+                              ("SDKTEST_PASSWORD", cls.password),
+                              ("SDKTEST_TOKEN", cls.token)):
+            if not valor:
+                raise ValueError(f"Falta la variable de entorno {nombre}")
 
     @staticmethod
     def generate_custom_id(prefix):
@@ -65,10 +70,13 @@ class TestV4Basic(unittest.TestCase):
         return json.dumps(data, indent=2, ensure_ascii=False)
 
     def wait_url_pdf(self, uuid):
-        #El PDF del comprobante tarda en quedar disponible en el ADT.
+        #El PDF del comprobante tarda en quedar disponible en el ADT: el registro aparece
+        #alrededor de los 70 segundos y la urlPDF hasta los 110, con variacion segun la
+        #carga del ambiente. Se consulta cada 5 segundos hasta 5 minutos y se regresa en
+        #cuanto esta lista, de modo que la espera real sigue siendo la del servicio.
         storage = Storage(self.url, self.urlApi, self.token)
-        for _ in range(12):
-            time.sleep(10)
+        for _ in range(60):
+            time.sleep(5)
             url_pdf = storage.get_by_uuid(uuid).get_url_pdf()
             if url_pdf:
                 return url_pdf
