@@ -19,6 +19,8 @@ class TestPdf(unittest.TestCase):
     uuidNotFound = "00000000-0000-0000-0000-000000000000"
     uuidInvalid = "no-es-uuid"
     _uuidTimbrado = None
+    #Tramos de 28 días que se recorren hacia atrás buscando un comprobante propio.
+    tramosBusqueda = 7
 
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
@@ -34,19 +36,26 @@ class TestPdf(unittest.TestCase):
 
     @classmethod
     def stamped_uuid(cls):
-        #El UUID se toma de un CFDI timbrado en la propia cuenta, nunca se hardcodea, y
-        #se prefiere uno que ya tenga PDF, que es el caso que ejercita la regeneración.
+        #El UUID se toma de un CFDI timbrado en la propia cuenta, nunca se hardcodea: el
+        #datawarehouse está particionado por cuenta, de modo que un UUID fijo sólo resuelve
+        #con el token de la cuenta que timbró el comprobante. Tiene que traer PDF, porque
+        #regenerar uno que nunca lo tuvo responde 404.
         if cls._uuidTimbrado is None:
-            hasta = datetime.now()
-            desde = hasta - timedelta(days=30)
-            endpoint = (f"{cls.urlApi}/datawarehouse/v1/live/"
-                        f"?startDate={desde.strftime('%Y-%m-%d')}&endDate={hasta.strftime('%Y-%m-%d')}")
-            registros = RequestHelper.get_json_request(endpoint, cls.token).json()
-            registros = registros.get("data", {}).get("records", [])
-            if not registros:
-                raise unittest.SkipTest("La cuenta de pruebas no tiene CFDI timbrados en los ultimos 30 dias")
-            conPdf = [r for r in registros if r.get("urlPDF") or r.get("urlPdf")]
-            cls._uuidTimbrado = (conPdf or registros)[0]["uuid"]
+            #El buscador por fechas acepta rangos de hasta 30 días y responde vacío con
+            #rangos más largos, así que se recorre hacia atrás por tramos.
+            for tramo in range(cls.tramosBusqueda):
+                hasta = datetime.now() - timedelta(days=28 * tramo)
+                desde = hasta - timedelta(days=28)
+                endpoint = (f"{cls.urlApi}/datawarehouse/v1/live/"
+                            f"?startDate={desde.strftime('%Y-%m-%d')}&endDate={hasta.strftime('%Y-%m-%d')}")
+                registros = RequestHelper.get_json_request(endpoint, cls.token).json()
+                registros = registros.get("data", {}).get("records", [])
+                conPdf = [r for r in registros if r.get("urlPDF") or r.get("urlPdf")]
+                if conPdf:
+                    cls._uuidTimbrado = conPdf[0]["uuid"]
+                    break
+            if cls._uuidTimbrado is None:
+                raise unittest.SkipTest("La cuenta de pruebas no tiene CFDI timbrados con PDF")
         return cls._uuidTimbrado
 
     @staticmethod

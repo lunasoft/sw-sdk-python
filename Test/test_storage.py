@@ -19,6 +19,8 @@ class TestStorage(unittest.TestCase):
     uuidNotFound = "00000000-0000-0000-0000-000000000000"
     uuidInvalid = "no-es-uuid"
     _uuidTimbrado = None
+    #Tramos de 28 días que se recorren hacia atrás buscando un comprobante propio.
+    tramosBusqueda = 7
 
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
@@ -34,18 +36,24 @@ class TestStorage(unittest.TestCase):
 
     @classmethod
     def stamped_uuid(cls):
-        #El UUID se toma de un CFDI timbrado en la propia cuenta, nunca se hardcodea:
-        #se consultan los timbrados de los últimos 30 días por rango de fechas.
+        #El UUID se toma de un CFDI timbrado en la propia cuenta, nunca se hardcodea: el
+        #datawarehouse está particionado por cuenta, de modo que un UUID fijo sólo resuelve
+        #con el token de la cuenta que timbró el comprobante.
         if cls._uuidTimbrado is None:
-            hasta = datetime.now()
-            desde = hasta - timedelta(days=30)
-            endpoint = (f"{cls.urlApi}/datawarehouse/v1/live/"
-                        f"?startDate={desde.strftime('%Y-%m-%d')}&endDate={hasta.strftime('%Y-%m-%d')}")
-            registros = RequestHelper.get_json_request(endpoint, cls.token).json()
-            registros = registros.get("data", {}).get("records", [])
-            if not registros:
-                raise unittest.SkipTest("La cuenta de pruebas no tiene CFDI timbrados en los ultimos 30 dias")
-            cls._uuidTimbrado = registros[0]["uuid"]
+            #El buscador por fechas acepta rangos de hasta 30 días y responde vacío con
+            #rangos más largos, así que se recorre hacia atrás por tramos.
+            for tramo in range(cls.tramosBusqueda):
+                hasta = datetime.now() - timedelta(days=28 * tramo)
+                desde = hasta - timedelta(days=28)
+                endpoint = (f"{cls.urlApi}/datawarehouse/v1/live/"
+                            f"?startDate={desde.strftime('%Y-%m-%d')}&endDate={hasta.strftime('%Y-%m-%d')}")
+                registros = RequestHelper.get_json_request(endpoint, cls.token).json()
+                registros = registros.get("data", {}).get("records", [])
+                if registros:
+                    cls._uuidTimbrado = registros[0]["uuid"]
+                    break
+            if cls._uuidTimbrado is None:
+                raise unittest.SkipTest("La cuenta de pruebas no tiene CFDI timbrados")
         return cls._uuidTimbrado
 
     #UT Recuperación de XML por UUID
