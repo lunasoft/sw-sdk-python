@@ -20,7 +20,6 @@ class TestPdf(unittest.TestCase):
     uuidInvalid = "no-es-uuid"
     _uuidTimbrado = None
 
-    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")
@@ -35,9 +34,8 @@ class TestPdf(unittest.TestCase):
 
     @classmethod
     def stamped_uuid(cls):
-        #El UUID se toma de un CFDI timbrado en la propia cuenta, nunca se hardcodea:
-        #se consultan los timbrados de los últimos 30 días y se prefiere uno que ya
-        #tenga PDF, que es el caso que ejercita la regeneración.
+        #El UUID se toma de un CFDI timbrado en la propia cuenta, nunca se hardcodea, y
+        #se prefiere uno que ya tenga PDF, que es el caso que ejercita la regeneración.
         if cls._uuidTimbrado is None:
             hasta = datetime.now()
             desde = hasta - timedelta(days=30)

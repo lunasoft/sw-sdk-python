@@ -22,7 +22,6 @@ class TestAccountUser(unittest.TestCase):
     invalidId = "no-es-uuid"
     _firstUser = None
 
-    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")

@@ -11,14 +11,12 @@ from Cancelation_Retentions.CancelationRetentions import CancelationRetentions
 class TestCancelationRetentions(unittest.TestCase):
     expected = "success"
     url = "https://services.test.sw.com.mx"
-    #Contraseña del CSD público de pruebas del SAT, no de una cuenta: se puede
-    #sobrescribir con SDKTEST_CSD_PASSWORD.
+    #Contraseña del CSD público de pruebas del SAT, se sobrescribe con SDKTEST_CSD_PASSWORD.
     passwordCsd = os.environ.get("SDKTEST_CSD_PASSWORD", "12345678a")
     #RFC del certificado de pruebas Test/resources/b64CSD.txt.
     rfc = "EKU9003173C9"
     #Retención timbrada en la cuenta de pruebas sobre la que se ejercita la cancelación.
     uuidCfdi = "578052ce-710f-4d0b-9ffc-6ca73daf92a5"
-    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")

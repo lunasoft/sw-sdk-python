@@ -23,7 +23,6 @@ class TestV4Basic(unittest.TestCase):
 
     url = "https://services.test.sw.com.mx"
     urlApi = "https://api.test.sw.com.mx"
-    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")
@@ -70,10 +69,8 @@ class TestV4Basic(unittest.TestCase):
         return json.dumps(data, indent=2, ensure_ascii=False)
 
     def wait_url_pdf(self, uuid):
-        #El PDF del comprobante tarda en quedar disponible en el ADT: el registro aparece
-        #alrededor de los 70 segundos y la urlPDF hasta los 110, con variación según la
-        #carga del ambiente. Se consulta cada 5 segundos hasta 5 minutos y se regresa en
-        #cuanto está lista, de modo que la espera real sigue siendo la del servicio.
+        #El PDF del comprobante tarda en quedar disponible en el ADT: la urlPDF aparece
+        #alrededor de los 110 segundos y varía según la carga del ambiente.
         storage = Storage(self.url, self.urlApi, self.token)
         for _ in range(60):
             time.sleep(5)

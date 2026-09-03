@@ -12,14 +12,12 @@ class TestAcceptReject(unittest.TestCase):
     expected = "success"
     expectedError = "error"
     url = "https://services.test.sw.com.mx"
-    #Contraseña del CSD público de pruebas del SAT, no de una cuenta: se puede
-    #sobrescribir con SDKTEST_CSD_PASSWORD.
+    #Contraseña del CSD público de pruebas del SAT, se sobrescribe con SDKTEST_CSD_PASSWORD.
     passwordCsd = os.environ.get("SDKTEST_CSD_PASSWORD", "12345678a")
     #RFC del certificado de pruebas Test/resources/b64CSD.txt.
     rfc = "EKU9003173C9"
     #CFDI recibido en la cuenta de pruebas sobre el que se ejercita la aceptación.
     uuidCfdi = "baf029f3-93ea-4267-a76c-1958d69bd4d8"
-    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")
@@ -38,7 +36,7 @@ class TestAcceptReject(unittest.TestCase):
             out = file.read()
         return out
     
-    #UT de Aceptación y rechazo
+    #UT Aceptación y rechazo
     def testAcceptRejectCsd_auth(self):
         accept_reject = AcceptReject(self.url, None, self.user, self.password)
         uuids = [{"uuid":self.uuidCfdi, "action":"Rechazo"}]

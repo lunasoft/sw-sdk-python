@@ -20,7 +20,6 @@ class TestIssue(unittest.TestCase):
     #El servicio contesta este código cuando el comprobante ya tiene un timbre.
     codeStamped = "307"
     
-    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")

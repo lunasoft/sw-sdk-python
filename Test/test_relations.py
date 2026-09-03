@@ -11,16 +11,13 @@ class TestRelations(unittest.TestCase):
     expected = "success"
     expectedError = "error"
     url = "https://services.test.sw.com.mx"
-    #Contraseña del CSD público de pruebas del SAT, no de una cuenta: se puede
-    #sobrescribir con SDKTEST_CSD_PASSWORD.
+    #Contraseña del CSD público de pruebas del SAT, se sobrescribe con SDKTEST_CSD_PASSWORD.
     passwordCsd = os.environ.get("SDKTEST_CSD_PASSWORD", "12345678a")
-    #UUID que no tiene comprobantes relacionados.
     uuidNotFound = "00000000-0000-0000-0000-000000000000"
     #RFC del certificado de pruebas Test/resources/b64CSD.txt.
     rfc = "EKU9003173C9"
     #CFDI timbrado en la cuenta de pruebas del que se consultan las relaciones.
     uuidCfdi = "316dff4d-6a5a-40d5-8558-c8f45244aa90"
-    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")
@@ -39,7 +36,7 @@ class TestRelations(unittest.TestCase):
             out = file.read()
         return out
     
-    #UT de Consulta de relaciones
+    #UT Consulta de relaciones
     def testRelationsCsd_auth(self):
         relations = Relations(self.url, None, self.user, self.password)
         response = relations.relations_csd(self.rfc,self.uuidCfdi,TestRelations.open_file("Test/resources/b64CSD.txt"), TestRelations.open_file("Test/resources/b64Key.txt"),self.passwordCsd)

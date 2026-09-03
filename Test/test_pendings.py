@@ -16,7 +16,6 @@ class TestPendings(unittest.TestCase):
     rfc = "EKU9003173C9"
     #RFC genérico sin comprobantes pendientes en la cuenta.
     rfcNotFound = "XAXX010101000"
-    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")

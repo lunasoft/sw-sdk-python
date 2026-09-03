@@ -12,7 +12,6 @@ class TestAuth(unittest.TestCase):
     expectedError = "error"
     url = "https://services.test.sw.com.mx"
     
-    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
 
@@ -23,7 +22,7 @@ class TestAuth(unittest.TestCase):
             if not valor:
                 raise ValueError(f"Falta la variable de entorno {nombre}")
 
-    #UT de Autenticación
+    #UT Autenticación
     def testAuth_success(self):
         auth = Auth(self.url, None , self.user, self.password)
         response = auth.authentication()

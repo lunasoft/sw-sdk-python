@@ -18,7 +18,6 @@ class TestStampRetentions(unittest.TestCase):
     codeStamped = "307"
     codeExpired = "401"
 
-    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")
@@ -37,7 +36,7 @@ class TestStampRetentions(unittest.TestCase):
             out = file.read()
         return out
 
-    #UT de Timbrado de retenciones
+    #UT Timbrado de retenciones
     def testStampRetentions_xml(self):
         """Prueba timbrado con XML usando token"""
         

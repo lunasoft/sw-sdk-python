@@ -16,7 +16,6 @@ class TestStamp(unittest.TestCase):
     #que la suite no puede reemitirlo: el resultado esperado es el timbre previo.
     codeStamped = "307"
 
-    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")
@@ -35,7 +34,7 @@ class TestStamp(unittest.TestCase):
             out = file.read()
         return out
 
-    #UT de Timbrado
+    #UT Timbrado
     def testStamp_auth(self):
         stamp = Stamp(self.url, None, self.user, self.password)
         response = stamp.stamp_v4(TestStamp.open_file("Test/resources/xml40Stamp.xml"))

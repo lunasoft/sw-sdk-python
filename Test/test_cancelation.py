@@ -11,14 +11,12 @@ from Cancelation.Cancelation import Cancelation
 class TestCancelation(unittest.TestCase):
     expected = "success"
     url = "https://services.test.sw.com.mx"
-    #Contraseña del CSD público de pruebas del SAT, no de una cuenta: se puede
-    #sobrescribir con SDKTEST_CSD_PASSWORD.
+    #Contraseña del CSD público de pruebas del SAT, se sobrescribe con SDKTEST_CSD_PASSWORD.
     passwordCsd = os.environ.get("SDKTEST_CSD_PASSWORD", "12345678a")
     #RFC del certificado de pruebas Test/resources/b64CSD.txt.
     rfc = "EKU9003173C9"
     #CFDI timbrado en la cuenta de pruebas sobre el que se ejercita la cancelación.
     uuidCfdi = "3dda215e-4c77-4923-94a1-627e0a04378c"
-    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")
@@ -37,7 +35,7 @@ class TestCancelation(unittest.TestCase):
             out = file.read()
         return out
     
-    #UT de Cancelación
+    #UT Cancelación
     def testCancelXml_auth(self):
         cancel = Cancelation(self.url, None, self.user, self.password)
         response = cancel.CancelXml(TestCancelation.open_file("Test/resources/cancelByXml.xml"))
@@ -81,7 +79,7 @@ class TestCancelation(unittest.TestCase):
     #UT de Error
     def testCancelUuid_invalidToken(self):
         #CancelationResponse no asigna status cuando el servicio no responde 200, así que
-        #la prueba afirma el código y el mensaje, que es el comportamiento real de hoy.
+        #la prueba afirma el código y el mensaje.
         cancel = Cancelation(self.url, "token-invalido")
         response = cancel.CancelUuid(self.uuidCfdi, self.rfc, "02", "")
         self.assertTrue(401 == response.get_status_code())
