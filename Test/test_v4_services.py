@@ -52,6 +52,9 @@ class TestV4Basic(unittest.TestCase):
         if "Fecha" not in root.attrib:
             raise ValueError("No se encontró el atributo 'Fecha' en el XML")
         root.set("Fecha", new_date.strftime("%Y-%m-%dT%H:%M:%S"))
+        #El servicio contesta 307 ante un comprobante idéntico a otro ya emitido, y la
+        #Fecha del CFDI solo llega al segundo: el Folio hace única cada emisión.
+        root.set("Folio", datetime.now().strftime("%H%M%S%f"))
         ET.register_namespace("cfdi", ns["cfdi"])
         xml_buffer = BytesIO()
         tree.write(xml_buffer, encoding="utf-8", xml_declaration=True)
@@ -66,6 +69,8 @@ class TestV4Basic(unittest.TestCase):
         if "Fecha" not in data:
             raise ValueError("No se encontró la clave 'Fecha' en el JSON")
         data["Fecha"] = new_date
+        #El Folio hace única cada emisión, igual que en update_date_xml.
+        data["Folio"] = datetime.now().strftime("%H%M%S%f")
         return json.dumps(data, indent=2, ensure_ascii=False)
 
     def wait_url_pdf(self, uuid):
