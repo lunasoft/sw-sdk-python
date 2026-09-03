@@ -10,6 +10,8 @@ from Pendings.Pendings import Pendings
 
 class TestPendings(unittest.TestCase):
     expected = "success"
+    expectedError = "error"
+    url = "https://services.test.sw.com.mx"
     @staticmethod
     def open_file(pathFile):
         with open(pathFile, "r", encoding='utf-8') as file:
@@ -25,6 +27,18 @@ class TestPendings(unittest.TestCase):
         pendings = Pendings("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
         response = pendings.pendings("EKU9003173C9")
         self.assertTrue(self.expected == response.get_status())
+
+    #UT de Error
+    def testPendings_rfcNotFound(self):
+        pendings = Pendings(TestPendings.url, os.environ["SDKTEST_TOKEN"])
+        response = pendings.pendings("XAXX010101000")
+        self.assertIsNotNone(response.get_status())
+
+    def testPendings_invalidToken(self):
+        pendings = Pendings(TestPendings.url, "token-invalido")
+        response = pendings.pendings("EKU9003173C9")
+        self.assertTrue(self.expectedError == response.get_status())
+        self.assertIsNotNone(response.get_message())
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestPendings)

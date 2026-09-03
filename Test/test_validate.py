@@ -10,6 +10,8 @@ from Validate.Validate import Validate
 
 class TestValidate(unittest.TestCase):
     expected = "success"
+    expectedError = "error"
+    url = "https://services.test.sw.com.mx"
     @staticmethod
     def open_file(pathFile):
         with open(pathFile, "r", encoding='utf-8') as file:
@@ -43,6 +45,19 @@ class TestValidate(unittest.TestCase):
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue("No Aplica"== response.response['statusSat'])
         self.assertTrue("No Aplica"== response.response['statusCodeSat'])
+
+    #UT de Error
+    def testValidateXml_invalidXml(self):
+        validate = Validate(TestValidate.url, os.environ["SDKTEST_TOKEN"])
+        response = validate.ValidateXml("<xml>no es un cfdi</xml>")
+        self.assertTrue(self.expectedError == response.get_status())
+        self.assertIsNotNone(response.get_message())
+
+    def testValidateXml_invalidToken(self):
+        validate = Validate(TestValidate.url, "token-invalido")
+        response = validate.ValidateXml(TestValidate.open_file("Test/resources/xml40Stamp.xml"))
+        self.assertTrue(self.expectedError == response.get_status())
+        self.assertIsNotNone(response.get_message())
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestValidate)

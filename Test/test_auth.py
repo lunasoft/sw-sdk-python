@@ -10,6 +10,7 @@ from Auth.Auth import Auth
 class TestAuth(unittest.TestCase):
     expectedSucces = "success"
     expectedError = "error"
+    url = "https://services.test.sw.com.mx"
     
     def testAuth_success(self):
         auth = Auth("https://services.test.sw.com.mx", None , os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
@@ -19,6 +20,24 @@ class TestAuth(unittest.TestCase):
         
     def testAuth_emailError(self):
         auth = Auth("https://services.test.sw.com.mx", None , os.environ["SDKTEST_USER"], "wrongPassword")
+        response = auth.authentication()
+        self.assertTrue(self.expectedError == response.get_status())
+        self.assertIsNotNone(response.get_message(),"El valor de message esta vacio")
+
+    def testAuth_expiration(self):
+        auth = Auth(TestAuth.url, None , os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        response = auth.authentication()
+        self.assertTrue(self.expectedSucces == response.get_status())
+        self.assertIsNotNone(response.get_time_expire(),"El valor de expiration esta vacio")
+
+    def testAuth_userError(self):
+        auth = Auth(TestAuth.url, None , "usuario.inexistente@example.com", os.environ["SDKTEST_PASSWORD"])
+        response = auth.authentication()
+        self.assertTrue(self.expectedError == response.get_status())
+        self.assertIsNotNone(response.get_message(),"El valor de message esta vacio")
+
+    def testAuth_emptyCredentials(self):
+        auth = Auth(TestAuth.url, None , "", "")
         response = auth.authentication()
         self.assertTrue(self.expectedError == response.get_status())
         self.assertIsNotNone(response.get_message(),"El valor de message esta vacio")
