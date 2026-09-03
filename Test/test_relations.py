@@ -9,15 +9,18 @@ from Relations.Relations import Relations
 
 class TestRelations(unittest.TestCase):
     expected = "success"
+    expectedError = "error"
     url = "https://services.test.sw.com.mx"
-    #Contrasena del CSD publico de pruebas del SAT, no de una cuenta: se puede
+    #Contraseña del CSD público de pruebas del SAT, no de una cuenta: se puede
     #sobrescribir con SDKTEST_CSD_PASSWORD.
     passwordCsd = os.environ.get("SDKTEST_CSD_PASSWORD", "12345678a")
+    #UUID que no tiene comprobantes relacionados.
+    uuidNotFound = "00000000-0000-0000-0000-000000000000"
     #RFC del certificado de pruebas Test/resources/b64CSD.txt.
     rfc = "EKU9003173C9"
     #CFDI timbrado en la cuenta de pruebas del que se consultan las relaciones.
     uuidCfdi = "316dff4d-6a5a-40d5-8558-c8f45244aa90"
-    #Las credenciales de la cuenta de pruebas nunca van en el codigo.
+    #Las credenciales de la cuenta de pruebas nunca van en el código.
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")
@@ -36,6 +39,7 @@ class TestRelations(unittest.TestCase):
             out = file.read()
         return out
     
+    #UT de Consulta de relaciones
     def testRelationsCsd_auth(self):
         relations = Relations(self.url, None, self.user, self.password)
         response = relations.relations_csd(self.rfc,self.uuidCfdi,TestRelations.open_file("Test/resources/b64CSD.txt"), TestRelations.open_file("Test/resources/b64Key.txt"),self.passwordCsd)
@@ -65,6 +69,22 @@ class TestRelations(unittest.TestCase):
         relations = Relations(self.url, self.token)
         response = relations.relations_uuid(self.rfc,self.uuidCfdi)
         self.assertTrue(self.expected == response.get_status())
+
+    #UT Consultas sin coincidencias
+    def testRelationsUuid_notFound(self):
+        #Un UUID sin relaciones responde success con el aviso en message, no es un error.
+        relations = Relations(self.url, self.token)
+        response = relations.relations_uuid(self.rfc, self.uuidNotFound)
+        self.assertTrue(self.expected == response.get_status())
+        self.assertIsNotNone(response.get_message())
+
+    #UT de Error
+    def testRelationsUuid_invalidToken(self):
+        relations = Relations(self.url, "token-invalido")
+        response = relations.relations_uuid(self.rfc, self.uuidCfdi)
+        self.assertTrue(self.expectedError == response.get_status())
+        self.assertTrue(401 == response.get_status_code())
+        self.assertIsNotNone(response.get_message())
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestRelations)
