@@ -9,6 +9,27 @@ from Relations.Relations import Relations
 
 class TestRelations(unittest.TestCase):
     expected = "success"
+    url = "https://services.test.sw.com.mx"
+    #Contrasena del CSD publico de pruebas del SAT, no de una cuenta: se puede
+    #sobrescribir con SDKTEST_CSD_PASSWORD.
+    passwordCsd = os.environ.get("SDKTEST_CSD_PASSWORD", "12345678a")
+    #RFC del certificado de pruebas Test/resources/b64CSD.txt.
+    rfc = "EKU9003173C9"
+    #CFDI timbrado en la cuenta de pruebas del que se consultan las relaciones.
+    uuidCfdi = "316dff4d-6a5a-40d5-8558-c8f45244aa90"
+    #Las credenciales de la cuenta de pruebas nunca van en el codigo.
+    user = os.environ.get("SDKTEST_USER")
+    password = os.environ.get("SDKTEST_PASSWORD")
+    token = os.environ.get("SDKTEST_TOKEN")
+
+    @classmethod
+    def setUpClass(cls):
+        for nombre, valor in (("SDKTEST_USER", cls.user),
+                              ("SDKTEST_PASSWORD", cls.password),
+                              ("SDKTEST_TOKEN", cls.token)):
+            if not valor:
+                raise ValueError(f"Falta la variable de entorno {nombre}")
+
     @staticmethod
     def open_file(pathFile):
         with open(pathFile, "r", encoding='utf-8') as file:
@@ -16,33 +37,33 @@ class TestRelations(unittest.TestCase):
         return out
     
     def testRelationsCsd_auth(self):
-        relations = Relations("https://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = relations.relations_csd("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90",TestRelations.open_file("Test/resources/b64CSD.txt"), TestRelations.open_file("Test/resources/b64Key.txt"),"12345678a")
+        relations = Relations(self.url, None, self.user, self.password)
+        response = relations.relations_csd(self.rfc,self.uuidCfdi,TestRelations.open_file("Test/resources/b64CSD.txt"), TestRelations.open_file("Test/resources/b64Key.txt"),self.passwordCsd)
         self.assertTrue(self.expected == response.get_status())
         
     def testRelationsCsd(self):
-        relations = Relations("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
-        response = relations.relations_csd("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90",TestRelations.open_file("Test/resources/b64CSD.txt"), TestRelations.open_file("Test/resources/b64Key.txt"),"12345678a")
+        relations = Relations(self.url, self.token)
+        response = relations.relations_csd(self.rfc,self.uuidCfdi,TestRelations.open_file("Test/resources/b64CSD.txt"), TestRelations.open_file("Test/resources/b64Key.txt"),self.passwordCsd)
         self.assertTrue(self.expected == response.get_status())
         
     def testRelationsPfx_auth(self):
-        relations = Relations("https://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = relations.relations_pfx("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90",TestRelations.open_file("Test/resources/b64Pfx.txt"),"12345678a")
+        relations = Relations(self.url, None, self.user, self.password)
+        response = relations.relations_pfx(self.rfc,self.uuidCfdi,TestRelations.open_file("Test/resources/b64Pfx.txt"),self.passwordCsd)
         self.assertTrue(self.expected == response.get_status())
         
     def testRelationsPfx(self):
-        relations = Relations("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
-        response = relations.relations_pfx("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90",TestRelations.open_file("Test/resources/b64Pfx.txt"),"12345678a")
+        relations = Relations(self.url, self.token)
+        response = relations.relations_pfx(self.rfc,self.uuidCfdi,TestRelations.open_file("Test/resources/b64Pfx.txt"),self.passwordCsd)
         self.assertTrue(self.expected == response.get_status())
         
     def testRelationsUuid_auth(self):
-        relations = Relations("https://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = relations.relations_uuid("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90")
+        relations = Relations(self.url, None, self.user, self.password)
+        response = relations.relations_uuid(self.rfc,self.uuidCfdi)
         self.assertTrue(self.expected == response.get_status())
         
     def testRelationsUuid(self):
-        relations = Relations("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
-        response = relations.relations_uuid("EKU9003173C9","316dff4d-6a5a-40d5-8558-c8f45244aa90")
+        relations = Relations(self.url, self.token)
+        response = relations.relations_uuid(self.rfc,self.uuidCfdi)
         self.assertTrue(self.expected == response.get_status())
 
 if __name__ == '__main__':

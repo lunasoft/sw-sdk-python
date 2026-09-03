@@ -20,6 +20,19 @@ class TestStorage(unittest.TestCase):
     uuidInvalid = "no-es-uuid"
     _uuidTimbrado = None
 
+    #Las credenciales de la cuenta de pruebas nunca van en el codigo.
+    user = os.environ.get("SDKTEST_USER")
+    password = os.environ.get("SDKTEST_PASSWORD")
+    token = os.environ.get("SDKTEST_TOKEN")
+
+    @classmethod
+    def setUpClass(cls):
+        for nombre, valor in (("SDKTEST_USER", cls.user),
+                              ("SDKTEST_PASSWORD", cls.password),
+                              ("SDKTEST_TOKEN", cls.token)):
+            if not valor:
+                raise ValueError(f"Falta la variable de entorno {nombre}")
+
     @classmethod
     def stamped_uuid(cls):
         #El UUID se toma de un CFDI timbrado en la propia cuenta, nunca se hardcodea:
@@ -29,7 +42,7 @@ class TestStorage(unittest.TestCase):
             desde = hasta - timedelta(days=30)
             endpoint = (f"{cls.urlApi}/datawarehouse/v1/live/"
                         f"?startDate={desde.strftime('%Y-%m-%d')}&endDate={hasta.strftime('%Y-%m-%d')}")
-            registros = RequestHelper.get_json_request(endpoint, os.environ["SDKTEST_TOKEN"]).json()
+            registros = RequestHelper.get_json_request(endpoint, cls.token).json()
             registros = registros.get("data", {}).get("records", [])
             if not registros:
                 raise unittest.SkipTest("La cuenta de pruebas no tiene CFDI timbrados en los ultimos 30 dias")
@@ -38,7 +51,7 @@ class TestStorage(unittest.TestCase):
 
     #UT Recuperación de XML por UUID
     def test_get_by_uuid(self):
-        storage_obj = Storage(TestStorage.url, TestStorage.urlApi, os.environ["SDKTEST_TOKEN"])
+        storage_obj = Storage(TestStorage.url, TestStorage.urlApi, self.token)
         uuidTimbrado = self.stamped_uuid()
         response = storage_obj.get_by_uuid(uuidTimbrado)
         self.assertTrue(self.expected == response.get_status())
@@ -48,21 +61,21 @@ class TestStorage(unittest.TestCase):
 
     def test_get_by_uuid_uuidObject(self):
         #El UUID también se acepta como uuid.UUID, no sólo como cadena.
-        storage_obj = Storage(TestStorage.url, TestStorage.urlApi, os.environ["SDKTEST_TOKEN"])
+        storage_obj = Storage(TestStorage.url, TestStorage.urlApi, self.token)
         uuidTimbrado = self.stamped_uuid()
         response = storage_obj.get_by_uuid(uuid.UUID(uuidTimbrado))
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue(uuidTimbrado == response.get_first_record()["uuid"])
 
     def test_get_by_uuid_auth(self):
-        storage_obj = Storage(TestStorage.url, TestStorage.urlApi, None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        storage_obj = Storage(TestStorage.url, TestStorage.urlApi, None, self.user, self.password)
         response = storage_obj.get_by_uuid(self.stamped_uuid())
         self.assertTrue(self.expected == response.get_status())
 
     #UT Consultas sin coincidencias
     def test_get_by_uuid_notFound(self):
         #Un UUID inexistente responde success con records vacío, no es un error.
-        storage_obj = Storage(TestStorage.url, TestStorage.urlApi, os.environ["SDKTEST_TOKEN"])
+        storage_obj = Storage(TestStorage.url, TestStorage.urlApi, self.token)
         response = storage_obj.get_by_uuid(TestStorage.uuidNotFound)
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue(len(response.get_records()) == 0)
@@ -71,7 +84,7 @@ class TestStorage(unittest.TestCase):
     def test_get_by_uuid_invalidFormat(self):
         #Un UUID mal formado responde igual que uno inexistente: 200 success con records
         #vacío y sin message. El servicio no valida el formato.
-        storage_obj = Storage(TestStorage.url, TestStorage.urlApi, os.environ["SDKTEST_TOKEN"])
+        storage_obj = Storage(TestStorage.url, TestStorage.urlApi, self.token)
         response = storage_obj.get_by_uuid(TestStorage.uuidInvalid)
         self.assertTrue(200 == response.get_status_code())
         self.assertTrue(self.expected == response.get_status())
@@ -82,7 +95,7 @@ class TestStorage(unittest.TestCase):
         #Una cadena vacía deja la ruta en /datawarehouse/v1/live/, que es el buscador por
         #fechas: responde 400 pidiendo la fecha de inicio. No regresa un recurso distinto
         #al pedido, así que el valor se envía tal cual y responde el servicio.
-        storage_obj = Storage(TestStorage.url, TestStorage.urlApi, os.environ["SDKTEST_TOKEN"])
+        storage_obj = Storage(TestStorage.url, TestStorage.urlApi, self.token)
         response = storage_obj.get_by_uuid("")
         self.assertTrue("error" == response.get_status())
         self.assertIsNotNone(response.get_message(), "El valor de message esta vacio")
@@ -97,7 +110,7 @@ class TestStorage(unittest.TestCase):
     def test_get_by_uuid_withoutUrlApi(self):
         #Con urlApi vacía la librería avisa por consola igual que Pdf y AccountUser, y la
         #petición no se puede armar. Se documenta el comportamiento actual del repositorio.
-        storage_obj = Storage(TestStorage.url, "", os.environ["SDKTEST_TOKEN"])
+        storage_obj = Storage(TestStorage.url, "", self.token)
         with self.assertRaises(requests.exceptions.RequestException):
             storage_obj.get_by_uuid(TestStorage.uuidNotFound)
 

@@ -12,6 +12,19 @@ class TestValidate(unittest.TestCase):
     expected = "success"
     expectedError = "error"
     url = "https://services.test.sw.com.mx"
+    #Las credenciales de la cuenta de pruebas nunca van en el codigo.
+    user = os.environ.get("SDKTEST_USER")
+    password = os.environ.get("SDKTEST_PASSWORD")
+    token = os.environ.get("SDKTEST_TOKEN")
+
+    @classmethod
+    def setUpClass(cls):
+        for nombre, valor in (("SDKTEST_USER", cls.user),
+                              ("SDKTEST_PASSWORD", cls.password),
+                              ("SDKTEST_TOKEN", cls.token)):
+            if not valor:
+                raise ValueError(f"Falta la variable de entorno {nombre}")
+
     @staticmethod
     def open_file(pathFile):
         with open(pathFile, "r", encoding='utf-8') as file:
@@ -19,28 +32,34 @@ class TestValidate(unittest.TestCase):
         return out
     
     def testValidateXml_Auth(self):
-        validate = Validate("https://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        validate = Validate(self.url, None, self.user, self.password)
         response = validate.ValidateXml(TestValidate.open_file("Test/resources/xml40Stamp.xml"))
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue("Vigente"== response.response['statusSat'])
-        self.assertTrue("S - Comprobante obtenido satisfactoriamente"== response.response['statusCodeSat'])
+        #statusCodeSat llega como "<codigo> - <texto>": el texto es del servicio, asi que
+        #la prueba afirma unicamente el codigo.
+        self.assertEqual("S", response.response['statusCodeSat'].split(" - ")[0])
         
     def testValidateXml(self):
-        validate = Validate("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
+        validate = Validate(self.url, self.token)
         response = validate.ValidateXml(TestValidate.open_file("Test/resources/xml40Stamp.xml"))
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue("Vigente"== response.response['statusSat'])
-        self.assertTrue("S - Comprobante obtenido satisfactoriamente"== response.response['statusCodeSat'])
+        #statusCodeSat llega como "<codigo> - <texto>": el texto es del servicio, asi que
+        #la prueba afirma unicamente el codigo.
+        self.assertEqual("S", response.response['statusCodeSat'].split(" - ")[0])
         
     def testValidateXml_WithStatus(self):
-        validate = Validate("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
+        validate = Validate(self.url, self.token)
         response = validate.ValidateXml(TestValidate.open_file("Test/resources/xml40Stamp.xml"),True)
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue("Vigente"== response.response['statusSat'])
-        self.assertTrue("S - Comprobante obtenido satisfactoriamente"== response.response['statusCodeSat'])
+        #statusCodeSat llega como "<codigo> - <texto>": el texto es del servicio, asi que
+        #la prueba afirma unicamente el codigo.
+        self.assertEqual("S", response.response['statusCodeSat'].split(" - ")[0])
         
     def testValidateXml_WithoutStatus(self):
-        validate = Validate("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
+        validate = Validate(self.url, self.token)
         response = validate.ValidateXml(TestValidate.open_file("Test/resources/xml40Stamp.xml"),False)
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue("No Aplica"== response.response['statusSat'])
@@ -48,7 +67,7 @@ class TestValidate(unittest.TestCase):
 
     #UT de Error
     def testValidateXml_invalidXml(self):
-        validate = Validate(TestValidate.url, os.environ["SDKTEST_TOKEN"])
+        validate = Validate(TestValidate.url, self.token)
         response = validate.ValidateXml("<xml>no es un cfdi</xml>")
         self.assertTrue(self.expectedError == response.get_status())
         self.assertIsNotNone(response.get_message())

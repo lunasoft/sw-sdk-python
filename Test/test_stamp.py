@@ -16,6 +16,19 @@ class TestStamp(unittest.TestCase):
     #que la suite no puede reemitirlo: el resultado esperado es el timbre previo.
     codeStamped = "307"
 
+    #Las credenciales de la cuenta de pruebas nunca van en el codigo.
+    user = os.environ.get("SDKTEST_USER")
+    password = os.environ.get("SDKTEST_PASSWORD")
+    token = os.environ.get("SDKTEST_TOKEN")
+
+    @classmethod
+    def setUpClass(cls):
+        for nombre, valor in (("SDKTEST_USER", cls.user),
+                              ("SDKTEST_PASSWORD", cls.password),
+                              ("SDKTEST_TOKEN", cls.token)):
+            if not valor:
+                raise ValueError(f"Falta la variable de entorno {nombre}")
+
     @staticmethod
     def open_file(pathFile):
         with open(pathFile, "r", encoding='utf-8') as file:
@@ -23,7 +36,7 @@ class TestStamp(unittest.TestCase):
         return out
 
     def testStamp_auth(self):
-        stamp = Stamp(self.url, None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        stamp = Stamp(self.url, None, self.user, self.password)
         response = stamp.stamp_v4(TestStamp.open_file("Test/resources/xml40Stamp.xml"))
         if response.get_status() == self.expectedError:
             self.assertIn(self.codeStamped, response.get_message())
@@ -32,7 +45,7 @@ class TestStamp(unittest.TestCase):
             self.assertIsNotNone(response.get_data())
 
     def testStamp(self):
-        stamp = Stamp(self.url, os.environ["SDKTEST_TOKEN"])
+        stamp = Stamp(self.url, self.token)
         response = stamp.stamp_v4(TestStamp.open_file("Test/resources/xml40Stamp.xml"))
         if response.get_status() == self.expectedError:
             self.assertIn(self.codeStamped, response.get_message())
@@ -42,7 +55,7 @@ class TestStamp(unittest.TestCase):
 
     def testStamp_b64(self):
         #El servicio tambien acepta el XML en base 64.
-        stamp = Stamp(self.url, os.environ["SDKTEST_TOKEN"])
+        stamp = Stamp(self.url, self.token)
         xml = TestStamp.open_file("Test/resources/xml40Stamp.xml")
         response = stamp.stamp_v4(b64encode(xml.encode("utf-8")).decode("utf-8"), True)
         if response.get_status() == self.expectedError:
@@ -51,7 +64,7 @@ class TestStamp(unittest.TestCase):
             self.assertEqual(self.expected, response.get_status())
 
     def testStamp_invalidXml(self):
-        stamp = Stamp(self.url, os.environ["SDKTEST_TOKEN"])
+        stamp = Stamp(self.url, self.token)
         response = stamp.stamp_v4("<xml>no es un cfdi</xml>")
         self.assertEqual(self.expectedError, response.get_status())
         self.assertIsNotNone(response.get_message())

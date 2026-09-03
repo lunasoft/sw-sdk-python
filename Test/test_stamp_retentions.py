@@ -18,6 +18,19 @@ class TestStampRetentions(unittest.TestCase):
     codeStamped = "307"
     codeExpired = "401"
 
+    #Las credenciales de la cuenta de pruebas nunca van en el codigo.
+    user = os.environ.get("SDKTEST_USER")
+    password = os.environ.get("SDKTEST_PASSWORD")
+    token = os.environ.get("SDKTEST_TOKEN")
+
+    @classmethod
+    def setUpClass(cls):
+        for nombre, valor in (("SDKTEST_USER", cls.user),
+                              ("SDKTEST_PASSWORD", cls.password),
+                              ("SDKTEST_TOKEN", cls.token)):
+            if not valor:
+                raise ValueError(f"Falta la variable de entorno {nombre}")
+
     @staticmethod
     def open_file(pathFile):
         with open(pathFile, "r", encoding='utf-8') as file:
@@ -27,7 +40,7 @@ class TestStampRetentions(unittest.TestCase):
     def testStampRetentions_xml(self):
         """Prueba timbrado con XML usando token"""
         
-        stamp = Stamp_Retentions(TestStampRetentions.url, os.environ["SDKTEST_TOKEN"])
+        stamp = Stamp_Retentions(TestStampRetentions.url, self.token)
         xml_content = TestStampRetentions.open_file("Test/resources/retenciones20.xml")
         response = stamp.stamp_retetions_v3(xml_content)
         if response.get_status() == self.expectedError:
@@ -39,7 +52,7 @@ class TestStampRetentions(unittest.TestCase):
     def testStampRetentions_xml_Error(self):
         """Prueba error timbrado con XML CFDI"""
 
-        stamp = Stamp_Retentions(TestStampRetentions.url, os.environ["SDKTEST_TOKEN"])
+        stamp = Stamp_Retentions(TestStampRetentions.url, self.token)
         xml_content = TestStampRetentions.open_file("Test/resources/xml40.xml")
         response = stamp.stamp_retetions_v3(xml_content)
         self.assertEqual(self.expectedError, response.get_status())
@@ -51,8 +64,8 @@ class TestStampRetentions(unittest.TestCase):
         stamp = Stamp_Retentions(
             TestStampRetentions.url,
             None,
-            os.environ["SDKTEST_USER"],
-            os.environ["SDKTEST_PASSWORD"]
+            self.user,
+            self.password
         )
         xml_content = TestStampRetentions.open_file("Test/resources/retenciones20.xml")
         response = stamp.stamp_retetions_v3(xml_content)
@@ -69,7 +82,7 @@ class TestStampRetentions(unittest.TestCase):
             TestStampRetentions.url,
             None,
             "wrongUser",
-            os.environ["SDKTEST_PASSWORD"]
+            self.password
         )
         xml_content = TestStampRetentions.open_file("Test/resources/retenciones20.xml")
         response = stamp.stamp_retetions_v3(xml_content)

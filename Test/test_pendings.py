@@ -12,6 +12,23 @@ class TestPendings(unittest.TestCase):
     expected = "success"
     expectedError = "error"
     url = "https://services.test.sw.com.mx"
+    #RFC del certificado de pruebas Test/resources/b64CSD.txt.
+    rfc = "EKU9003173C9"
+    #RFC generico sin comprobantes pendientes en la cuenta.
+    rfcNotFound = "XAXX010101000"
+    #Las credenciales de la cuenta de pruebas nunca van en el codigo.
+    user = os.environ.get("SDKTEST_USER")
+    password = os.environ.get("SDKTEST_PASSWORD")
+    token = os.environ.get("SDKTEST_TOKEN")
+
+    @classmethod
+    def setUpClass(cls):
+        for nombre, valor in (("SDKTEST_USER", cls.user),
+                              ("SDKTEST_PASSWORD", cls.password),
+                              ("SDKTEST_TOKEN", cls.token)):
+            if not valor:
+                raise ValueError(f"Falta la variable de entorno {nombre}")
+
     @staticmethod
     def open_file(pathFile):
         with open(pathFile, "r", encoding='utf-8') as file:
@@ -19,24 +36,24 @@ class TestPendings(unittest.TestCase):
         return out
     
     def testPendings_auth(self):
-        pendings = Pendings("https://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = pendings.pendings("EKU9003173C9")
+        pendings = Pendings(self.url, None, self.user, self.password)
+        response = pendings.pendings(self.rfc)
         self.assertTrue(self.expected == response.get_status())
         
     def testPendings(self):
-        pendings = Pendings("https://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
-        response = pendings.pendings("EKU9003173C9")
+        pendings = Pendings(self.url, self.token)
+        response = pendings.pendings(self.rfc)
         self.assertTrue(self.expected == response.get_status())
 
     #UT de Error
     def testPendings_rfcNotFound(self):
-        pendings = Pendings(TestPendings.url, os.environ["SDKTEST_TOKEN"])
-        response = pendings.pendings("XAXX010101000")
+        pendings = Pendings(TestPendings.url, self.token)
+        response = pendings.pendings(self.rfcNotFound)
         self.assertIsNotNone(response.get_status())
 
     def testPendings_invalidToken(self):
         pendings = Pendings(TestPendings.url, "token-invalido")
-        response = pendings.pendings("EKU9003173C9")
+        response = pendings.pendings(self.rfc)
         self.assertTrue(self.expectedError == response.get_status())
         self.assertIsNotNone(response.get_message())
 

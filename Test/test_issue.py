@@ -20,6 +20,19 @@ class TestIssue(unittest.TestCase):
     #El servicio contesta este codigo cuando el comprobante ya tiene un timbre.
     codeStamped = "307"
     
+    #Las credenciales de la cuenta de pruebas nunca van en el codigo.
+    user = os.environ.get("SDKTEST_USER")
+    password = os.environ.get("SDKTEST_PASSWORD")
+    token = os.environ.get("SDKTEST_TOKEN")
+
+    @classmethod
+    def setUpClass(cls):
+        for nombre, valor in (("SDKTEST_USER", cls.user),
+                              ("SDKTEST_PASSWORD", cls.password),
+                              ("SDKTEST_TOKEN", cls.token)):
+            if not valor:
+                raise ValueError(f"Falta la variable de entorno {nombre}")
+
     @staticmethod
     def open_file(pathFile):
         with open(pathFile, "r", encoding='utf-8') as file:
@@ -53,38 +66,38 @@ class TestIssue(unittest.TestCase):
         
     def testIssue_auth(self):
         xml = self.update_date_xml("Test/resources/xml40.xml")
-        issue = Issue(self.url, None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        issue = Issue(self.url, None, self.user, self.password)
         response = issue.issue_v4(xml)
         self.assertEmision(response)
 
     def testIssue(self):
         xml = self.update_date_xml("Test/resources/xml40.xml")
-        issue = Issue(self.url, os.environ["SDKTEST_TOKEN"])
+        issue = Issue(self.url, self.token)
         response = issue.issue_v4(xml)
         self.assertEmision(response)
 
     def testIssue_b64(self):
         #El servicio tambien acepta el XML en base 64.
         xml = self.update_date_xml("Test/resources/xml40.xml")
-        issue = Issue(self.url, os.environ["SDKTEST_TOKEN"])
+        issue = Issue(self.url, self.token)
         response = issue.issue_v4(b64encode(xml.encode("utf-8")).decode("utf-8"), True)
         self.assertEmision(response)
 
     def testIssueJson_auth(self):
         json_content = self.update_date_json("Test/resources/cfdi.json")
-        issue = Issue(self.url, None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        issue = Issue(self.url, None, self.user, self.password)
         response = issue.issue_json_v4(json_content)
         self.assertEmision(response)
 
     def testIssueJson(self):
         json_content = self.update_date_json("Test/resources/cfdi.json")
-        issue = Issue(self.url, os.environ["SDKTEST_TOKEN"])
+        issue = Issue(self.url, self.token)
         response = issue.issue_json_v4(json_content)
         self.assertEmision(response)
 
     #UT de Error
     def testIssue_invalidXml(self):
-        issue = Issue(self.url, os.environ["SDKTEST_TOKEN"])
+        issue = Issue(self.url, self.token)
         response = issue.issue_v4("<xml>no es un cfdi</xml>")
         self.assertEqual(self.expectedError, response.get_status())
         self.assertIsNotNone(response.get_message())
