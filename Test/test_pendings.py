@@ -14,8 +14,8 @@ class TestPendings(unittest.TestCase):
     url = "https://services.test.sw.com.mx"
     #RFC del certificado de pruebas Test/resources/b64CSD.txt.
     rfc = "EKU9003173C9"
-    #RFC genérico sin comprobantes pendientes en la cuenta.
-    rfcNotFound = "XAXX010101000"
+    #RFC mal formado, usado en la prueba de error.
+    rfcInvalid = "no-es-un-rfc"
     user = os.environ.get("SDKTEST_USER")
     password = os.environ.get("SDKTEST_PASSWORD")
     token = os.environ.get("SDKTEST_TOKEN")
@@ -45,10 +45,14 @@ class TestPendings(unittest.TestCase):
         self.assertTrue(self.expected == response.get_status())
 
     #UT de Error
-    def testPendings_rfcNotFound(self):
+    def testPendings_invalidRfc(self):
+        #XAXX010101000 no sirve como caso sin coincidencias: la cuenta de pruebas tiene
+        #comprobantes pendientes con ese RFC. Un RFC mal formado si responde error.
         pendings = Pendings(self.url, self.token)
-        response = pendings.pendings(self.rfcNotFound)
-        self.assertIsNotNone(response.get_status())
+        response = pendings.pendings(self.rfcInvalid)
+        self.assertTrue(self.expectedError == response.get_status())
+        self.assertTrue(400 == response.get_status_code())
+        self.assertIsNotNone(response.get_message())
 
     def testPendings_invalidToken(self):
         pendings = Pendings(self.url, "token-invalido")
