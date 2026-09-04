@@ -13,51 +13,65 @@ class TestCsd(unittest.TestCase):
     url = "https://services.test.sw.com.mx"
     #Certificado de pruebas Test/resources/b64CSD.txt
     noCertificado = "30001000000500003416"
+    #Contraseña del CSD público de pruebas del SAT, se sobrescribe con SDKTEST_CSD_PASSWORD.
+    passwordCsd = os.environ.get("SDKTEST_CSD_PASSWORD", "12345678a")
+    user = os.environ.get("SDKTEST_USER")
+    password = os.environ.get("SDKTEST_PASSWORD")
+    token = os.environ.get("SDKTEST_TOKEN")
+
+    @classmethod
+    def setUpClass(cls):
+        for nombre, valor in (("SDKTEST_USER", cls.user),
+                              ("SDKTEST_PASSWORD", cls.password),
+                              ("SDKTEST_TOKEN", cls.token)):
+            if not valor:
+                raise ValueError(f"Falta la variable de entorno {nombre}")
+
     @staticmethod
     def open_file(pathFile):
-        with open(pathFile, "r", encoding='ansi', errors='ignore') as file:
+        with open(pathFile, "r", encoding='utf-8') as file:
             out = file.read()
         return out
     
     def testUploadCsd_auth(self):
-        csd_obj = Csd("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"),"12345678a")
+        csd_obj = Csd(self.url, None, self.user, self.password)
+        response = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"),TestCsd.passwordCsd)
         self.assertTrue(self.expected == response.get_status())
         
     def testUploadCsd(self):
-        csd_obj = Csd("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
-        response = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"),"12345678a")
+        csd_obj = Csd(self.url, self.token)
+        response = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"),TestCsd.passwordCsd)
         self.assertTrue(self.expected == response.get_status())
 
     #UT Consulta de certificados
     def testGetListCsd(self):
-        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
+        csd_obj = Csd(TestCsd.url, self.token)
         response = csd_obj.get_list_csd()
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue(isinstance(response.get_data(), list))
 
     def testGetListCsd_auth(self):
-        csd_obj = Csd(TestCsd.url, None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        csd_obj = Csd(TestCsd.url, None, self.user, self.password)
         response = csd_obj.get_list_csd()
         self.assertTrue(self.expected == response.get_status())
 
     def testGetCsd(self):
         #El número de certificado se toma de la propia cuenta, nunca se hardcodea.
         certificate_number = self.first_certificate()["certificate_number"]
-        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
+        csd_obj = Csd(TestCsd.url, self.token)
         response = csd_obj.get_csd(certificate_number)
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue(certificate_number == response.get_data()["certificate_number"])
 
     def testGetCsd_notFound(self):
-        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
+        csd_obj = Csd(TestCsd.url, self.token)
         response = csd_obj.get_csd("00000000000000000000")
         self.assertTrue("error" == response.get_status())
         self.assertIsNotNone(response.get_messageDetail(), "El valor de messageDetail esta vacio")
 
     def testGetListCsdByRfc(self):
         rfc = self.first_certificate()["issuer_rfc"]
-        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
+        csd_obj = Csd(TestCsd.url, self.token)
         response = csd_obj.get_list_csd_by_rfc(rfc)
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue(isinstance(response.get_data(), list))
@@ -70,7 +84,7 @@ class TestCsd(unittest.TestCase):
 
     #UT Consulta por tipo y certificado activo
     def testGetListCsdByType(self):
-        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
+        csd_obj = Csd(TestCsd.url, self.token)
         response = csd_obj.get_list_csd_by_type("stamp")
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue(isinstance(response.get_data(), list))
@@ -79,7 +93,7 @@ class TestCsd(unittest.TestCase):
 
     def testGetListCsdByType_withoutResults(self):
         #Un tipo sin certificados responde success con data vacío, no es un error.
-        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
+        csd_obj = Csd(TestCsd.url, self.token)
         response = csd_obj.get_list_csd_by_type("fiel")
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue(isinstance(response.get_data(), list))
@@ -87,7 +101,7 @@ class TestCsd(unittest.TestCase):
     def testGetActiveCsd(self):
         #El RFC y el tipo se toman de la propia cuenta, nunca se hardcodean.
         certificado = self.first_active_certificate()
-        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
+        csd_obj = Csd(TestCsd.url, self.token)
         response = csd_obj.get_active_csd(certificado["issuer_rfc"], certificado["certificate_type"])
         self.assertTrue(self.expected == response.get_status())
         self.assertTrue(isinstance(response.get_data(), dict))
@@ -95,7 +109,7 @@ class TestCsd(unittest.TestCase):
         self.assertTrue(response.get_data()["is_active"])
 
     def testGetActiveCsd_rfcNotFound(self):
-        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
+        csd_obj = Csd(TestCsd.url, self.token)
         response = csd_obj.get_active_csd("XAXX010101000", "stamp")
         self.assertTrue("error" == response.get_status())
         self.assertIsNotNone(response.get_message(), "El valor de message esta vacío")
@@ -104,8 +118,8 @@ class TestCsd(unittest.TestCase):
     #no el primero de la lista. Para rehabilitarlo basta con ejecutar testUploadCsd.
     @unittest.skipUnless(os.environ.get("SDKTEST_CSD_DELETE"), "Prueba destructiva, definir SDKTEST_CSD_DELETE para ejecutarla")
     def testDisableCsd(self):
-        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
-        upload = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"), "12345678a")
+        csd_obj = Csd(TestCsd.url, self.token)
+        upload = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"), TestCsd.passwordCsd)
         self.assertTrue(self.expected == upload.get_status())
         certificate_number = TestCsd.noCertificado
         response = csd_obj.disable_csd(certificate_number)
@@ -116,7 +130,7 @@ class TestCsd(unittest.TestCase):
     def first_active_certificate(self):
         """Regresa el primer certificado activo de la cuenta de pruebas.
         Omite la prueba si la cuenta no tiene ninguno activo."""
-        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
+        csd_obj = Csd(TestCsd.url, self.token)
         response = csd_obj.get_list_csd()
         self.assertTrue(self.expected == response.get_status())
         for certificado in response.get_data():
@@ -127,7 +141,7 @@ class TestCsd(unittest.TestCase):
     def first_certificate(self):
         """Regresa el primer certificado listado en la cuenta de pruebas.
         Omite la prueba si la cuenta no tiene certificados cargados."""
-        csd_obj = Csd(TestCsd.url, os.environ["SDKTEST_TOKEN"])
+        csd_obj = Csd(TestCsd.url, self.token)
         response = csd_obj.get_list_csd()
         self.assertTrue(self.expected == response.get_status())
         data = response.get_data()

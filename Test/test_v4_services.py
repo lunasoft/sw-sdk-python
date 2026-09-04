@@ -21,15 +21,19 @@ from Utils.response_version import ResponseVersion
 
 class TestV4Basic(unittest.TestCase):
 
-    def setUp(self):
-        self.url = "https://services.test.sw.com.mx"
-        self.urlApi = "https://api.test.sw.com.mx"
-        self.user = os.environ.get("SDKTEST_USER")
-        self.password = os.environ.get("SDKTEST_PASSWORD")
-        self.token = os.environ.get("SDKTEST_TOKEN")
+    url = "https://services.test.sw.com.mx"
+    urlApi = "https://api.test.sw.com.mx"
+    user = os.environ.get("SDKTEST_USER")
+    password = os.environ.get("SDKTEST_PASSWORD")
+    token = os.environ.get("SDKTEST_TOKEN")
 
-        if not all([self.user, self.password, self.token]):
-            raise ValueError("Faltan variables de entorno necesarias: SDKTEST_USER, SDKTEST_PASSWORD, SDKTEST_TOKEN")
+    @classmethod
+    def setUpClass(cls):
+        for nombre, valor in (("SDKTEST_USER", cls.user),
+                              ("SDKTEST_PASSWORD", cls.password),
+                              ("SDKTEST_TOKEN", cls.token)):
+            if not valor:
+                raise ValueError(f"Falta la variable de entorno {nombre}")
 
     @staticmethod
     def generate_custom_id(prefix):
@@ -48,6 +52,9 @@ class TestV4Basic(unittest.TestCase):
         if "Fecha" not in root.attrib:
             raise ValueError("No se encontró el atributo 'Fecha' en el XML")
         root.set("Fecha", new_date.strftime("%Y-%m-%dT%H:%M:%S"))
+        #El servicio contesta 307 ante un comprobante idéntico a otro ya emitido, y la
+        #Fecha del CFDI solo llega al segundo: el Folio hace única cada emisión.
+        root.set("Folio", datetime.now().strftime("%H%M%S%f"))
         ET.register_namespace("cfdi", ns["cfdi"])
         xml_buffer = BytesIO()
         tree.write(xml_buffer, encoding="utf-8", xml_declaration=True)
@@ -62,13 +69,16 @@ class TestV4Basic(unittest.TestCase):
         if "Fecha" not in data:
             raise ValueError("No se encontró la clave 'Fecha' en el JSON")
         data["Fecha"] = new_date
+        #El Folio hace única cada emisión, igual que en update_date_xml.
+        data["Folio"] = datetime.now().strftime("%H%M%S%f")
         return json.dumps(data, indent=2, ensure_ascii=False)
 
     def wait_url_pdf(self, uuid):
-        #El PDF del comprobante tarda en quedar disponible en el ADT.
+        #El PDF del comprobante tarda en quedar disponible en el ADT: la urlPDF aparece
+        #alrededor de los 110 segundos y varía según la carga del ambiente.
         storage = Storage(self.url, self.urlApi, self.token)
-        for _ in range(12):
-            time.sleep(10)
+        for _ in range(60):
+            time.sleep(5)
             url_pdf = storage.get_by_uuid(uuid).get_url_pdf()
             if url_pdf:
                 return url_pdf

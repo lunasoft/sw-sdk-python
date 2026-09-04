@@ -10,40 +10,71 @@ from Cancelation_Retentions.CancelationRetentions import CancelationRetentions
 
 class TestCancelationRetentions(unittest.TestCase):
     expected = "success"
+    url = "https://services.test.sw.com.mx"
+    #Contraseña del CSD público de pruebas del SAT, se sobrescribe con SDKTEST_CSD_PASSWORD.
+    passwordCsd = os.environ.get("SDKTEST_CSD_PASSWORD", "12345678a")
+    #RFC del certificado de pruebas Test/resources/b64CSD.txt.
+    rfc = "EKU9003173C9"
+    #Retención timbrada en la cuenta de pruebas sobre la que se ejercita la cancelación.
+    uuidCfdi = "578052ce-710f-4d0b-9ffc-6ca73daf92a5"
+    user = os.environ.get("SDKTEST_USER")
+    password = os.environ.get("SDKTEST_PASSWORD")
+    token = os.environ.get("SDKTEST_TOKEN")
+
+    @classmethod
+    def setUpClass(cls):
+        for nombre, valor in (("SDKTEST_USER", cls.user),
+                              ("SDKTEST_PASSWORD", cls.password),
+                              ("SDKTEST_TOKEN", cls.token)):
+            if not valor:
+                raise ValueError(f"Falta la variable de entorno {nombre}")
+
     @staticmethod
     def open_file(pathFile):
-        out = open(pathFile, "r", encoding='ansi', errors='ignore').read()
+        with open(pathFile, "r", encoding='utf-8') as file:
+            out = file.read()
         return out
     
     def testCancelaUno_auth(self):
-        cancel = CancelationRetentions("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
+        cancel = CancelationRetentions(self.url, None, self.user, self.password)
         response = cancel.CancelaUno(TestCancelationRetentions.open_file("Test/resources/cancelRetByXml.xml"))
         self.assertTrue(self.expected == response.get_status())
         
     def testCancelaUno(self):
-        cancel = CancelationRetentions("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
+        cancel = CancelationRetentions(self.url, self.token)
         response = cancel.CancelaUno(TestCancelationRetentions.open_file("Test/resources/cancelRetByXml.xml"))
         self.assertTrue(self.expected == response.get_status())
     
     def testCancelaUnoCSD_auth(self):
-        cancel = CancelationRetentions("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = cancel.CancelaUnoCSD("578052ce-710f-4d0b-9ffc-6ca73daf92a5", "EKU9003173C9", TestCancelationRetentions.open_file("Test/resources/b64CSD.txt"), TestCancelationRetentions.open_file("Test/resources/b64Key.txt"),"12345678a", "02", "")
+        cancel = CancelationRetentions(self.url, None, self.user, self.password)
+        response = cancel.CancelaUnoCSD(self.uuidCfdi, self.rfc, TestCancelationRetentions.open_file("Test/resources/b64CSD.txt"), TestCancelationRetentions.open_file("Test/resources/b64Key.txt"),self.passwordCsd, "02", "")
         self.assertTrue(self.expected == response.get_status())
 
     def testCancelaUnoCSD(self):
-        cancel = CancelationRetentions("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
-        response = cancel.CancelaUnoCSD("578052ce-710f-4d0b-9ffc-6ca73daf92a5", "EKU9003173C9", TestCancelationRetentions.open_file("Test/resources/b64CSD.txt"), TestCancelationRetentions.open_file("Test/resources/b64Key.txt"),"12345678a", "02", "")
+        cancel = CancelationRetentions(self.url, self.token)
+        response = cancel.CancelaUnoCSD(self.uuidCfdi, self.rfc, TestCancelationRetentions.open_file("Test/resources/b64CSD.txt"), TestCancelationRetentions.open_file("Test/resources/b64Key.txt"),self.passwordCsd, "02", "")
         self.assertTrue(self.expected == response.get_status())
         
     def testCancelaUnoPFX_auth(self):
-        cancel = CancelationRetentions("http://services.test.sw.com.mx", None, os.environ["SDKTEST_USER"], os.environ["SDKTEST_PASSWORD"])
-        response = cancel.CancelaUnoPFX("578052ce-710f-4d0b-9ffc-6ca73daf92a5", "EKU9003173C9", TestCancelationRetentions.open_file("Test/resources/b64Pfx.txt"), "12345678a", "02", "")
+        cancel = CancelationRetentions(self.url, None, self.user, self.password)
+        response = cancel.CancelaUnoPFX(self.uuidCfdi, self.rfc, TestCancelationRetentions.open_file("Test/resources/b64Pfx.txt"), self.passwordCsd, "02", "")
         self.assertTrue(self.expected == response.get_status())
 
     def testCancelaUnoPFX(self):
-        cancel = CancelationRetentions("http://services.test.sw.com.mx", os.environ["SDKTEST_TOKEN"])
-        response = cancel.CancelaUnoPFX("578052ce-710f-4d0b-9ffc-6ca73daf92a5", "EKU9003173C9", TestCancelationRetentions.open_file("Test/resources/b64Pfx.txt"), "12345678a", "02", "")
+        cancel = CancelationRetentions(self.url, self.token)
+        response = cancel.CancelaUnoPFX(self.uuidCfdi, self.rfc, TestCancelationRetentions.open_file("Test/resources/b64Pfx.txt"), self.passwordCsd, "02", "")
         self.assertTrue(self.expected == response.get_status())
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestCancelationRetentions)
-unittest.TextTestRunner(verbosity=2).run(suite)
+    #UT de Error
+    def testCancelRetentions_invalidToken(self):
+        #CancelationRetentionsResponse tampoco asigna status cuando el servicio no
+        #responde 200, así que la prueba afirma el código y el mensaje.
+        cancel = CancelationRetentions(self.url, "token-invalido")
+        response = cancel.CancelaUno(TestCancelationRetentions.open_file("Test/resources/cancelRetByXml.xml"))
+        self.assertTrue(401 == response.get_status_code())
+        self.assertIsNotNone(response.get_message())
+
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestCancelationRetentions)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    sys.exit(not result.wasSuccessful())
