@@ -5,14 +5,21 @@ import sys
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
+from Test import config
 from StatusCfdi.StatusCfdi import StatusCfdi
 
 class TestStatusCfdi(unittest.TestCase):
-    urlProd="https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc"
-    soapAction = "http://tempuri.org/IConsultaCFDIService/Consulta"
+    urlProd = config.URL_SAT
+    soapAction = config.SOAP_ACTION
+    rfcEmisor = config.RFC_EMISOR_SAT
+    rfcReceptor = config.RFC_RECEPTOR_SAT
+    total = config.TOTAL_SAT
+    uuidCfdi = config.UUID_SAT
+    uuidNotFound = config.ID_NOT_FOUND
 
     def testStatusCfdi(self):
-        objStatus = StatusCfdi.status("CAU180123GEA", "GACM650215GH9", "398.39", "699628be-2f06-4bc9-adc2-860b51eecbca", self.urlProd, self.soapAction)
+        objStatus = StatusCfdi.status(self.rfcEmisor, self.rfcReceptor, self.total, self.uuidCfdi,
+                                      self.urlProd, self.soapAction)
         self.assertTrue(objStatus.status_code == 200)
         self.assertIsNotNone(objStatus.codigoEstatus)
         self.assertIsNotNone(objStatus.esCancelable)
@@ -23,14 +30,14 @@ class TestStatusCfdi(unittest.TestCase):
 
     def testStatusCfdi_notFound(self):
         #Un UUID que no existe responde igual con 200, con el código de estatus del SAT.
-        objStatus = StatusCfdi.status("CAU180123GEA", "GACM650215GH9", "398.39",
-                                      "00000000-0000-0000-0000-000000000000", self.urlProd, self.soapAction)
+        objStatus = StatusCfdi.status(self.rfcEmisor, self.rfcReceptor, self.total, self.uuidNotFound,
+                                      self.urlProd, self.soapAction)
         self.assertTrue(objStatus.status_code == 200)
         self.assertIsNotNone(objStatus.codigoEstatus)
 
     def testStatusCfdi_totalDistinto(self):
-        objStatus = StatusCfdi.status("CAU180123GEA", "GACM650215GH9", "1.00",
-                                      "699628be-2f06-4bc9-adc2-860b51eecbca", self.urlProd, self.soapAction)
+        objStatus = StatusCfdi.status(self.rfcEmisor, self.rfcReceptor, "1.00", self.uuidCfdi,
+                                      self.urlProd, self.soapAction)
         self.assertTrue(objStatus.status_code == 200)
         self.assertIsNotNone(objStatus.codigoEstatus)
 

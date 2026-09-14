@@ -7,23 +7,23 @@ import uuid
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
+from Test import config
 from AccountUser.AccountUser import AccountUser
 from Balance.Balance import Balance
 
 class TestBalance(unittest.TestCase):
     expected = "success"
     expectedError = "error"
-    url = "https://services.test.sw.com.mx"
-    urlApi = "https://api.test.sw.com.mx"
-    comment = "Prueba unitaria Python"
-    #Identificadores que el servicio rechaza, usados en las pruebas de error.
-    invalidId = "no-es-uuid"
-    notFoundId = "00000000-0000-0000-0000-000000000000"
+    url = config.URL
+    urlApi = config.URL_API
+    comment = config.COMMENT
+    invalidId = config.ID_INVALID
+    notFoundId = config.ID_NOT_FOUND
     _childUserId = None
 
-    user = os.environ.get("SDKTEST_USER")
-    password = os.environ.get("SDKTEST_PASSWORD")
-    token = os.environ.get("SDKTEST_TOKEN")
+    user = config.USER
+    password = config.PASSWORD
+    token = config.TOKEN
 
     @classmethod
     def setUpClass(cls):

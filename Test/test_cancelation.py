@@ -6,20 +6,18 @@ import sys
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
+from Test import config
 from Cancelation.Cancelation import Cancelation
 
 class TestCancelation(unittest.TestCase):
     expected = "success"
-    url = "https://services.test.sw.com.mx"
-    #Contraseña del CSD público de pruebas del SAT, se sobrescribe con SDKTEST_CSD_PASSWORD.
-    passwordCsd = os.environ.get("SDKTEST_CSD_PASSWORD", "12345678a")
-    #RFC del certificado de pruebas Test/resources/b64CSD.txt.
-    rfc = "EKU9003173C9"
-    #CFDI timbrado en la cuenta de pruebas sobre el que se ejercita la cancelación.
-    uuidCfdi = "3dda215e-4c77-4923-94a1-627e0a04378c"
-    user = os.environ.get("SDKTEST_USER")
-    password = os.environ.get("SDKTEST_PASSWORD")
-    token = os.environ.get("SDKTEST_TOKEN")
+    url = config.URL
+    passwordCsd = config.PASSWORD_CSD
+    rfc = config.RFC
+    uuidCfdi = config.UUID_CANCELACION
+    user = config.USER
+    password = config.PASSWORD
+    token = config.TOKEN
 
     @classmethod
     def setUpClass(cls):

@@ -6,19 +6,18 @@ import sys
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
+from Test import config
 from Pendings.Pendings import Pendings
 
 class TestPendings(unittest.TestCase):
     expected = "success"
     expectedError = "error"
-    url = "https://services.test.sw.com.mx"
-    #RFC del certificado de pruebas Test/resources/b64CSD.txt.
-    rfc = "EKU9003173C9"
-    #RFC mal formado, usado en la prueba de error.
-    rfcInvalid = "no-es-un-rfc"
-    user = os.environ.get("SDKTEST_USER")
-    password = os.environ.get("SDKTEST_PASSWORD")
-    token = os.environ.get("SDKTEST_TOKEN")
+    url = config.URL
+    rfc = config.RFC
+    rfcInvalid = config.RFC_INVALID
+    user = config.USER
+    password = config.PASSWORD
+    token = config.TOKEN
 
     @classmethod
     def setUpClass(cls):

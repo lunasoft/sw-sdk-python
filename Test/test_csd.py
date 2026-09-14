@@ -6,18 +6,17 @@ import sys
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
+from Test import config
 from Csd.Csd import Csd
 
 class TestCsd(unittest.TestCase):
     expected = "success"
-    url = "https://services.test.sw.com.mx"
-    #Certificado de pruebas Test/resources/b64CSD.txt
-    noCertificado = "30001000000500003416"
-    #Contraseña del CSD público de pruebas del SAT, se sobrescribe con SDKTEST_CSD_PASSWORD.
-    passwordCsd = os.environ.get("SDKTEST_CSD_PASSWORD", "12345678a")
-    user = os.environ.get("SDKTEST_USER")
-    password = os.environ.get("SDKTEST_PASSWORD")
-    token = os.environ.get("SDKTEST_TOKEN")
+    url = config.URL
+    noCertificado = config.NO_CERTIFICADO
+    passwordCsd = config.PASSWORD_CSD
+    user = config.USER
+    password = config.PASSWORD
+    token = config.TOKEN
 
     @classmethod
     def setUpClass(cls):
@@ -116,7 +115,7 @@ class TestCsd(unittest.TestCase):
 
     #UT de eliminación, destructiva: desactiva el CSD de pruebas recién cargado,
     #no el primero de la lista. Para rehabilitarlo basta con ejecutar testUploadCsd.
-    @unittest.skipUnless(os.environ.get("SDKTEST_CSD_DELETE"), "Prueba destructiva, definir SDKTEST_CSD_DELETE para ejecutarla")
+    @unittest.skipUnless(config.CSD_DELETE, "Prueba destructiva, definir SDKTEST_CSD_DELETE para ejecutarla")
     def testDisableCsd(self):
         csd_obj = Csd(TestCsd.url, self.token)
         upload = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"), TestCsd.passwordCsd)

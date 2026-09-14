@@ -1,5 +1,4 @@
 import unittest
-import os
 import sys
 import json
 from base64 import b64encode
@@ -14,6 +13,7 @@ import time
 PROJECT_ROOT = str(Path(__file__).parent.parent.absolute())
 sys.path.insert(0, PROJECT_ROOT)
 
+from Test import config
 from Issue.IssueV4 import IssueV4
 from Stamp.StampV4 import StampV4
 from Storage.Storage import Storage
@@ -21,11 +21,11 @@ from Utils.response_version import ResponseVersion
 
 class TestV4Basic(unittest.TestCase):
 
-    url = "https://services.test.sw.com.mx"
-    urlApi = "https://api.test.sw.com.mx"
-    user = os.environ.get("SDKTEST_USER")
-    password = os.environ.get("SDKTEST_PASSWORD")
-    token = os.environ.get("SDKTEST_TOKEN")
+    url = config.URL
+    urlApi = config.URL_API
+    user = config.USER
+    password = config.PASSWORD
+    token = config.TOKEN
 
     @classmethod
     def setUpClass(cls):

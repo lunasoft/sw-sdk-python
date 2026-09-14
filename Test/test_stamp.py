@@ -6,19 +6,18 @@ from base64 import b64encode
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
+from Test import config
 from Stamp.Stamp import Stamp
 
 class TestStamp(unittest.TestCase):
     expected = "success"
     expectedError = "error"
-    url = "https://services.test.sw.com.mx"
-    #xml40Stamp.xml viene sellado y timbrado, y el servicio valida el sello, de modo
-    #que la suite no puede reemitirlo: el resultado esperado es el timbre previo.
-    codeStamped = "307"
+    url = config.URL
+    codeStamped = config.CODE_STAMPED
 
-    user = os.environ.get("SDKTEST_USER")
-    password = os.environ.get("SDKTEST_PASSWORD")
-    token = os.environ.get("SDKTEST_TOKEN")
+    user = config.USER
+    password = config.PASSWORD
+    token = config.TOKEN
 
     @classmethod
     def setUpClass(cls):

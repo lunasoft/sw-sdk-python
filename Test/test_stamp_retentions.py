@@ -5,22 +5,20 @@ import sys
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
+from Test import config
 from Stamp_Retentions.Stamp_Retentions import Stamp_Retentions
 
 
 class TestStampRetentions(unittest.TestCase):
     expected = "success"
     expectedError = "error"
-    url = "https://services.test.sw.com.mx"
-    #retenciones20.xml viene sellado con su FechaExp, y el servicio valida el sello,
-    #de modo que la suite no puede refrescar la fecha: el servicio contesta 307 si la
-    #retención ya se timbró, o 401 cuando la fecha del fixture rebasa las 72 horas.
-    codeStamped = "307"
-    codeExpired = "401"
+    url = config.URL
+    codeStamped = config.CODE_STAMPED
+    codeExpired = config.CODE_EXPIRED
 
-    user = os.environ.get("SDKTEST_USER")
-    password = os.environ.get("SDKTEST_PASSWORD")
-    token = os.environ.get("SDKTEST_TOKEN")
+    user = config.USER
+    password = config.PASSWORD
+    token = config.TOKEN
 
     @classmethod
     def setUpClass(cls):

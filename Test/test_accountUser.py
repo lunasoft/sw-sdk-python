@@ -9,22 +9,23 @@ from datetime import datetime
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
+from Test import config
 from AccountUser.AccountUser import AccountUser
 
 class TestAccountUser(unittest.TestCase):
     expected = "success"
     expectedError = "error"
-    url = "https://services.test.sw.com.mx"
-    urlApi = "https://api.test.sw.com.mx"
-    taxId = "XAXX010101000"
-    phone = "0000000000"
-    notFoundId = "00000000-0000-0000-0000-000000000000"
-    invalidId = "no-es-uuid"
+    url = config.URL
+    urlApi = config.URL_API
+    taxId = config.TAX_ID
+    phone = config.PHONE
+    notFoundId = config.ID_NOT_FOUND
+    invalidId = config.ID_INVALID
     _firstUser = None
 
-    user = os.environ.get("SDKTEST_USER")
-    password = os.environ.get("SDKTEST_PASSWORD")
-    token = os.environ.get("SDKTEST_TOKEN")
+    user = config.USER
+    password = config.PASSWORD
+    token = config.TOKEN
 
     @classmethod
     def setUpClass(cls):
@@ -168,7 +169,7 @@ class TestAccountUser(unittest.TestCase):
     #UT Alta, actualización y baja de usuarios, destructivas: dan de alta una cuenta real en el
     #distribuidor y la eliminan en la misma prueba, de modo que la cuenta queda como estaba.
     #Para ejecutarlas basta con definir SDKTEST_USER_LIFECYCLE.
-    @unittest.skipUnless(os.environ.get("SDKTEST_USER_LIFECYCLE"), "Prueba destructiva, definir SDKTEST_USER_LIFECYCLE para ejecutarla")
+    @unittest.skipUnless(config.USER_LIFECYCLE, "Prueba destructiva, definir SDKTEST_USER_LIFECYCLE para ejecutarla")
     def testAccountUser_lifecycle(self):
         accountUser = AccountUser(self.url, self.urlApi, self.token)
         email = self.generate_email()
@@ -194,7 +195,7 @@ class TestAccountUser(unittest.TestCase):
         self.assertIsNotNone(baja.get_data())
         self.assertEqual(0, len(accountUser.getUser_by_email(email).data.items))
 
-    @unittest.skipUnless(os.environ.get("SDKTEST_USER_LIFECYCLE"), "Prueba destructiva, definir SDKTEST_USER_LIFECYCLE para ejecutarla")
+    @unittest.skipUnless(config.USER_LIFECYCLE, "Prueba destructiva, definir SDKTEST_USER_LIFECYCLE para ejecutarla")
     def testAccountUser_lifecycle_auth(self):
         accountUser = AccountUser(self.url, self.urlApi, None, self.user, self.password)
         email = self.generate_email()
@@ -208,7 +209,7 @@ class TestAccountUser(unittest.TestCase):
         self.assertEqual(self.expected, baja.get_status())
         self.assertIsNotNone(baja.get_data())
 
-    @unittest.skipUnless(os.environ.get("SDKTEST_USER_LIFECYCLE"), "Prueba destructiva, definir SDKTEST_USER_LIFECYCLE para ejecutarla")
+    @unittest.skipUnless(config.USER_LIFECYCLE, "Prueba destructiva, definir SDKTEST_USER_LIFECYCLE para ejecutarla")
     def testAccountUser_update_sameData(self):
         accountUser = AccountUser(self.url, self.urlApi, self.token)
         email = self.generate_email()

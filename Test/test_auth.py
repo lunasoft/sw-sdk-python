@@ -5,15 +5,16 @@ import sys
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
+from Test import config
 from Auth.Auth import Auth
 
 class TestAuth(unittest.TestCase):
     expected = "success"
     expectedError = "error"
-    url = "https://services.test.sw.com.mx"
+    url = config.URL
     
-    user = os.environ.get("SDKTEST_USER")
-    password = os.environ.get("SDKTEST_PASSWORD")
+    user = config.USER
+    password = config.PASSWORD
 
     @classmethod
     def setUpClass(cls):

@@ -10,21 +10,21 @@ from datetime import datetime, timedelta
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
+from Test import config
 from Pdf.Pdf import Pdf
 from Utils.requestHelper import RequestHelper
 
 class TestPdf(unittest.TestCase):
-    url = "https://services.test.sw.com.mx"
-    urlApi = "https://api.test.sw.com.mx"
-    uuidNotFound = "00000000-0000-0000-0000-000000000000"
-    uuidInvalid = "no-es-uuid"
+    url = config.URL
+    urlApi = config.URL_API
+    uuidNotFound = config.ID_NOT_FOUND
+    uuidInvalid = config.ID_INVALID
     _uuidTimbrado = None
-    #Tramos de 28 días que se recorren hacia atrás buscando un comprobante propio.
-    tramosBusqueda = 7
+    tramosBusqueda = config.TRAMOS_BUSQUEDA
 
-    user = os.environ.get("SDKTEST_USER")
-    password = os.environ.get("SDKTEST_PASSWORD")
-    token = os.environ.get("SDKTEST_TOKEN")
+    user = config.USER
+    password = config.PASSWORD
+    token = config.TOKEN
 
     @classmethod
     def setUpClass(cls):

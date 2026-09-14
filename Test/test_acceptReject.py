@@ -6,21 +6,19 @@ import sys
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
+from Test import config
 from AcceptReject.AcceptReject import AcceptReject
 
 class TestAcceptReject(unittest.TestCase):
     expected = "success"
     expectedError = "error"
-    url = "https://services.test.sw.com.mx"
-    #Contraseña del CSD público de pruebas del SAT, se sobrescribe con SDKTEST_CSD_PASSWORD.
-    passwordCsd = os.environ.get("SDKTEST_CSD_PASSWORD", "12345678a")
-    #RFC del certificado de pruebas Test/resources/b64CSD.txt.
-    rfc = "EKU9003173C9"
-    #CFDI recibido en la cuenta de pruebas sobre el que se ejercita la aceptación.
-    uuidCfdi = "baf029f3-93ea-4267-a76c-1958d69bd4d8"
-    user = os.environ.get("SDKTEST_USER")
-    password = os.environ.get("SDKTEST_PASSWORD")
-    token = os.environ.get("SDKTEST_TOKEN")
+    url = config.URL
+    passwordCsd = config.PASSWORD_CSD
+    rfc = config.RFC
+    uuidCfdi = config.UUID_ACEPTA_RECHAZA
+    user = config.USER
+    password = config.PASSWORD
+    token = config.TOKEN
 
     @classmethod
     def setUpClass(cls):

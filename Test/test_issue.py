@@ -9,6 +9,7 @@ from io import BytesIO
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
+from Test import config
 from base64 import b64encode
 
 from Issue.Issue import Issue
@@ -16,13 +17,12 @@ from Issue.Issue import Issue
 class TestIssue(unittest.TestCase):
     expected = "success"
     expectedError = "error"
-    url = "https://services.test.sw.com.mx"
-    #El servicio contesta este código cuando el comprobante ya tiene un timbre.
-    codeStamped = "307"
+    url = config.URL
+    codeStamped = config.CODE_STAMPED
     
-    user = os.environ.get("SDKTEST_USER")
-    password = os.environ.get("SDKTEST_PASSWORD")
-    token = os.environ.get("SDKTEST_TOKEN")
+    user = config.USER
+    password = config.PASSWORD
+    token = config.TOKEN
 
     @classmethod
     def setUpClass(cls):
