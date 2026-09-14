@@ -6,5 +6,6 @@ build/
 pytest_cache/
 unittest_cache/
 .vscode/
+.idea/
 sw_sdk_python.egg-info/
 Test/resources/filePdf.pdf
