@@ -6,31 +6,11 @@ import sys
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
-from Test import config
+from Test.base import SdkTestCase
 from Validate.Validate import Validate
 
-class TestValidate(unittest.TestCase):
-    expected = "success"
-    expectedError = "error"
-    url = config.URL
-    user = config.USER
-    password = config.PASSWORD
-    token = config.TOKEN
+class TestValidate(SdkTestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        for nombre, valor in (("SDKTEST_USER", cls.user),
-                              ("SDKTEST_PASSWORD", cls.password),
-                              ("SDKTEST_TOKEN", cls.token)):
-            if not valor:
-                raise ValueError(f"Falta la variable de entorno {nombre}")
-
-    @staticmethod
-    def open_file(pathFile):
-        with open(pathFile, "r", encoding='utf-8') as file:
-            out = file.read()
-        return out
-    
     def testValidateXml_Auth(self):
         validate = Validate(self.url, None, self.user, self.password)
         response = validate.ValidateXml(TestValidate.open_file("Test/resources/xml40Stamp.xml"))

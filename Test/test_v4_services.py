@@ -1,39 +1,25 @@
 import unittest
+import os
 import sys
 import json
 from base64 import b64encode
 from datetime import datetime, timedelta
 import xml.etree.ElementTree as ET
 from io import BytesIO
-from pathlib import Path
 import random
 import string
 import time
 
-PROJECT_ROOT = str(Path(__file__).parent.parent.absolute())
-sys.path.insert(0, PROJECT_ROOT)
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+sys.path.append(PROJECT_ROOT)
 
-from Test import config
+from Test.base import SdkTestCase
 from Issue.IssueV4 import IssueV4
 from Stamp.StampV4 import StampV4
 from Storage.Storage import Storage
 from Utils.response_version import ResponseVersion
 
-class TestV4Basic(unittest.TestCase):
-
-    url = config.URL
-    urlApi = config.URL_API
-    user = config.USER
-    password = config.PASSWORD
-    token = config.TOKEN
-
-    @classmethod
-    def setUpClass(cls):
-        for nombre, valor in (("SDKTEST_USER", cls.user),
-                              ("SDKTEST_PASSWORD", cls.password),
-                              ("SDKTEST_TOKEN", cls.token)):
-            if not valor:
-                raise ValueError(f"Falta la variable de entorno {nombre}")
+class TestV4Basic(SdkTestCase):
 
     @staticmethod
     def generate_custom_id(prefix):

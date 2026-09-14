@@ -5,46 +5,18 @@ import string
 import sys
 from datetime import datetime
 
-#Función para poder importar módulos necesarios.
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
 from Test import config
+from Test.base import SdkTestCase
 from AccountUser.AccountUser import AccountUser
 
-class TestAccountUser(unittest.TestCase):
-    expected = "success"
-    expectedError = "error"
-    url = config.URL
-    urlApi = config.URL_API
+class TestAccountUser(SdkTestCase):
     taxId = config.TAX_ID
     phone = config.PHONE
     notFoundId = config.ID_NOT_FOUND
     invalidId = config.ID_INVALID
-    _firstUser = None
-
-    user = config.USER
-    password = config.PASSWORD
-    token = config.TOKEN
-
-    @classmethod
-    def setUpClass(cls):
-        for nombre, valor in (("SDKTEST_USER", cls.user),
-                              ("SDKTEST_PASSWORD", cls.password),
-                              ("SDKTEST_TOKEN", cls.token)):
-            if not valor:
-                raise ValueError(f"Falta la variable de entorno {nombre}")
-
-    @classmethod
-    def first_user(cls):
-        #Los datos de consulta se toman de la propia cuenta, nunca se hardcodean.
-        if cls._firstUser is None:
-            accountUser = AccountUser(cls.url, cls.urlApi, cls.token)
-            response = accountUser.getUser_all()
-            if response.get_status() != cls.expected or not response.data.items:
-                raise unittest.SkipTest("La cuenta de pruebas no tiene cuentas hijas")
-            cls._firstUser = response.data.items[0]
-        return cls._firstUser
 
     @staticmethod
     def generate_email():

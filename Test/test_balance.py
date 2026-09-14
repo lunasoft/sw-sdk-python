@@ -3,46 +3,21 @@ import os
 import sys
 import uuid
 
-#Función para poder importar módulos necesarios.
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
 from Test import config
-from AccountUser.AccountUser import AccountUser
+from Test.base import SdkTestCase
 from Balance.Balance import Balance
 
-class TestBalance(unittest.TestCase):
-    expected = "success"
-    expectedError = "error"
-    url = config.URL
-    urlApi = config.URL_API
+class TestBalance(SdkTestCase):
     comment = config.COMMENT
     invalidId = config.ID_INVALID
     notFoundId = config.ID_NOT_FOUND
-    _childUserId = None
-
-    user = config.USER
-    password = config.PASSWORD
-    token = config.TOKEN
-
-    @classmethod
-    def setUpClass(cls):
-        for nombre, valor in (("SDKTEST_USER", cls.user),
-                              ("SDKTEST_PASSWORD", cls.password),
-                              ("SDKTEST_TOKEN", cls.token)):
-            if not valor:
-                raise ValueError(f"Falta la variable de entorno {nombre}")
 
     @classmethod
     def child_user_id(cls):
-        #El idUser se toma de la propia cuenta distribuidora, nunca se hardcodea.
-        if cls._childUserId is None:
-            accountUser = AccountUser(cls.url, cls.urlApi, cls.token)
-            response = accountUser.getUser_all()
-            if response.get_status() != cls.expected or not response.data.items:
-                raise unittest.SkipTest("La cuenta de pruebas no tiene cuentas hijas")
-            cls._childUserId = response.data.items[0].idUser
-        return cls._childUserId
+        return cls.first_user().idUser
 
     #UT Consulta del saldo propio
     def testBalance_auth(self):

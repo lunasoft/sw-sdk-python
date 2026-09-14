@@ -7,33 +7,14 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir
 sys.path.append(PROJECT_ROOT)
 
 from Test import config
+from Test.base import SdkTestCase
 from AcceptReject.AcceptReject import AcceptReject
 
-class TestAcceptReject(unittest.TestCase):
-    expected = "success"
-    expectedError = "error"
-    url = config.URL
+class TestAcceptReject(SdkTestCase):
     passwordCsd = config.PASSWORD_CSD
     rfc = config.RFC
     uuidCfdi = config.UUID_ACEPTA_RECHAZA
-    user = config.USER
-    password = config.PASSWORD
-    token = config.TOKEN
 
-    @classmethod
-    def setUpClass(cls):
-        for nombre, valor in (("SDKTEST_USER", cls.user),
-                              ("SDKTEST_PASSWORD", cls.password),
-                              ("SDKTEST_TOKEN", cls.token)):
-            if not valor:
-                raise ValueError(f"Falta la variable de entorno {nombre}")
-
-    @staticmethod
-    def open_file(pathFile):
-        with open(pathFile, "r", encoding='utf-8') as file:
-            out = file.read()
-        return out
-    
     #UT Aceptación y rechazo
     def testAcceptRejectCsd_auth(self):
         accept_reject = AcceptReject(self.url, None, self.user, self.password)

@@ -4,66 +4,19 @@ import sys
 import time
 import uuid
 from base64 import b64decode
-from datetime import datetime, timedelta
 
-#Función para poder importar módulos necesarios.
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
 from Test import config
+from Test.base import SdkTestCase
 from Pdf.Pdf import Pdf
-from Utils.requestHelper import RequestHelper
 
-class TestPdf(unittest.TestCase):
-    url = config.URL
-    urlApi = config.URL_API
+class TestPdf(SdkTestCase):
+    exigePdf = True
     uuidNotFound = config.ID_NOT_FOUND
     uuidInvalid = config.ID_INVALID
-    _uuidTimbrado = None
-    tramosBusqueda = config.TRAMOS_BUSQUEDA
 
-    user = config.USER
-    password = config.PASSWORD
-    token = config.TOKEN
-
-    @classmethod
-    def setUpClass(cls):
-        for nombre, valor in (("SDKTEST_USER", cls.user),
-                              ("SDKTEST_PASSWORD", cls.password),
-                              ("SDKTEST_TOKEN", cls.token)):
-            if not valor:
-                raise ValueError(f"Falta la variable de entorno {nombre}")
-
-    @classmethod
-    def stamped_uuid(cls):
-        #El UUID se toma de un CFDI timbrado en la propia cuenta, nunca se hardcodea: el
-        #datawarehouse está particionado por cuenta, de modo que un UUID fijo sólo resuelve
-        #con el token de la cuenta que timbró el comprobante. Tiene que traer PDF, porque
-        #regenerar uno que nunca lo tuvo responde 404.
-        if cls._uuidTimbrado is None:
-            #El buscador por fechas acepta rangos de hasta 30 días y responde vacío con
-            #rangos más largos, así que se recorre hacia atrás por tramos.
-            for tramo in range(cls.tramosBusqueda):
-                hasta = datetime.now() - timedelta(days=28 * tramo)
-                desde = hasta - timedelta(days=28)
-                endpoint = (f"{cls.urlApi}/datawarehouse/v1/live/"
-                            f"?startDate={desde.strftime('%Y-%m-%d')}&endDate={hasta.strftime('%Y-%m-%d')}")
-                registros = RequestHelper.get_json_request(endpoint, cls.token).json()
-                registros = registros.get("data", {}).get("records", [])
-                conPdf = [r for r in registros if r.get("urlPDF") or r.get("urlPdf")]
-                if conPdf:
-                    cls._uuidTimbrado = conPdf[0]["uuid"]
-                    break
-            if cls._uuidTimbrado is None:
-                raise unittest.SkipTest("La cuenta de pruebas no tiene CFDI timbrados con PDF")
-        return cls._uuidTimbrado
-
-    @staticmethod
-    def open_file(pathFile):
-        with open(pathFile, "r", encoding='utf-8') as file:
-            out = file.read()
-        return out
-    
     @staticmethod
     def esperar_limite():
         #La regeneración responde 429 cuando se consumen varias peticiones seguidas.
