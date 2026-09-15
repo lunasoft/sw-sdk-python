@@ -3,7 +3,7 @@ from Utils.Services import Services
 
 class Pdf(Services):
     url_api = None
-    def __init__(self, url, url_api, token, user=None, password = None):
+    def __init__(self, url, url_api, token = None, user = None, password = None):
         super(Pdf, self).__init__(url, token, user, password)
         if url_api:
             self.url_api = url_api

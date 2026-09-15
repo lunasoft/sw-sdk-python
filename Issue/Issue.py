@@ -2,7 +2,7 @@ from Issue.IssueRequest import IssueRequest
 from Utils.Services import Services
 
 class Issue(Services):
-    def __init__(self, url, token, user = None, password = None):
+    def __init__(self, url, token = None, user = None, password = None):
         super(Issue, self).__init__(url, token, user, password)
     
     def issue_v1(self, xml, b64 = False):

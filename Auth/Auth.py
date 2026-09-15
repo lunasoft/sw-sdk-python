@@ -2,7 +2,7 @@ from Auth.AuthRequest import AuthRequest
 from Utils.Services import Services
 
 class Auth(Services):
-    def __init__(self, url, token, user, password):
+    def __init__(self, url, token = None, user = None, password = None):
         super(Auth, self).__init__(url, None, user, password)
     
     def authentication(self):

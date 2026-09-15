@@ -2,7 +2,7 @@ from Stamp.StampRequest import StampRequest
 from Utils.Services import Services
 
 class Stamp(Services):
-    def __init__(self, url, token, user = None, password = None):
+    def __init__(self, url, token = None, user = None, password = None):
         super(Stamp, self).__init__(url, token, user, password)
     
     def stamp_v1(self, xml, b64 = False):
