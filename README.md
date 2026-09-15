@@ -23,6 +23,7 @@ Librería *Python* para el consumo de los servicios de SW sapien®.
 ### Documentación :open_file_folder:
 * [Inicio Rápido](https://developers.sw.com.mx/knowledge-base/conoce-el-proceso-de-integracion-en-solo-7-pasos/)
 * [Documentacion Oficial Servicios](http://developers.sw.com.mx)
+* [Guía de migración a la 1.0](MIGRACION.md) — la 1.0 renombra la API pública sin conservar los nombres anteriores.
 
 
 ### Instalación :hammer_and_wrench:
