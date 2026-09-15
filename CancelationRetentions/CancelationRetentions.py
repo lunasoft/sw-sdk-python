@@ -1,4 +1,4 @@
-from Cancelation_Retentions.CancelationRetentionsRequest import CancelationRetentionsRequest
+from CancelationRetentions.CancelationRetentionsRequest import CancelationRetentionsRequest
 from Utils.Services import Services
 
 class CancelationRetentions(Services):

@@ -8,7 +8,7 @@ sys.path.append(PROJECT_ROOT)
 
 from Test import config
 from Test.base import SdkTestCase
-from Cancelation_Retentions.CancelationRetentions import CancelationRetentions
+from CancelationRetentions.CancelationRetentions import CancelationRetentions
 
 class TestCancelationRetentions(SdkTestCase):
     passwordCsd = config.PASSWORD_CSD

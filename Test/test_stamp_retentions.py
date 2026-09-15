@@ -7,7 +7,7 @@ sys.path.append(PROJECT_ROOT)
 
 from Test import config
 from Test.base import SdkTestCase
-from Stamp_Retentions.Stamp_Retentions import Stamp_Retentions
+from StampRetentions.StampRetentions import StampRetentions
 
 
 class TestStampRetentions(SdkTestCase):
@@ -18,7 +18,7 @@ class TestStampRetentions(SdkTestCase):
     def testStampRetentions_xml(self):
         """Prueba timbrado con XML usando token"""
         
-        stamp = Stamp_Retentions(self.url, self.token)
+        stamp = StampRetentions(self.url, self.token)
         xml_content = TestStampRetentions.open_file("Test/resources/retenciones20.xml")
         response = stamp.stamp_retentions_v3(xml_content)
         if response.get_status() == self.expectedError:
@@ -30,7 +30,7 @@ class TestStampRetentions(SdkTestCase):
     def testStampRetentions_auth(self):
         """Prueba timbrado con autenticación de cuenta"""
         
-        stamp = Stamp_Retentions(
+        stamp = StampRetentions(
             self.url,
             None,
             self.user,
@@ -48,7 +48,7 @@ class TestStampRetentions(SdkTestCase):
     def testStampRetentions_xml_Error(self):
         """Prueba error timbrado con XML CFDI"""
 
-        stamp = Stamp_Retentions(self.url, self.token)
+        stamp = StampRetentions(self.url, self.token)
         xml_content = TestStampRetentions.open_file("Test/resources/xml40.xml")
         response = stamp.stamp_retentions_v3(xml_content)
         self.assertEqual(self.expectedError, response.get_status())
@@ -57,7 +57,7 @@ class TestStampRetentions(SdkTestCase):
     def testStampRetentions_authError(self):
         """Prueba error timbrado con autenticación de cuenta"""
         
-        stamp = Stamp_Retentions(
+        stamp = StampRetentions(
             self.url,
             None,
             "wrongUser",
@@ -70,7 +70,7 @@ class TestStampRetentions(SdkTestCase):
 
     def testStampRetentions_invalidToken(self):
         """Prueba error con un token invalido"""
-        stamp = Stamp_Retentions(self.url, "token-invalido")
+        stamp = StampRetentions(self.url, "token-invalido")
         xml_content = TestStampRetentions.open_file("Test/resources/retenciones20.xml")
         response = stamp.stamp_retentions_v3(xml_content)
         self.assertEqual(self.expectedError, response.get_status())

@@ -2,7 +2,7 @@ import json
 import traceback
 from Utils.response import Response
 
-class Stamp_RetentionsResponse(Response):
+class StampRetentionsResponse(Response):
     def __init__(self, response):
         try:
             self.status_code = response.status_code

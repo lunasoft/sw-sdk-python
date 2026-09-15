@@ -2505,10 +2505,10 @@ Este método recibe los siguientes parámetros:
 
 **Ejemplo de consumo de la librería para timbrar XML de retenciones en formato string utilizando token**
 ```python
-from Stamp_Retentions.Stamp_Retentions import Stamp_Retentions
+from StampRetentions.StampRetentions import StampRetentions
 
 xml = open("retencion.xml", "r", encoding='utf-8').read()
-stamp_ret = Stamp_Retentions("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
+stamp_ret = StampRetentions("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
 response = stamp_ret.stamp_retentions_v3(xml)
 
 if response.get_status() == "error":
@@ -2520,10 +2520,10 @@ else:
 
 **Ejemplo de consumo de la librería para timbrar XML de retenciones usando usuario y contraseña**
 ```python
-from Stamp_Retentions.Stamp_Retentions import Stamp_Retentions
+from StampRetentions.StampRetentions import StampRetentions
 
 xml = open("retencion.xml", "r", encoding='utf-8').read()
-stamp_ret = Stamp_Retentions("http://services.test.sw.com.mx", None, "user", "password")
+stamp_ret = StampRetentions("http://services.test.sw.com.mx", None, "user", "password")
 response = stamp_ret.stamp_retentions_v3(xml)
 
 if response.get_status() == "error":
@@ -2553,7 +2553,7 @@ Este método recibe los siguientes parametros:
 **Ejemplo de consumo de la libreria para cancelar retención por XML mediante token**
 ```py
 #Importar la clase al comienzo de nuestro programa de la siguiente manera
-from Cancelation_Retentions.CancelationRetentions import CancelationRetentions
+from CancelationRetentions.CancelationRetentions import CancelationRetentions
 
 xml_cancel = open("cancelacion_retencion.xml", "r", encoding='utf-8').read()
 objCancel = CancelationRetentions("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
@@ -2588,7 +2588,7 @@ Este método recibe los siguientes parametros:
 **Ejemplo de consumo de la libreria para cancelar retención con CSD con motivo de cancelación 02 sin relación a documento mediante token**
 ```py
 #Importar la clase al comienzo de nuestro programa de la siguiente manera
-from Cancelation_Retentions.CancelationRetentions import CancelationRetentions
+from CancelationRetentions.CancelationRetentions import CancelationRetentions
 
 #Datos
 uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
@@ -2625,7 +2625,7 @@ Este método recibe los siguientes parametros:
 **Ejemplo de consumo de la libreria para cancelar retención con PFX con motivo de cancelación 02 sin relación a documento mediante token**
 ```py
 #Importar la clase al comienzo de nuestro programa de la siguiente manera
-from Cancelation_Retentions.CancelationRetentions import CancelationRetentions
+from CancelationRetentions.CancelationRetentions import CancelationRetentions
 
 uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
 motivo = "02"
