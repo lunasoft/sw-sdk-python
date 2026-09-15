@@ -21,7 +21,7 @@ class SdkTestCase(unittest.TestCase):
     expectedError = "error"
 
     url = config.URL
-    urlApi = config.URL_API
+    url_api = config.URL_API
     user = config.USER
     password = config.PASSWORD
     token = config.TOKEN
@@ -64,7 +64,7 @@ class SdkTestCase(unittest.TestCase):
             for tramo in range(config.TRAMOS_BUSQUEDA):
                 hasta = datetime.now() - timedelta(days=28 * tramo)
                 desde = hasta - timedelta(days=28)
-                endpoint = (f"{cls.urlApi}/datawarehouse/v1/live/"
+                endpoint = (f"{cls.url_api}/datawarehouse/v1/live/"
                             f"?startDate={desde.strftime('%Y-%m-%d')}&endDate={hasta.strftime('%Y-%m-%d')}")
                 registros = RequestHelper.get_json_request(endpoint, cls.token).json()
                 registros = registros.get("data", {}).get("records", [])
@@ -84,7 +84,7 @@ class SdkTestCase(unittest.TestCase):
     def first_user(cls):
         #Los datos de consulta se toman de la propia cuenta, nunca se hardcodean.
         if cls._firstUser is None:
-            accountUser = AccountUser(cls.url, cls.urlApi, cls.token)
+            accountUser = AccountUser(cls.url, cls.url_api, cls.token)
             response = accountUser.get_users()
             if response.get_status() != cls.expected or not response.data.items:
                 raise unittest.SkipTest("La cuenta de pruebas no tiene cuentas hijas")

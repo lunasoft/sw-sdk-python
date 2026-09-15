@@ -13,7 +13,7 @@ class RegeneratePdfResponse(Response):
                     if "message" in self.response:
                         self.message = self.response["message"]
                     if "messageDetail" in self.response:
-                        self.messageDetail = self.response["messageDetail"]
+                        self.message_detail = self.response["messageDetail"]
                 except ValueError:
                     self.message = response.text
             else:

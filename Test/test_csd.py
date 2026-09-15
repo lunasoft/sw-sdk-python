@@ -48,7 +48,7 @@ class TestCsd(SdkTestCase):
         csd_obj = Csd(TestCsd.url, self.token)
         response = csd_obj.get_csd("00000000000000000000")
         self.assertTrue("error" == response.get_status())
-        self.assertIsNotNone(response.get_messageDetail(), "El valor de messageDetail esta vacio")
+        self.assertIsNotNone(response.get_message_detail(), "El valor de messageDetail esta vacio")
 
     def testGetListCsdByRfc(self):
         rfc = self.first_certificate()["issuer_rfc"]

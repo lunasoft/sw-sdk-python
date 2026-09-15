@@ -16,11 +16,11 @@ class StampRetentionsResponse(Response):
                     self.status = self.response.get("status", "error")
                     self.message = self.response.get("message")
                     if "messageDetail" in self.response:
-                        self.messageDetail = self.response["messageDetail"]
+                        self.message_detail = self.response["messageDetail"]
             else:
                 self.status = "error"
                 self.message = response.reason
-                self.messageDetail = response.request
+                self.message_detail = response.request
         except:
             traceback.print_exc()
 

@@ -56,7 +56,7 @@ objResponseAuth = objAuth.authentication()
 if objResponseAuth.get_status() == "error":
    print(objResponseAuth.get_status_code())
    print("\nMessage: "+ objResponseAuth.get_message())
-   print(objResponseAuth.get_messageDetail())
+   print(objResponseAuth.get_message_detail())
 else:
    print(objResponseAuth.get_status_code())
    print("\nToken: "+objResponseAuth.get_token())
@@ -105,7 +105,7 @@ response = stamp.stamp_v1(xml)
 
 if response.get_status() ==  "error":
 	print(response.get_message())
-	print(response.get_messageDetail())
+	print(response.get_message_detail())
 else:
 	print(response.get_data())
 ```
@@ -123,7 +123,7 @@ stamp = Stamp("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealTo
 response = stamp.stamp_v1(encoded.decode(),True)
 if response.get_status() ==  "error":
 	print(response.get_message())
-	print(response.get_messageDetail())
+	print(response.get_message_detail())
 else:
 	print(response.get_data())
 ```
@@ -162,7 +162,7 @@ issue = Issue("http://services.test.sw.com.mx", None, "user", "password")
 response = issue.issue_v1(xml)
 if response.status ==  "error":
 	print(response.get_message())
-	print(response.get_messageDetail())
+	print(response.get_message_detail())
 else:
 	print(response.get_data())
 ```
@@ -178,7 +178,7 @@ issue = Issue("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealTo
 response = issue.issue_v1(xml)
 if response.status ==  "error":
 	print(response.get_message())
-	print(response.get_messageDetail())
+	print(response.get_message_detail())
 else:
 	print(response.get_data())
 ```
@@ -196,7 +196,7 @@ issue = Issue("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealTo
 response = issue.issue_v1(encoded.decode(), True)
 if response.get_status() ==  "error":
 	print(response.get_message())
-	print(response.get_messageDetail())
+	print(response.get_message_detail())
 else:
 	print(response.get_data())
 ```
@@ -232,7 +232,7 @@ issue = Issue("http://services.test.sw.com.mx", None, "user", "password")
 response = issue.issue_json_v1(json)
 if response.get_status() ==  "error":
 	print(response.get_message())
-	print(response.get_messageDetail())
+	print(response.get_message_detail())
 else:
 	print(response.get_data())
 ```
@@ -247,7 +247,7 @@ issue = Issue("http://services.test.sw.com.mx","T2lYQ0t4L0R....ReplaceForRealTok
 response = issue.issue_json_v1(json)
 if response.get_status() ==  "error":
 	print(response.get_message())
-	print(response.get_messageDetail())
+	print(response.get_message_detail())
 else:
 	print(response.get_data())
 ```
@@ -308,7 +308,7 @@ objResponseCancelCSD = objCancel.cancel_csd(uuid, rfc, b64cert, b64key, cPasswor
 
 if objResponseCancelCSD.get_status() ==  "error":
 	print(objResponseCancelCSD.get_message())
-	print(objResponseCancelCSD.get_messageDetail())
+	print(objResponseCancelCSD.get_message_detail())
 else:
 	print(objResponseCancelCSD.get_data())
 ```
@@ -326,7 +326,7 @@ objResponseCancelCSD = objCancel.cancel_csd(uuid, rfc, b64cert, b64key, cPasswor
 
 if objResponseCancelCSD.get_status() ==  "error":
 	print(objResponseCancelCSD.get_message())
-	print(objResponseCancelCSD.get_messageDetail())
+	print(objResponseCancelCSD.get_message_detail())
 else:
 	print(objResponseCancelCSD.get_data())
 ```
@@ -363,7 +363,7 @@ objResponseCancelPfx = objCancel.cancel_pfx(uuid, rfc, b64Pfx, cPassword, motivo
 
 if objResponseCancelPfx .get_status() ==  "error":
 	print(objResponseCancelPfx.get_message())
-	print(objResponseCancelPfx.get_messageDetail())
+	print(objResponseCancelPfx.get_message_detail())
 else:
 	print(objResponseCancelPfx.get_data())
 ```
@@ -381,7 +381,7 @@ objResponseCancelPfx = objCancel.cancel_pfx(uuid, rfc, b64Pfx, cPassword, motivo
 
 if objResponseCancelPfx.get_status() ==  "error":
 	print(objResponseCancelPfx.get_message())
-	print(objResponseCancelPfx.get_messageDetail())
+	print(objResponseCancelPfx.get_message_detail())
 else:
 	print(objResponseCancelPfx.get_data())
 ```
@@ -453,7 +453,7 @@ objResponseCancelXml  = objCancel.cancel_xml(xmlCancel)
 
 if objResponseCancelXml.get_status() ==  "error":
 	print(objResponseCancelXml.get_message())
-	print(objResponseCancelXml.get_messageDetail())
+	print(objResponseCancelXml.get_message_detail())
 else:
 	print(objResponseCancelXml.get_data())
 ```
@@ -488,7 +488,7 @@ objResponseCancelUuid = objCancel.cancel_uuid(uuid, rfc, motivo, foliosustitucio
 
 if objResponseCancelUuid.get_status() ==  "error":
 	print(objResponseCancelUuid.get_message())
-	print(objResponseCancelUuid.get_messageDetail())
+	print(objResponseCancelUuid.get_message_detail())
 else:
 	print(objResponseCancelUuid.get_data())
 ```
@@ -507,7 +507,7 @@ objResponseCancelUuid = objCancel.cancel_uuid(uuid, rfc, motivo, foliosustitucio
 
 if objResponseCancelUuid.get_status() ==  "error":
 	print(objResponseCancelUuid.get_message())
-	print(objResponseCancelUuid.get_messageDetail())
+	print(objResponseCancelUuid.get_message_detail())
 else:
 	print(objResponseCancelUuid.get_data())
 ```
@@ -559,7 +559,7 @@ objResponseAccountUser = objAccountUser.create_user(name,taxId,email,stamps,isUn
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Procesamiento de la respuesta
 	for Key,Value in objResponseAccountUser.response["data"].items():
@@ -584,7 +584,7 @@ objResponseAccountUser = objAccountUser.create_user(name,taxId,email,stamps,isUn
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Procesamiento de la respuesta
 	for Key,Value in objResponseAccountUser.response["data"].items():
@@ -645,7 +645,7 @@ objResponseAccountUser = objAccountUser.update_user(idUser,name,taxId,notificati
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Obtenemos como Respuesta el IdUser
 	print(objResponseAccountUser.get_data())
@@ -667,7 +667,7 @@ objResponseAccountUser = objAccountUser.update_user(idUser,name,taxId,notificati
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Obtenemos como Respuesta el IdUser
 	print(objResponseAccountUser.get_data())
@@ -694,7 +694,7 @@ objResponseAccountUser = objAccountUser.delete_user(idUser)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Obtenemos como Respuesta el IdUser
 	print(objResponseAccountUser.get_data())
@@ -711,7 +711,7 @@ objResponseAccountUser = objAccountUser.delete_user(idUser)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Obtenemos como Respuesta el IdUser
 	print(objResponseAccountUser.get_data())
@@ -742,7 +742,7 @@ objResponseAccountUser = objAccountUser.get_users()
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Obtenemos los datos de los usuarios
 	for user in objResponseAccountUser.data.items:
@@ -769,7 +769,7 @@ objResponseAccountUser = objAccountUser.get_users()
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Obtenemos los datos de los usuarios
 	for user in objResponseAccountUser.data.items:
@@ -797,7 +797,7 @@ objResponseAccountUser = objAccountUser.get_users(1, 50)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Obtenemos la paginación de la consulta
 	meta = objResponseAccountUser.get_meta()
@@ -833,7 +833,7 @@ objResponseAccountUser = objAccountUser.get_user_by_id(idUser)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Obtenemos la respuesta
 	for user in objResponseAccountUser.data.items:
@@ -861,7 +861,7 @@ objResponseAccountUser = objAccountUser.get_user_by_id(idUser)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Obtenemos la respuesta
 	for user in objResponseAccountUser.data.items:
@@ -901,7 +901,7 @@ objResponseAccountUser = objAccountUser.get_user_by_email(email)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Obtenemos la respuesta
 	for user in objResponseAccountUser.data.items:
@@ -929,7 +929,7 @@ objResponseAccountUser = objAccountUser.get_user_by_email(email)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Obtenemos la respuesta
 	for user in objResponseAccountUser.data.items:
@@ -969,7 +969,7 @@ objResponseAccountUser = objAccountUser.get_user_by_tax_id(taxId)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Obtenemos la respuesta
 	for user in objResponseAccountUser.data.items:
@@ -997,7 +997,7 @@ objResponseAccountUser = objAccountUser.get_user_by_tax_id(taxId)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Obtenemos la respuesta
 	for user in objResponseAccountUser.data.items:
@@ -1036,7 +1036,7 @@ objResponseAccountUser = objAccountUser.get_users_by_is_active(True)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Obtenemos la respuesta
 	for user in objResponseAccountUser.data.items:
@@ -1063,7 +1063,7 @@ objResponseAccountUser = objAccountUser.get_users_by_is_active(True)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Obtenemos la respuesta
 	for user in objResponseAccountUser.data.items:
@@ -1102,7 +1102,7 @@ objResponseAccountUser = objAccountUser.get_user_by_name("Cliente de prueba")
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Una consulta sin coincidencias regresa la lista vacía
 	for user in objResponseAccountUser.data.items:
@@ -1122,7 +1122,7 @@ objResponseAccountUser = objAccountUser.get_user_by_name("Cliente de prueba")
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
-	print(objResponseAccountUser.get_messageDetail())
+	print(objResponseAccountUser.get_message_detail())
 else:
 	#Una consulta sin coincidencias regresa la lista vacía
 	for user in objResponseAccountUser.data.items:
@@ -1157,7 +1157,7 @@ objResponseBalance = objBalance.get_balance()
 #En caso de error, obtenemos el mensaje
 if objResponseBalance.get_status() ==  "error":
 	print(objResponseBalance.get_message())
-	print(objResponseBalance.get_messageDetail())
+	print(objResponseBalance.get_message_detail())
 else:
 	#Obtenemos los datos
 	print(objResponseBalance.data.idUser)
@@ -1177,7 +1177,7 @@ objResponseBalance = objBalance.get_balance()
 #En caso de error, obtenemos el mensaje
 if objResponseBalance.get_status() ==  "error":
 	print(objResponseBalance.get_message())
-	print(objResponseBalance.get_messageDetail())
+	print(objResponseBalance.get_message_detail())
 else:
 	#Obtenemos los datos
 	print(objResponseBalance.data.idUser)
@@ -1207,7 +1207,7 @@ objResponseBalance = objBalance.get_balance_by_id("32501CF2-DC62-4370-B47D-25024
 #En caso de error, obtenemos el mensaje
 if objResponseBalance.get_status() ==  "error":
 	print(objResponseBalance.get_message())
-	print(objResponseBalance.get_messageDetail())
+	print(objResponseBalance.get_message_detail())
 else:
 	#Obtenemos los datos
 	print(objResponseBalance.data.idUser)
@@ -1227,7 +1227,7 @@ objResponseBalance = objBalance.get_balance_by_id("32501CF2-DC62-4370-B47D-25024
 #En caso de error, obtenemos el mensaje
 if objResponseBalance.get_status() ==  "error":
 	print(objResponseBalance.get_message())
-	print(objResponseBalance.get_messageDetail())
+	print(objResponseBalance.get_message_detail())
 else:
 	#Obtenemos los datos
 	print(objResponseBalance.data.idUser)
@@ -1262,7 +1262,7 @@ objResponseBalance = objBalance.add_stamps("32501CF2-DC62-4370-B47D-25024C44E131
 #En caso de error, obtenemos el mensaje
 if objResponseBalance.get_status() ==  "error":
 	print(objResponseBalance.get_message())
-	print(objResponseBalance.get_messageDetail())
+	print(objResponseBalance.get_message_detail())
 else:
 	#Obtenemos la cantidad de timbres posterior a la asignación
 	print(objResponseBalance.get_data())
@@ -1277,7 +1277,7 @@ objResponseBalance = objBalance.add_stamps("32501CF2-DC62-4370-B47D-25024C44E131
 #En caso de error, obtenemos el mensaje
 if objResponseBalance.get_status() ==  "error":
 	print(objResponseBalance.get_message())
-	print(objResponseBalance.get_messageDetail())
+	print(objResponseBalance.get_message_detail())
 else:
 	#Obtenemos la cantidad de timbres posterior a la asignación
 	print(objResponseBalance.get_data())
@@ -1307,7 +1307,7 @@ objResponseBalance = objBalance.remove_stamps("32501CF2-DC62-4370-B47D-25024C44E
 #En caso de error, obtenemos el mensaje
 if objResponseBalance.get_status() ==  "error":
 	print(objResponseBalance.get_message())
-	print(objResponseBalance.get_messageDetail())
+	print(objResponseBalance.get_message_detail())
 else:
 	#Obtenemos la cantidad de timbres posterior a remover los timbres
 	print(objResponseBalance.get_data())
@@ -1323,7 +1323,7 @@ objResponseBalance = objBalance.remove_stamps("32501CF2-DC62-4370-B47D-25024C44E
 #En caso de error, obtenemos el mensaje
 if objResponseBalance.get_status() ==  "error":
 	print(objResponseBalance.get_message())
-	print(objResponseBalance.get_messageDetail())
+	print(objResponseBalance.get_message_detail())
 else:
 	#Obtenemos la cantidad de timbres posterior a remover los timbres
 	print(objResponseBalance.get_data())
@@ -1477,7 +1477,7 @@ response_csd = relations.relations_csd(rfc, uuid, b64_csd, b64_key, password_csd
 
 if response_csd.get_status() ==  "error":
 	print(response_csd.get_message())
-	print(response_csd.get_messageDetail())
+	print(response_csd.get_message_detail())
 else:
 	print(response_csd.get_data())
 ```
@@ -1509,7 +1509,7 @@ response_pfx = relations.relations_pfx(rfc, uuid, b64_pfx, password_csd)
 
 if response_pfx.get_status() ==  "error":
 	print(response_pfx.get_message())
-	print(response_pfx.get_messageDetail())
+	print(response_pfx.get_message_detail())
 else:
 	print(response_pfx.get_data())
 ```
@@ -1541,7 +1541,7 @@ response_uuid = relations.relations_uuid(rfc, uuid)
 
 if response_uuid.get_status() ==  "error":
 	print(response_uuid.get_message())
-	print(response_uuid.get_messageDetail())
+	print(response_uuid.get_message_detail())
 else:
 	print(response_uuid.get_data())
 ```
@@ -1839,7 +1839,7 @@ response = pdf.regenerate_pdf("d3773788-c68a-4549-ac67-f223d26c925b")
 
 if response.get_status() == "error":
 	print(response.get_message())
-	print(response.get_messageDetail())
+	print(response.get_message_detail())
 else:
 	print(response.get_status())
 	print(response.get_message())
@@ -1915,7 +1915,7 @@ response = csd_obj.get_list_csd()
 
 if response.get_status() ==  "error":
 	print(response.get_message())
-	print(response.get_messageDetail())
+	print(response.get_message_detail())
 else:
 	for certificado in response.get_data():
 		print("issuer_rfc: ", certificado["issuer_rfc"])
@@ -1965,7 +1965,7 @@ response = csd_obj.get_csd("30001000000400002434")
 
 if response.get_status() ==  "error":
 	print(response.get_message())
-	print(response.get_messageDetail())
+	print(response.get_message_detail())
 else:
 	certificado = response.get_data()
 	print("issuer_rfc: ", certificado["issuer_rfc"])
@@ -2017,7 +2017,7 @@ response = csd_obj.get_list_csd_by_rfc("EKU9003173C9")
 
 if response.get_status() ==  "error":
 	print(response.get_message())
-	print(response.get_messageDetail())
+	print(response.get_message_detail())
 else:
 	for certificado in response.get_data():
 		print("certificate_number: ", certificado["certificate_number"])
@@ -2062,7 +2062,7 @@ response = csd_obj.get_list_csd_by_type("stamp")
 
 if response.get_status() ==  "error":
 	print(response.get_message())
-	print(response.get_messageDetail())
+	print(response.get_message_detail())
 else:
 	for certificado in response.get_data():
 		print("certificate_number: ", certificado["certificate_number"])
@@ -2111,7 +2111,7 @@ response = csd_obj.get_active_csd("EKU9003173C9", "stamp")
 
 if response.get_status() ==  "error":
 	print(response.get_message())
-	print(response.get_messageDetail())
+	print(response.get_message_detail())
 else:
 	certificado = response.get_data()
 	print("certificate_number: ", certificado["certificate_number"])
@@ -2162,7 +2162,7 @@ response = csd_obj.disable_csd("30001000000400002434")
 
 if response.get_status() ==  "error":
 	print(response.get_message())
-	print(response.get_messageDetail())
+	print(response.get_message_detail())
 else:
 	#data regresa un texto: "Certificado 30001000000400002434 desactivado."
 	print(response.get_data())
@@ -2211,7 +2211,7 @@ response = storage_obj.get_by_uuid("d3773788-c68a-4549-ac67-f223d26c925b")
 
 if response.get_status() ==  "error":
 	print(response.get_message())
-	print(response.get_messageDetail())
+	print(response.get_message_detail())
 else:
 	print(response.get_status())
 	#Un UUID sin coincidencias regresa una lista vacía. El comprobante recién timbrado
@@ -2513,7 +2513,7 @@ response = stamp_ret.stamp_retentions_v3(xml)
 
 if response.get_status() == "error":
     print(response.get_message())
-    print(response.get_messageDetail())
+    print(response.get_message_detail())
 else:
     print(response.get_data())
 ```
@@ -2528,7 +2528,7 @@ response = stamp_ret.stamp_retentions_v3(xml)
 
 if response.get_status() == "error":
     print(response.get_message())
-    print(response.get_messageDetail())
+    print(response.get_message_detail())
 else:
     print(response.get_data())
 ```
@@ -2561,7 +2561,7 @@ objResponseCancel = objCancel.cancel_xml(xml_cancel)
 
 if objResponseCancel.get_status() == "error":
 	print(objResponseCancel.get_message())
-	print(objResponseCancel.get_messageDetail())
+	print(objResponseCancel.get_message_detail())
 else:
 	print(objResponseCancel.get_data())
 ```
@@ -2599,7 +2599,7 @@ objResponseCancelCSD = objCancel.cancel_csd(uuid, rfc, b64cert, b64key, cPasswor
 
 if objResponseCancelCSD.get_status() == "error":
 	print(objResponseCancelCSD.get_message())
-	print(objResponseCancelCSD.get_messageDetail())
+	print(objResponseCancelCSD.get_message_detail())
 else:
 	print(objResponseCancelCSD.get_data())
 ```
@@ -2635,7 +2635,7 @@ objResponseCancelPfx = objCancel.cancel_pfx(uuid, rfc, b64Pfx, cPassword, motivo
 
 if objResponseCancelPfx.get_status() == "error":
 	print(objResponseCancelPfx.get_message())
-	print(objResponseCancelPfx.get_messageDetail())
+	print(objResponseCancelPfx.get_message_detail())
 else:
 	print(objResponseCancelPfx.get_data())
 ```

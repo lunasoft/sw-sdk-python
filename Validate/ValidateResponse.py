@@ -5,10 +5,10 @@ from Utils.response import Response
 class ValidateResponse(Response):
     def __init__(self, response):
         try:
-            self.statusCode = response.status_code
+            self.status_code = response.status_code
             if(bool(response.text and response.text.strip())):
                 self.response = json.loads(response.text.encode().decode('utf8'))
-                if(self.statusCode == 200):
+                if(self.status_code == 200):
                     try:
                         self.data = self.response["data"]
                         self.status = self.response["status"]
@@ -17,11 +17,11 @@ class ValidateResponse(Response):
                 else:
                     self.message = self.response["message"]
                     if "messageDetail" in self.response: 
-                        self.messageDetail = self.response["messageDetail"]
+                        self.message_detail = self.response["messageDetail"]
                     self.status = self.response["status"] 
             else:
                 self.status = "error"
                 self.message = response.reason
-                self.messageDetail = response.request
+                self.message_detail = response.request
         except:
             traceback.print_exc()

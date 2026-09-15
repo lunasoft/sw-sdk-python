@@ -62,7 +62,7 @@ class TestV4Basic(SdkTestCase):
     def wait_url_pdf(self, uuid):
         #El PDF del comprobante tarda en quedar disponible en el ADT: la urlPDF aparece
         #alrededor de los 110 segundos y varía según la carga del ambiente.
-        storage = Storage(self.url, self.urlApi, self.token)
+        storage = Storage(self.url, self.url_api, self.token)
         for _ in range(60):
             time.sleep(5)
             url_pdf = storage.get_by_uuid(uuid).get_url_pdf()

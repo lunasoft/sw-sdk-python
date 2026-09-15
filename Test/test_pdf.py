@@ -32,7 +32,7 @@ class TestPdf(SdkTestCase):
         xml = TestPdf.open_file("Test/resources/filePdf.xml")
         logo = None
         extras = None
-        pdf = Pdf(self.url,self.urlApi, None, self.user, self.password)
+        pdf = Pdf(self.url,self.url_api, None, self.user, self.password)
         response = pdf.generate_pdf(xml,logo, "cfdi40",extras)
         self.assertTrue(response.get_status() == "success")
         
@@ -40,7 +40,7 @@ class TestPdf(SdkTestCase):
         xml = TestPdf.open_file("Test/resources/filePdf.xml")
         logo = None
         extras = None
-        pdf = Pdf(self.url,self.urlApi,self.token)
+        pdf = Pdf(self.url,self.url_api,self.token)
         response = pdf.generate_pdf(xml,logo,"cfdi40",extras)
         self.assertTrue(response.get_status() == "success")
         
@@ -48,7 +48,7 @@ class TestPdf(SdkTestCase):
         xml = TestPdf.open_file("Test/resources/filePdf.xml")
         logo = None
         extras = None
-        pdf = Pdf(self.url,self.urlApi,"T2lYQ0t4.....")
+        pdf = Pdf(self.url,self.url_api,"T2lYQ0t4.....")
         response = pdf.generate_pdf(xml,logo,"cfdi40",extras)
         self.assertTrue(response.get_status() == "error")
         
@@ -58,7 +58,7 @@ class TestPdf(SdkTestCase):
         extras = {
             'REFERENCIA': "Referencia de pruebas"
         }
-        pdf = Pdf(self.url,self.urlApi,self.token)
+        pdf = Pdf(self.url,self.url_api,self.token)
         response = pdf.generate_pdf(xml,logo,"cfdi40",extras)
         TestPdf.save_pdf(response.data['contentB64'])
         self.assertTrue(response.get_status() == "success")
@@ -67,7 +67,7 @@ class TestPdf(SdkTestCase):
         xml = TestPdf.open_file("Test/resources/filePdf.xml")
         logo = None
         extras = None
-        pdf = Pdf(self.url,self.urlApi,self.token)
+        pdf = Pdf(self.url,self.url_api,self.token)
         response = pdf.generate_pdf(xml,logo,"cfdi40",extras)
         self.assertTrue(response.get_status() == "success")
         self.assertIsNotNone(response.get_content_b64())
@@ -86,7 +86,7 @@ class TestPdf(SdkTestCase):
         extras = {
             'REFERENCIA': "Referencia de pruebas"
         }
-        pdf = Pdf(self.url,self.urlApi,self.token)
+        pdf = Pdf(self.url,self.url_api,self.token)
         response = pdf.generate_pdf(xml,logo,"cfdi40",extras)
         self.assertTrue(response.get_status() == "success")
         self.assertIn("contentB64", response.response["data"])
@@ -96,7 +96,7 @@ class TestPdf(SdkTestCase):
     #UT Regeneración de PDF
     def test_regenerate_pdf_token(self):
         TestPdf.esperar_limite()
-        pdf = Pdf(TestPdf.url, TestPdf.urlApi, self.token)
+        pdf = Pdf(TestPdf.url, TestPdf.url_api, self.token)
         response = pdf.regenerate_pdf(self.stamped_uuid())
         self.assertTrue(response.get_status() == "success")
         self.assertTrue(200 == response.get_status_code())
@@ -104,13 +104,13 @@ class TestPdf(SdkTestCase):
 
     def test_regenerate_pdf_auth(self):
         TestPdf.esperar_limite()
-        pdf = Pdf(TestPdf.url, TestPdf.urlApi, None, self.user, self.password)
+        pdf = Pdf(TestPdf.url, TestPdf.url_api, None, self.user, self.password)
         response = pdf.regenerate_pdf(self.stamped_uuid())
         self.assertTrue(response.get_status() == "success")
 
     def test_regenerate_pdf_uuidObject(self):
         TestPdf.esperar_limite()
-        pdf = Pdf(TestPdf.url, TestPdf.urlApi, self.token)
+        pdf = Pdf(TestPdf.url, TestPdf.url_api, self.token)
         response = pdf.regenerate_pdf(uuid.UUID(self.stamped_uuid()))
         self.assertTrue(response.get_status() == "success")
 
@@ -119,14 +119,14 @@ class TestPdf(SdkTestCase):
             'REFERENCIA': "Referencia de pruebas"
         }
         TestPdf.esperar_limite()
-        pdf = Pdf(TestPdf.url, TestPdf.urlApi, self.token)
+        pdf = Pdf(TestPdf.url, TestPdf.url_api, self.token)
         response = pdf.regenerate_pdf(self.stamped_uuid(), None, "cfdi40", extras)
         self.assertTrue(response.get_status() == "success")
 
     #UT de Error
     def test_regenerate_pdf_notFound(self):
         TestPdf.esperar_limite()
-        pdf = Pdf(TestPdf.url, TestPdf.urlApi, self.token)
+        pdf = Pdf(TestPdf.url, TestPdf.url_api, self.token)
         response = pdf.regenerate_pdf(TestPdf.uuidNotFound)
         self.assertTrue(response.get_status() == "error")
         self.assertTrue(404 == response.get_status_code())
@@ -134,20 +134,20 @@ class TestPdf(SdkTestCase):
 
     def test_regenerate_pdf_invalidFormat(self):
         TestPdf.esperar_limite()
-        pdf = Pdf(TestPdf.url, TestPdf.urlApi, self.token)
+        pdf = Pdf(TestPdf.url, TestPdf.url_api, self.token)
         response = pdf.regenerate_pdf(TestPdf.uuidInvalid)
         self.assertTrue(response.get_status() == "error")
         self.assertTrue(404 == response.get_status_code())
         self.assertIsNotNone(response.get_message(), "El valor de message esta vacio")
 
     def test_regenerate_pdf_emptyString(self):
-        pdf = Pdf(TestPdf.url, TestPdf.urlApi, self.token)
+        pdf = Pdf(TestPdf.url, TestPdf.url_api, self.token)
         response = pdf.regenerate_pdf("")
         self.assertTrue(response.get_status() == "error")
         self.assertTrue(404 == response.get_status_code())
 
     def test_regenerate_pdf_invalidToken(self):
-        pdf = Pdf(TestPdf.url, TestPdf.urlApi, "T2lYQ0t4.....")
+        pdf = Pdf(TestPdf.url, TestPdf.url_api, "T2lYQ0t4.....")
         response = pdf.regenerate_pdf(self.stamped_uuid())
         self.assertTrue(response.get_status() == "error")
         self.assertIsNotNone(response.get_message(), "El valor de message esta vacio")
