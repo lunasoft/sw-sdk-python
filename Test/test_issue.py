@@ -2,7 +2,7 @@ import unittest
 import os
 import json
 import sys
-from datetime import datetime, timedelta, UTC
+from datetime import datetime, timedelta
 import xml.etree.ElementTree as ET
 from io import BytesIO
 

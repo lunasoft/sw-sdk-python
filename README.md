@@ -15,10 +15,9 @@ Librería *Python* para el consumo de los servicios de SW sapien®.
 
 ### Compatibilidad :clipboard:
 - CFDI 4.0
-- Python 3 o superior
+- **Python 3.11 o superior**. El desarrollo y las pruebas se hacen sobre 3.14.
 
 ### Dependencias :toolbox:
-- **Python 3** o superior.
 - [Requests](http://docs.python-requests.org)
 
 ### Documentación :open_file_folder:
@@ -30,7 +29,7 @@ Librería *Python* para el consumo de los servicios de SW sapien®.
 
 Ejecutar los comandos directamente en la consola tal cual aparecen en la página de la librería requerida, por ejemplo
 
- ```py
+ ```sh
 pip install requests
 ```
 
@@ -1351,7 +1350,7 @@ from Validate.Validate import Validate
 
 #Creamos funcion para abrir nuestro archivo
 xml = open_file("file.xml")
-objValidate = Validate("http://services.test.sw.com.mx", , None ,"user","password")
+objValidate = Validate("http://services.test.sw.com.mx", None, "user", "password")
 objResponseValidateXml = objValidate.validate_xml(xml)
 
 #Respuesta
@@ -1868,6 +1867,8 @@ print(response.get_message())
 Servicio para gestionar los certificados CSD de tu cuenta.
 Para administrar los certificados de manera gráfica, puede hacerlo desde el [Administrador de timbres](https://portal.sw.com.mx/).
 
+:pushpin: ***NOTA:*** En todas las consultas de esta sección el parámetro de búsqueda es obligatorio. La librería no lo valida en local: se envía tal cual y responde el servicio.
+
 
 <details>
 <summary>
@@ -1940,7 +1941,7 @@ print(response.get_status())
 print(response.get_data())
 ```
 
-:pushpin: ***NOTA:*** Si la cuenta no tiene certificados cargados, el servicio responde `status` **success** con `data` vacío; no se trata de un error.
+Si la cuenta no tiene certificados cargados, el servicio responde `status` **success** con `data` vacío; no se trata de un error.
 </details>
 
 <details>
@@ -1990,9 +1991,7 @@ print(response.get_status())
 print(response.get_data())
 ```
 
-:pushpin: ***NOTA:*** A diferencia de la consulta general, aquí `data` es un objeto único, no un arreglo.
-
-:pushpin: ***NOTA:*** El parámetro es obligatorio. La librería no lo valida en local: se envía tal cual y responde el servicio.
+A diferencia de la consulta general, aquí `data` es un objeto único, no un arreglo.
 </details>
 
 <details>
@@ -2036,8 +2035,6 @@ response = csd_obj.get_list_csd_by_rfc("EKU9003173C9")
 print(response.get_status())
 print(response.get_data())
 ```
-
-:pushpin: ***NOTA:*** El parámetro es obligatorio. La librería no lo valida en local: se envía tal cual y responde el servicio.
 </details>
 
 <details>
@@ -2083,9 +2080,7 @@ print(response.get_status())
 print(response.get_data())
 ```
 
-:pushpin: ***NOTA:*** Si no hay certificados de ese tipo, el servicio responde `status` **success** con `data` vacío; no se trata de un error.
-
-:pushpin: ***NOTA:*** El parámetro es obligatorio. La librería no lo valida en local: se envía tal cual y responde el servicio.
+Si no hay certificados de ese tipo, el servicio responde `status` **success** con `data` vacío; no se trata de un error.
 </details>
 
 <details>
@@ -2133,11 +2128,9 @@ print(response.get_status())
 print(response.get_data())
 ```
 
-:pushpin: ***NOTA:*** A diferencia de la consulta por RFC, aquí `data` es un objeto único con el certificado activo, no un arreglo.
+A diferencia de la consulta por RFC, aquí `data` es un objeto único con el certificado activo, no un arreglo.
 
-:pushpin: ***NOTA:*** Si el RFC no tiene un certificado activo de ese tipo, el servicio responde `status` **error**.
-
-:pushpin: ***NOTA:*** El parámetro es obligatorio. La librería no lo valida en local: se envía tal cual y responde el servicio.
+Si el RFC no tiene un certificado activo de ese tipo, el servicio responde `status` **error**.
 </details>
 
 <details>
@@ -2181,8 +2174,6 @@ print(response.get_data())
 ```
 
 :pushpin: ***NOTA:*** La operación desactiva el certificado en la cuenta. Para volver a utilizarlo es necesario cargarlo de nuevo con **Cargar Certificado**.
-
-:pushpin: ***NOTA:*** El parámetro es obligatorio. La librería no lo valida en local: se envía tal cual y responde el servicio.
 </details>
 
 ## Recuperar XML por UUID ##
