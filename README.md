@@ -304,7 +304,7 @@ uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
 motivo = "02"
 foliosustitucion = ""
 objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-objResponseCancelCSD = objCancel.CancelCsd(uuid, rfc, b64cert, b64key, cPassword, motivo, foliosustitucion)
+objResponseCancelCSD = objCancel.cancel_csd(uuid, rfc, b64cert, b64key, cPassword, motivo, foliosustitucion)
 
 if objResponseCancelCSD.get_status() ==  "error":
 	print(objResponseCancelCSD.get_message())
@@ -322,7 +322,7 @@ uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
 motivo = "01"
 foliosustitucion = "01724196-ac5a-4735-b621-e3b42bcbb459"
 objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-objResponseCancelCSD = objCancel.CancelCsd(uuid, rfc, b64cert, b64key, cPassword, motivo, foliosustitucion)
+objResponseCancelCSD = objCancel.cancel_csd(uuid, rfc, b64cert, b64key, cPassword, motivo, foliosustitucion)
 
 if objResponseCancelCSD.get_status() ==  "error":
 	print(objResponseCancelCSD.get_message())
@@ -359,7 +359,7 @@ uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
 motivo = "02"
 foliosustitucion = ""
 objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-objResponseCancelPfx = objCancel.CancelPfx(uuid, rfc, b64Pfx, cPassword, motivo, foliosustitucion)
+objResponseCancelPfx = objCancel.cancel_pfx(uuid, rfc, b64Pfx, cPassword, motivo, foliosustitucion)
 
 if objResponseCancelPfx .get_status() ==  "error":
 	print(objResponseCancelPfx.get_message())
@@ -377,7 +377,7 @@ uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
 motivo = "02"
 foliosustitucion = "01724196-ac5a-4735-b621-e3b42bcbb459"
 objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-objResponseCancelPfx = objCancel.CancelPfx(uuid, rfc, b64Pfx, cPassword, motivo, foliosustitucion)
+objResponseCancelPfx = objCancel.cancel_pfx(uuid, rfc, b64Pfx, cPassword, motivo, foliosustitucion)
 
 if objResponseCancelPfx.get_status() ==  "error":
 	print(objResponseCancelPfx.get_message())
@@ -449,7 +449,7 @@ from Cancelation.Cancelation import Cancelation
 #Creamos funcion para abrir nuestro archivo
 xmlCancel = open_file("file.xml")
 objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-objResponseCancelXml  = objCancel.CancelXml(xmlCancel)
+objResponseCancelXml  = objCancel.cancel_xml(xmlCancel)
 
 if objResponseCancelXml.get_status() ==  "error":
 	print(objResponseCancelXml.get_message())
@@ -484,7 +484,7 @@ uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
 motivo = "02"
 foliosustitucion = ""
 objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-objResponseCancelUuid = objCancel.CancelUuid(uuid, rfc, motivo, foliosustitucion)
+objResponseCancelUuid = objCancel.cancel_uuid(uuid, rfc, motivo, foliosustitucion)
 
 if objResponseCancelUuid.get_status() ==  "error":
 	print(objResponseCancelUuid.get_message())
@@ -503,7 +503,7 @@ uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
 motivo = "01"
 foliosustitucion = "01724196-ac5a-4735-b621-e3b42bcbb459"
 objCancel = Cancelation("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-objResponseCancelUuid = objCancel.CancelUuid(uuid, rfc, motivo, foliosustitucion)
+objResponseCancelUuid = objCancel.cancel_uuid(uuid, rfc, motivo, foliosustitucion)
 
 if objResponseCancelUuid.get_status() ==  "error":
 	print(objResponseCancelUuid.get_message())
@@ -738,7 +738,7 @@ Este método recibe los siguientes parametros:
 from AccountUser.AccountUser import AccountUser
 
 objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",None,user,password)
-objResponseAccountUser = objAccountUser.getUser_all()
+objResponseAccountUser = objAccountUser.get_users()
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
@@ -765,7 +765,7 @@ else:
 from AccountUser.AccountUser import AccountUser
 
 objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",token)
-objResponseAccountUser = objAccountUser.getUser_all()
+objResponseAccountUser = objAccountUser.get_users()
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
@@ -793,7 +793,7 @@ else:
 from AccountUser.AccountUser import AccountUser
 
 objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",token)
-objResponseAccountUser = objAccountUser.getUser_all(1, 50)
+objResponseAccountUser = objAccountUser.get_users(1, 50)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
@@ -829,7 +829,7 @@ from AccountUser.AccountUser import AccountUser
 
 objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",None,user,password)
 idUser = "32501CF2-DC62-4370-B47D-25024C44E131"
-objResponseAccountUser = objAccountUser.getUser_by_idUser(idUser)
+objResponseAccountUser = objAccountUser.get_user_by_id(idUser)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
@@ -857,7 +857,7 @@ from AccountUser.AccountUser import AccountUser
 
 objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",token)
 idUser = "32501CF2-DC62-4370-B47D-25024C44E131"
-objResponseAccountUser = objAccountUser.getUser_by_idUser(idUser)
+objResponseAccountUser = objAccountUser.get_user_by_id(idUser)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
@@ -897,7 +897,7 @@ from AccountUser.AccountUser import AccountUser
 
 objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",None,user,password)
 email = "usuario_prueba@example.com"
-objResponseAccountUser = objAccountUser.getUser_by_email(email)
+objResponseAccountUser = objAccountUser.get_user_by_email(email)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
@@ -925,7 +925,7 @@ from AccountUser.AccountUser import AccountUser
 
 objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",token)
 email = "usuario_prueba@example.com"
-objResponseAccountUser = objAccountUser.getUser_by_email(email)
+objResponseAccountUser = objAccountUser.get_user_by_email(email)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
@@ -965,7 +965,7 @@ from AccountUser.AccountUser import AccountUser
 
 objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",None,user,password)
 taxId = "AAAA000101010"
-objResponseAccountUser = objAccountUser.getUser_by_taxId(taxId)
+objResponseAccountUser = objAccountUser.get_user_by_tax_id(taxId)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
@@ -993,7 +993,7 @@ from AccountUser.AccountUser import AccountUser
 
 objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",token)
 taxId = "AAAA000101010"
-objResponseAccountUser = objAccountUser.getUser_by_taxId(taxId)
+objResponseAccountUser = objAccountUser.get_user_by_tax_id(taxId)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
@@ -1032,7 +1032,7 @@ else:
 from AccountUser.AccountUser import AccountUser
 
 objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",None,user,password)
-objResponseAccountUser = objAccountUser.getUser_by_isActive(True)
+objResponseAccountUser = objAccountUser.get_users_by_is_active(True)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
@@ -1059,7 +1059,7 @@ else:
 from AccountUser.AccountUser import AccountUser
 
 objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",token)
-objResponseAccountUser = objAccountUser.getUser_by_isActive(True)
+objResponseAccountUser = objAccountUser.get_users_by_is_active(True)
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
@@ -1098,7 +1098,7 @@ else:
 from AccountUser.AccountUser import AccountUser
 
 objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",None,user,password)
-objResponseAccountUser = objAccountUser.getUser_by_name("Cliente de prueba")
+objResponseAccountUser = objAccountUser.get_user_by_name("Cliente de prueba")
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
@@ -1118,7 +1118,7 @@ else:
 from AccountUser.AccountUser import AccountUser
 
 objAccountUser = AccountUser("https://services.test.sw.com.mx","https://api.test.sw.com.mx",token)
-objResponseAccountUser = objAccountUser.getUser_by_name("Cliente de prueba")
+objResponseAccountUser = objAccountUser.get_user_by_name("Cliente de prueba")
 #En caso de error, obtenemos el mensaje
 if objResponseAccountUser.get_status() ==  "error":
 	print(objResponseAccountUser.get_message())
@@ -1352,7 +1352,7 @@ from Validate.Validate import Validate
 #Creamos funcion para abrir nuestro archivo
 xml = open_file("file.xml")
 objValidate = Validate("http://services.test.sw.com.mx", , None ,"user","password")
-objResponseValidateXml = objValidate.ValidateXml(xml)
+objResponseValidateXml = objValidate.validate_xml(xml)
 
 #Respuesta
 print(objResponseValidateXml.get_response())
@@ -1381,7 +1381,7 @@ from Validate.Validate import Validate
 #Creamos funcion para abrir nuestro archivo
 xml = open_file("file.xml")
 objValidate = Validate("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-objResponseValidateXml = objValidate.ValidateXml(xml)
+objResponseValidateXml = objValidate.validate_xml(xml)
 
 #Respuesta
 print(objResponseValidateXml.get_response())
@@ -2509,7 +2509,7 @@ from Stamp_Retentions.Stamp_Retentions import Stamp_Retentions
 
 xml = open("retencion.xml", "r", encoding='utf-8').read()
 stamp_ret = Stamp_Retentions("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-response = stamp_ret.stamp_retetions_v3(xml)
+response = stamp_ret.stamp_retentions_v3(xml)
 
 if response.get_status() == "error":
     print(response.get_message())
@@ -2524,7 +2524,7 @@ from Stamp_Retentions.Stamp_Retentions import Stamp_Retentions
 
 xml = open("retencion.xml", "r", encoding='utf-8').read()
 stamp_ret = Stamp_Retentions("http://services.test.sw.com.mx", None, "user", "password")
-response = stamp_ret.stamp_retetions_v3(xml)
+response = stamp_ret.stamp_retentions_v3(xml)
 
 if response.get_status() == "error":
     print(response.get_message())
@@ -2557,7 +2557,7 @@ from Cancelation_Retentions.CancelationRetentions import CancelationRetentions
 
 xml_cancel = open("cancelacion_retencion.xml", "r", encoding='utf-8').read()
 objCancel = CancelationRetentions("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-objResponseCancel = objCancel.CancelaUno(xml_cancel)
+objResponseCancel = objCancel.cancel_xml(xml_cancel)
 
 if objResponseCancel.get_status() == "error":
 	print(objResponseCancel.get_message())
@@ -2595,7 +2595,7 @@ uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
 motivo = "02"
 foliosustitucion = ""
 objCancel = CancelationRetentions("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-objResponseCancelCSD = objCancel.CancelaUnoCSD(uuid, rfc, b64cert, b64key, cPassword, motivo, foliosustitucion)
+objResponseCancelCSD = objCancel.cancel_csd(uuid, rfc, b64cert, b64key, cPassword, motivo, foliosustitucion)
 
 if objResponseCancelCSD.get_status() == "error":
 	print(objResponseCancelCSD.get_message())
@@ -2631,7 +2631,7 @@ uuid = "8D93A20F-E9EF-42CA-A2B9-2986A352DCEC"
 motivo = "02"
 foliosustitucion = ""
 objCancel = CancelationRetentions("http://services.test.sw.com.mx", "T2lYQ0t4L0R....ReplaceForRealToken")
-objResponseCancelPfx = objCancel.CancelaUnoPFX(uuid, rfc, b64Pfx, cPassword, motivo, foliosustitucion)
+objResponseCancelPfx = objCancel.cancel_pfx(uuid, rfc, b64Pfx, cPassword, motivo, foliosustitucion)
 
 if objResponseCancelPfx.get_status() == "error":
 	print(objResponseCancelPfx.get_message())

@@ -35,44 +35,44 @@ class TestAccountUser(SdkTestCase):
     #UT Auth consulta de usuarios
     def testAccountUser_all_auth(self):
         accountUser = AccountUser(self.url, self.urlApi, None, self.user, self.password)
-        response = accountUser.getUser_all()
+        response = accountUser.get_users()
         self.assertEqual(self.expected, response.get_status())
         self.assertTrue(len(response.data.items) > 0)
 
     def testAccountUser_by_idUser_auth(self):
         accountUser = AccountUser(self.url, self.urlApi, None, self.user, self.password)
-        response = accountUser.getUser_by_idUser(self.first_user().idUser)
+        response = accountUser.get_user_by_id(self.first_user().idUser)
         self.assertEqual(self.expected, response.get_status())
         self.assertTrue(len(response.data.items) > 0)
 
     def testAccountUser_by_email_auth(self):
         accountUser = AccountUser(self.url, self.urlApi, None, self.user, self.password)
-        response = accountUser.getUser_by_email(self.first_user().email)
+        response = accountUser.get_user_by_email(self.first_user().email)
         self.assertEqual(self.expected, response.get_status())
         self.assertTrue(len(response.data.items) > 0)
 
     def testAccountUser_by_taxId_auth(self):
         accountUser = AccountUser(self.url, self.urlApi, None, self.user, self.password)
-        response = accountUser.getUser_by_taxId(self.first_user().taxId)
+        response = accountUser.get_user_by_tax_id(self.first_user().taxId)
         self.assertEqual(self.expected, response.get_status())
         self.assertTrue(len(response.data.items) > 0)
 
     def testAccountUser_by_isActive_auth(self):
         accountUser = AccountUser(self.url, self.urlApi, None, self.user, self.password)
-        response = accountUser.getUser_by_isActive(True)
+        response = accountUser.get_users_by_is_active(True)
         self.assertEqual(self.expected, response.get_status())
         self.assertTrue(len(response.data.items) > 0)
 
     def testAccountUser_by_name_auth(self):
         accountUser = AccountUser(self.url, self.urlApi, None, self.user, self.password)
-        response = accountUser.getUser_by_name(self.first_user().name)
+        response = accountUser.get_user_by_name(self.first_user().name)
         self.assertEqual(self.expected, response.get_status())
         self.assertTrue(len(response.data.items) > 0)
 
     #UT Token consulta de usuarios
     def testAccountUser_all(self):
         accountUser = AccountUser(self.url, self.urlApi, self.token)
-        response = accountUser.getUser_all()
+        response = accountUser.get_users()
         self.assertEqual(self.expected, response.get_status())
         self.assertTrue(len(response.data.items) > 0)
         for user in response.data.items:
@@ -83,39 +83,39 @@ class TestAccountUser(SdkTestCase):
     def testAccountUser_by_idUser(self):
         accountUser = AccountUser(self.url, self.urlApi, self.token)
         idUser = self.first_user().idUser
-        response = accountUser.getUser_by_idUser(idUser)
+        response = accountUser.get_user_by_id(idUser)
         self.assertEqual(self.expected, response.get_status())
         self.assertEqual(1, len(response.data.items))
         self.assertEqual(idUser.lower(), response.data.items[0].idUser.lower())
 
     def testAccountUser_by_email(self):
         accountUser = AccountUser(self.url, self.urlApi, self.token)
-        response = accountUser.getUser_by_email(self.first_user().email)
+        response = accountUser.get_user_by_email(self.first_user().email)
         self.assertEqual(self.expected, response.get_status())
         self.assertTrue(len(response.data.items) > 0)
 
     def testAccountUser_by_taxId(self):
         accountUser = AccountUser(self.url, self.urlApi, self.token)
-        response = accountUser.getUser_by_taxId(self.first_user().taxId)
+        response = accountUser.get_user_by_tax_id(self.first_user().taxId)
         self.assertEqual(self.expected, response.get_status())
         self.assertTrue(len(response.data.items) > 0)
 
     def testAccountUser_by_isActive(self):
         accountUser = AccountUser(self.url, self.urlApi, self.token)
-        response = accountUser.getUser_by_isActive(True)
+        response = accountUser.get_users_by_is_active(True)
         self.assertEqual(self.expected, response.get_status())
         self.assertTrue(len(response.data.items) > 0)
 
     def testAccountUser_by_name(self):
         accountUser = AccountUser(self.url, self.urlApi, self.token)
-        response = accountUser.getUser_by_name(self.first_user().name)
+        response = accountUser.get_user_by_name(self.first_user().name)
         self.assertEqual(self.expected, response.get_status())
         self.assertTrue(len(response.data.items) > 0)
 
     #UT Paginación de la consulta
     def testAccountUser_pagination(self):
         accountUser = AccountUser(self.url, self.urlApi, self.token)
-        response = accountUser.getUser_all(1, 1)
+        response = accountUser.get_users(1, 1)
         self.assertEqual(self.expected, response.get_status())
         self.assertTrue(len(response.data.items) <= 1)
         self.assertEqual(1, response.get_meta()["page"])
@@ -125,7 +125,7 @@ class TestAccountUser(SdkTestCase):
     def testAccountUser_pagination_emptyPage(self):
         #Una página sin resultados responde success con la lista vacía, no es un error.
         accountUser = AccountUser(self.url, self.urlApi, self.token)
-        response = accountUser.getUser_all(999)
+        response = accountUser.get_users(999)
         self.assertEqual(self.expected, response.get_status())
         self.assertEqual(0, len(response.data.items))
         self.assertEqual(999, response.get_meta()["page"])
@@ -133,7 +133,7 @@ class TestAccountUser(SdkTestCase):
     def testAccountUser_pagination_invalidPerPage(self):
         #El servicio es quien limita el tamaño de página.
         accountUser = AccountUser(self.url, self.urlApi, self.token)
-        response = accountUser.getUser_all(1, 100)
+        response = accountUser.get_users(1, 100)
         self.assertEqual(self.expectedError, response.get_status())
         self.assertEqual(400, response.get_status_code())
         self.assertIsNotNone(response.get_message())
@@ -153,7 +153,7 @@ class TestAccountUser(SdkTestCase):
         self.assertIsNotNone(idUser)
         self.addCleanup(accountUser.delete_user, idUser)
 
-        consulta = accountUser.getUser_by_email(email)
+        consulta = accountUser.get_user_by_email(email)
         self.assertEqual(self.expected, consulta.get_status())
         self.assertEqual(1, len(consulta.data.items))
         self.assertEqual(idUser.lower(), consulta.data.items[0].idUser.lower())
@@ -165,7 +165,7 @@ class TestAccountUser(SdkTestCase):
         baja = accountUser.delete_user(idUser)
         self.assertEqual(self.expected, baja.get_status())
         self.assertIsNotNone(baja.get_data())
-        self.assertEqual(0, len(accountUser.getUser_by_email(email).data.items))
+        self.assertEqual(0, len(accountUser.get_user_by_email(email).data.items))
 
     @unittest.skipUnless(config.USER_LIFECYCLE, "Prueba destructiva, definir SDKTEST_USER_LIFECYCLE para ejecutarla")
     def testAccountUser_lifecycle_auth(self):
@@ -198,26 +198,26 @@ class TestAccountUser(SdkTestCase):
     def testAccountUser_by_idUser_notFound(self):
         #Una consulta sin coincidencias responde success con la lista vacía, no es un error.
         accountUser = AccountUser(self.url, self.urlApi, self.token)
-        response = accountUser.getUser_by_idUser(self.notFoundId)
+        response = accountUser.get_user_by_id(self.notFoundId)
         self.assertEqual(self.expected, response.get_status())
         self.assertEqual(0, len(response.data.items))
 
     def testAccountUser_by_email_notFound(self):
         accountUser = AccountUser(self.url, self.urlApi, self.token)
-        response = accountUser.getUser_by_email("sin.coincidencias@example.com")
+        response = accountUser.get_user_by_email("sin.coincidencias@example.com")
         self.assertEqual(self.expected, response.get_status())
         self.assertEqual(0, len(response.data.items))
 
     def testAccountUser_by_taxId_notFound(self):
         accountUser = AccountUser(self.url, self.urlApi, self.token)
-        response = accountUser.getUser_by_taxId("AAAA000101011")
+        response = accountUser.get_user_by_tax_id("AAAA000101011")
         self.assertEqual(self.expected, response.get_status())
         self.assertEqual(0, len(response.data.items))
 
     #UT de Error
     def testAccountUser_by_idUser_invalid(self):
         accountUser = AccountUser(self.url, self.urlApi, self.token)
-        response = accountUser.getUser_by_idUser(self.invalidId)
+        response = accountUser.get_user_by_id(self.invalidId)
         self.assertEqual(self.expectedError, response.get_status())
         self.assertIsNotNone(response.get_message())
 
@@ -249,7 +249,7 @@ class TestAccountUser(SdkTestCase):
 
     def testAccountUser_invalidToken(self):
         accountUser = AccountUser(self.url, self.urlApi, "token-invalido")
-        response = accountUser.getUser_all()
+        response = accountUser.get_users()
         self.assertEqual(self.expectedError, response.get_status())
         self.assertEqual(401, response.get_status_code())
         self.assertIsNotNone(response.get_message())

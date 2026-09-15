@@ -13,7 +13,7 @@ class RequestHelper:
         return session
 
     @staticmethod
-    def post_json_request_Without_Headers(endpoint, payload, headers=None):
+    def post_json_request_without_headers(endpoint, payload, headers=None):
         session = RequestHelper._get_session()
         return session.post(endpoint, json=payload, headers=headers, verify=True, timeout=300)
 

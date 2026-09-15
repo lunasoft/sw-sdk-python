@@ -85,7 +85,7 @@ class SdkTestCase(unittest.TestCase):
         #Los datos de consulta se toman de la propia cuenta, nunca se hardcodean.
         if cls._firstUser is None:
             accountUser = AccountUser(cls.url, cls.urlApi, cls.token)
-            response = accountUser.getUser_all()
+            response = accountUser.get_users()
             if response.get_status() != cls.expected or not response.data.items:
                 raise unittest.SkipTest("La cuenta de pruebas no tiene cuentas hijas")
             cls._firstUser = response.data.items[0]

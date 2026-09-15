@@ -20,7 +20,7 @@ class TestStampRetentions(SdkTestCase):
         
         stamp = Stamp_Retentions(self.url, self.token)
         xml_content = TestStampRetentions.open_file("Test/resources/retenciones20.xml")
-        response = stamp.stamp_retetions_v3(xml_content)
+        response = stamp.stamp_retentions_v3(xml_content)
         if response.get_status() == self.expectedError:
             self.assertTrue(self.codeStamped in response.get_message() or self.codeExpired in response.get_message())
         else:
@@ -37,7 +37,7 @@ class TestStampRetentions(SdkTestCase):
             self.password
         )
         xml_content = TestStampRetentions.open_file("Test/resources/retenciones20.xml")
-        response = stamp.stamp_retetions_v3(xml_content)
+        response = stamp.stamp_retentions_v3(xml_content)
         if response.get_status() == self.expectedError:
             self.assertTrue(self.codeStamped in response.get_message() or self.codeExpired in response.get_message())
         else:
@@ -50,7 +50,7 @@ class TestStampRetentions(SdkTestCase):
 
         stamp = Stamp_Retentions(self.url, self.token)
         xml_content = TestStampRetentions.open_file("Test/resources/xml40.xml")
-        response = stamp.stamp_retetions_v3(xml_content)
+        response = stamp.stamp_retentions_v3(xml_content)
         self.assertEqual(self.expectedError, response.get_status())
         self.assertIsNotNone(response.get_message())
 
@@ -64,7 +64,7 @@ class TestStampRetentions(SdkTestCase):
             self.password
         )
         xml_content = TestStampRetentions.open_file("Test/resources/retenciones20.xml")
-        response = stamp.stamp_retetions_v3(xml_content)
+        response = stamp.stamp_retentions_v3(xml_content)
         self.assertEqual(self.expectedError, response.get_status())
         self.assertIsNotNone(response.get_message())
 
@@ -72,7 +72,7 @@ class TestStampRetentions(SdkTestCase):
         """Prueba error con un token invalido"""
         stamp = Stamp_Retentions(self.url, "token-invalido")
         xml_content = TestStampRetentions.open_file("Test/resources/retenciones20.xml")
-        response = stamp.stamp_retetions_v3(xml_content)
+        response = stamp.stamp_retentions_v3(xml_content)
         self.assertEqual(self.expectedError, response.get_status())
         self.assertIsNotNone(response.get_message())
 
