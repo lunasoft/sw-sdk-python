@@ -2,7 +2,7 @@ import json
 import traceback
 from Utils.response import Response
 class AcceptRejectResponse(Response):
-    codStatus = None
+    cod_status = None
     folios = None
     acuse = None
     def __init__(self, response):
@@ -14,21 +14,21 @@ class AcceptRejectResponse(Response):
                     self.data = self.response["data"]
                     self.acuse = self.data["acuse"]
                     self.status = self.response["status"]
-                    self.codStatus = self.response["codStatus"]
+                    self.cod_status = self.response["codStatus"]
                 else:
                     self.message = self.response["message"]
                     if "messageDetail" in self.response: 
-                        self.messageDetail = self.response["messageDetail"]
+                        self.message_detail = self.response["messageDetail"]
                     self.status = self.response["status"]
             else:
                 self.status = "error"
                 self.message = response.reason
-                self.messageDetail = response.request
+                self.message_detail = response.request
         except:
             traceback.print_exc()
 
-    def get_codStatus(self):
-        return self.codStatus
+    def get_cod_status(self):
+        return self.cod_status
     def get_folios(self):
         return self.folios
     def get_acuse(self):

@@ -2,11 +2,11 @@ import json
 import traceback
 from Utils.response import Response
 class RelationsResponse(Response):
-    codStatus = None
-    uuid_consultado = None
-    resultado = None
-    uuids_relacionados_padres = None
-    uuids_relacionados_hijos = None
+    cod_status = None
+    queried_uuid = None
+    result = None
+    parent_related_uuids = None
+    child_related_uuids = None
     def __init__(self, response):
         try:
             self.status_code = response.status_code
@@ -17,29 +17,29 @@ class RelationsResponse(Response):
                     self.status = self.response["status"]
                     self.message = self.response["message"]
                     if(self.response["codStatus"] == "2000"):
-                        self.uuid_consultado = self.data["uuidConsultado"]
-                        self.resultado = self.data["resultado"]
-                        self.uuids_relacionados_padres = self.data["uuidsRelacionadosPadres"]
-                        self.uuids_relacionados_hijos = self.data["uuidsRelacionadosHijos"]
+                        self.queried_uuid = self.data["uuidConsultado"]
+                        self.result = self.data["resultado"]
+                        self.parent_related_uuids = self.data["uuidsRelacionadosPadres"]
+                        self.child_related_uuids = self.data["uuidsRelacionadosHijos"]
                 else:
                     self.status = self.response["status"]
                     self.message = self.response["message"]
                     if "messageDetail" in self.response: 
-                        self.messageDetail = self.response["messageDetail"]
+                        self.message_detail = self.response["messageDetail"]
             else:
                 self.status = "error"
                 self.message = response.reason
-                self.messageDetail = response.request
+                self.message_detail = response.request
         except:
             traceback.print_exc()
 
-    def get_codStatus(self):
-        return self.codStatus
-    def get_uuid_consultado(self):
-        return self.uuid_consultado
-    def get_resultado(self):
-        return self.resultado
-    def get_uuids_relacionados_padres(self):
-        return self.uuids_relacionados_padres
-    def get_uuids_relacionados_hijos(self):
-        return self.uuids_relacionados_hijos
+    def get_cod_status(self):
+        return self.cod_status
+    def get_queried_uuid(self):
+        return self.queried_uuid
+    def get_result(self):
+        return self.result
+    def get_parent_related_uuids(self):
+        return self.parent_related_uuids
+    def get_child_related_uuids(self):
+        return self.child_related_uuids

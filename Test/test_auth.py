@@ -5,22 +5,12 @@ import sys
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
+from Test.base import SdkTestCase
 from Auth.Auth import Auth
 
-class TestAuth(unittest.TestCase):
-    expected = "success"
-    expectedError = "error"
-    url = "https://services.test.sw.com.mx"
-    
-    user = os.environ.get("SDKTEST_USER")
-    password = os.environ.get("SDKTEST_PASSWORD")
-
-    @classmethod
-    def setUpClass(cls):
-        for nombre, valor in (("SDKTEST_USER", cls.user),
-                              ("SDKTEST_PASSWORD", cls.password)):
-            if not valor:
-                raise ValueError(f"Falta la variable de entorno {nombre}")
+class TestAuth(SdkTestCase):
+    #La autenticación se ejercita con usuario y contraseña, no necesita token.
+    requeridas = ("SDKTEST_USER", "SDKTEST_PASSWORD")
 
     #UT Autenticación
     def testAuth_success(self):

@@ -1,68 +1,47 @@
 import unittest
 import os
-import json
 import sys
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
-from Cancelation_Retentions.CancelationRetentions import CancelationRetentions
+from Test import config
+from Test.base import SdkTestCase
+from CancelationRetentions.CancelationRetentions import CancelationRetentions
 
-class TestCancelationRetentions(unittest.TestCase):
-    expected = "success"
-    url = "https://services.test.sw.com.mx"
-    #Contraseña del CSD público de pruebas del SAT, se sobrescribe con SDKTEST_CSD_PASSWORD.
-    passwordCsd = os.environ.get("SDKTEST_CSD_PASSWORD", "12345678a")
-    #RFC del certificado de pruebas Test/resources/b64CSD.txt.
-    rfc = "EKU9003173C9"
-    #Retención timbrada en la cuenta de pruebas sobre la que se ejercita la cancelación.
-    uuidCfdi = "578052ce-710f-4d0b-9ffc-6ca73daf92a5"
-    user = os.environ.get("SDKTEST_USER")
-    password = os.environ.get("SDKTEST_PASSWORD")
-    token = os.environ.get("SDKTEST_TOKEN")
+class TestCancelationRetentions(SdkTestCase):
+    passwordCsd = config.PASSWORD_CSD
+    rfc = config.RFC
+    uuidCfdi = config.UUID_CANCELACION_RETENCION
 
-    @classmethod
-    def setUpClass(cls):
-        for nombre, valor in (("SDKTEST_USER", cls.user),
-                              ("SDKTEST_PASSWORD", cls.password),
-                              ("SDKTEST_TOKEN", cls.token)):
-            if not valor:
-                raise ValueError(f"Falta la variable de entorno {nombre}")
-
-    @staticmethod
-    def open_file(pathFile):
-        with open(pathFile, "r", encoding='utf-8') as file:
-            out = file.read()
-        return out
-    
-    def testCancelaUno_auth(self):
+    def testCancelXml_auth(self):
         cancel = CancelationRetentions(self.url, None, self.user, self.password)
-        response = cancel.CancelaUno(TestCancelationRetentions.open_file("Test/resources/cancelRetByXml.xml"))
+        response = cancel.cancel_xml(TestCancelationRetentions.open_file("Test/resources/cancelRetByXml.xml"))
         self.assertTrue(self.expected == response.get_status())
         
-    def testCancelaUno(self):
+    def testCancelXml(self):
         cancel = CancelationRetentions(self.url, self.token)
-        response = cancel.CancelaUno(TestCancelationRetentions.open_file("Test/resources/cancelRetByXml.xml"))
+        response = cancel.cancel_xml(TestCancelationRetentions.open_file("Test/resources/cancelRetByXml.xml"))
         self.assertTrue(self.expected == response.get_status())
     
-    def testCancelaUnoCSD_auth(self):
+    def testCancelCsd_auth(self):
         cancel = CancelationRetentions(self.url, None, self.user, self.password)
-        response = cancel.CancelaUnoCSD(self.uuidCfdi, self.rfc, TestCancelationRetentions.open_file("Test/resources/b64CSD.txt"), TestCancelationRetentions.open_file("Test/resources/b64Key.txt"),self.passwordCsd, "02", "")
+        response = cancel.cancel_csd(self.uuidCfdi, self.rfc, TestCancelationRetentions.open_file("Test/resources/b64CSD.txt"), TestCancelationRetentions.open_file("Test/resources/b64Key.txt"),self.passwordCsd, "02", "")
         self.assertTrue(self.expected == response.get_status())
 
-    def testCancelaUnoCSD(self):
+    def testCancelCsd(self):
         cancel = CancelationRetentions(self.url, self.token)
-        response = cancel.CancelaUnoCSD(self.uuidCfdi, self.rfc, TestCancelationRetentions.open_file("Test/resources/b64CSD.txt"), TestCancelationRetentions.open_file("Test/resources/b64Key.txt"),self.passwordCsd, "02", "")
+        response = cancel.cancel_csd(self.uuidCfdi, self.rfc, TestCancelationRetentions.open_file("Test/resources/b64CSD.txt"), TestCancelationRetentions.open_file("Test/resources/b64Key.txt"),self.passwordCsd, "02", "")
         self.assertTrue(self.expected == response.get_status())
         
-    def testCancelaUnoPFX_auth(self):
+    def testCancelPfx_auth(self):
         cancel = CancelationRetentions(self.url, None, self.user, self.password)
-        response = cancel.CancelaUnoPFX(self.uuidCfdi, self.rfc, TestCancelationRetentions.open_file("Test/resources/b64Pfx.txt"), self.passwordCsd, "02", "")
+        response = cancel.cancel_pfx(self.uuidCfdi, self.rfc, TestCancelationRetentions.open_file("Test/resources/b64Pfx.txt"), self.passwordCsd, "02", "")
         self.assertTrue(self.expected == response.get_status())
 
-    def testCancelaUnoPFX(self):
+    def testCancelPfx(self):
         cancel = CancelationRetentions(self.url, self.token)
-        response = cancel.CancelaUnoPFX(self.uuidCfdi, self.rfc, TestCancelationRetentions.open_file("Test/resources/b64Pfx.txt"), self.passwordCsd, "02", "")
+        response = cancel.cancel_pfx(self.uuidCfdi, self.rfc, TestCancelationRetentions.open_file("Test/resources/b64Pfx.txt"), self.passwordCsd, "02", "")
         self.assertTrue(self.expected == response.get_status())
 
     #UT de Error
@@ -70,7 +49,7 @@ class TestCancelationRetentions(unittest.TestCase):
         #CancelationRetentionsResponse tampoco asigna status cuando el servicio no
         #responde 200, así que la prueba afirma el código y el mensaje.
         cancel = CancelationRetentions(self.url, "token-invalido")
-        response = cancel.CancelaUno(TestCancelationRetentions.open_file("Test/resources/cancelRetByXml.xml"))
+        response = cancel.cancel_xml(TestCancelationRetentions.open_file("Test/resources/cancelRetByXml.xml"))
         self.assertTrue(401 == response.get_status_code())
         self.assertIsNotNone(response.get_message())
 

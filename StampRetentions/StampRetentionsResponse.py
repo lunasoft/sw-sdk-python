@@ -2,7 +2,7 @@ import json
 import traceback
 from Utils.response import Response
 
-class Stamp_RetentionsResponse(Response):
+class StampRetentionsResponse(Response):
     def __init__(self, response):
         try:
             self.status_code = response.status_code
@@ -16,11 +16,11 @@ class Stamp_RetentionsResponse(Response):
                     self.status = self.response.get("status", "error")
                     self.message = self.response.get("message")
                     if "messageDetail" in self.response:
-                        self.messageDetail = self.response["messageDetail"]
+                        self.message_detail = self.response["messageDetail"]
             else:
                 self.status = "error"
                 self.message = response.reason
-                self.messageDetail = response.request
+                self.message_detail = response.request
         except:
             traceback.print_exc()
 

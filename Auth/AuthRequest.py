@@ -7,5 +7,5 @@ class AuthRequest:
         payload = {'user': user, 'password': password}
         headers = {'Content-Type': 'application/json', 'Cache-Control': "no-cache"}
         endpoint = url + "/v2/security/authenticate"
-        response = RequestHelper.post_json_request_Without_Headers(endpoint,payload, headers)
+        response = RequestHelper.post_json_request_without_headers(endpoint,payload, headers)
         return AuthResponse(response)

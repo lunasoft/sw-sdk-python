@@ -6,34 +6,20 @@ from base64 import b64encode
 from datetime import datetime, timedelta
 import xml.etree.ElementTree as ET
 from io import BytesIO
-from pathlib import Path
 import random
 import string
 import time
 
-PROJECT_ROOT = str(Path(__file__).parent.parent.absolute())
-sys.path.insert(0, PROJECT_ROOT)
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+sys.path.append(PROJECT_ROOT)
 
+from Test.base import SdkTestCase
 from Issue.IssueV4 import IssueV4
 from Stamp.StampV4 import StampV4
 from Storage.Storage import Storage
 from Utils.response_version import ResponseVersion
 
-class TestV4Basic(unittest.TestCase):
-
-    url = "https://services.test.sw.com.mx"
-    urlApi = "https://api.test.sw.com.mx"
-    user = os.environ.get("SDKTEST_USER")
-    password = os.environ.get("SDKTEST_PASSWORD")
-    token = os.environ.get("SDKTEST_TOKEN")
-
-    @classmethod
-    def setUpClass(cls):
-        for nombre, valor in (("SDKTEST_USER", cls.user),
-                              ("SDKTEST_PASSWORD", cls.password),
-                              ("SDKTEST_TOKEN", cls.token)):
-            if not valor:
-                raise ValueError(f"Falta la variable de entorno {nombre}")
+class TestV4Basic(SdkTestCase):
 
     @staticmethod
     def generate_custom_id(prefix):
@@ -76,7 +62,7 @@ class TestV4Basic(unittest.TestCase):
     def wait_url_pdf(self, uuid):
         #El PDF del comprobante tarda en quedar disponible en el ADT: la urlPDF aparece
         #alrededor de los 110 segundos y varía según la carga del ambiente.
-        storage = Storage(self.url, self.urlApi, self.token)
+        storage = Storage(self.url, self.url_api, self.token)
         for _ in range(60):
             time.sleep(5)
             url_pdf = storage.get_by_uuid(uuid).get_url_pdf()

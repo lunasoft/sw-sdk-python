@@ -15,11 +15,11 @@ class AccountBalanceResponse(Response):
                     self.status = self.response["status"]
                     self.message = self.response["message"]
                     if "messageDetail" in self.response:
-                        self.messageDetail = self.response["messageDetail"]
+                        self.message_detail = self.response["messageDetail"]
             else:
                 self.status = "error"
                 self.message = response.reason
-                self.messageDetail = response.request
+                self.message_detail = response.request
         except Exception:
             traceback.print_exc()
 
@@ -36,11 +36,11 @@ class BalanceResponse(Response):
                     self.status = self.response["status"]
                     self.message = self.response["message"]
                     if "messageDetail" in self.response: 
-                        self.messageDetail = self.response["messageDetail"]
+                        self.message_detail = self.response["messageDetail"]
             else:
                 self.status = "error"
                 self.message = response.reason
-                self.messageDetail = response.request
+                self.message_detail = response.request
         except:
             traceback.print_exc()
             
@@ -58,7 +58,7 @@ class Data:
 class LastTransaction:
     def __init__(self, transaction):
         self.folio = transaction.get("folio", 0)
-        self.idUSer = transaction.get("idUser", "")
+        self.idUser = transaction.get("idUser", "")
         self.idUserReceiver = transaction.get("idUserReceiver", "")
         self.nameReceiver = transaction.get("nameReceiver", "")
         self.stampsIn = transaction.get("stampsIn", 0)
