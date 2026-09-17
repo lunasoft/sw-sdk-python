@@ -35,7 +35,7 @@ Responsibilities are strictly separated:
 Variants of the same service live in the same package as extra files rather than new directories — e.g. `Stamp/StampV4.py` + `Stamp/StampRequestV4.py` reuse `Stamp/StampResponse.py`, and `Issue/IssueV4.py` + `Issue/IssueRequestV4.py` reuse `Issue/IssueResponse.py`.
 
 Documented deviations that exist today (do not "fix" them as a side effect of another change):
-- `StatusCfdi/StatusCfdi.py` does **not** extend `Services` (no auth token needed) and `StatusCfdiResponse` does **not** extend `Response`; it parses the SAT SOAP envelope by string splitting and exposes `status_code_sat`, `is_cancelable`, `state`, `cancelation_status`.
+- `StatusCfdi/StatusCfdi.py` does **not** extend `Services` (no auth token needed; the URL of the SOAP service is a parameter, and the test environment exposes it at `https://api.test.sw.com.mx/ConsultaCFDIService.svc`) and `StatusCfdiResponse` does **not** extend `Response`; it parses the SAT SOAP envelope by string splitting and exposes `status_code_sat`, `is_cancelable`, `state`, `cancelation_status`.
 - `StatusCfdi/StatusCfdiRequest.py` builds its own `requests.Session` instead of using `RequestHelper`, and calls with `verify=False`.
 - `Balance/BalanceResponse.py` declares two response classes (`BalanceResponse`, `AccountBalanceResponse`) in one file, plus the `Data` / `LastTransaction` payload DTOs.
 - `Pdf/RegeneratePdfResponse.py` adds no attributes or getters of its own: it only sets the inherited
@@ -128,9 +128,9 @@ A full run takes roughly 5–10 minutes and depends on the load of the test envi
 
 ### Test configuration and helpers
 - `Test/config.py` holds the URLs, the environment reading and the test data (RFC, certificate number, UUIDs, invalid identifiers). **Do not hard-code any of this in a test module.** Its docstring explains why the UUIDs are tied to the test account: the datawarehouse is partitioned per account, so a comprobante stamped elsewhere does not resolve with this token.
-- `Test/base.py` holds `SdkTestCase`, which every credential-using test class extends. It provides `expected` / `expectedError`, the URLs and credentials, the environment validation, `open_file(pathFile)`, `stamped_uuid()` (finds a recent comprobante of the account, walking the datawarehouse backwards in 28-day windows) and `first_user()` (the account's first child user).
+- `Test/base.py` holds `SdkTestCase`, which every credential-using test class extends. It provides `expected` / `expectedError`, the URLs and credentials, the environment validation, `open_file(pathFile)`, `search_cfdi(filtro)` (walks the datawarehouse backwards in 28-day windows and returns the first record matching `filtro`), `stamped_uuid()` and `stamped_cfdi(cancelado)` (both built on it: the UUID of a recent comprobante, and the whole record of a vigente or cancelled one) and `first_user()` (the account's first child user).
 - Per-class knobs instead of duplicated code: `exigePdf = True` makes `stamped_uuid()` require a comprobante that has a PDF (`TestPdf`), and `requeridas` narrows the required environment variables (`TestAuth` does not use a token).
-- `Test/test_statusCfdi.py` extends `unittest.TestCase` directly: it queries the SAT, uses no credentials, and shares nothing with the rest.
+- `Test/test_statusCfdi.py` needs no credentials for the SOAP call itself, but extends `SdkTestCase` with `requeridas = ("SDKTEST_TOKEN",)`: it builds the expresión impresa from a comprobante of the account through `stamped_cfdi()`, instead of hard-coding someone else's.
 - Each test module still starts with the `sys.path` bootstrap:
   ```python
   PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
@@ -241,7 +241,7 @@ A full run takes roughly 5–10 minutes and depends on the load of the test envi
 - Credentials are never committed; the only supported way to run the suite is via the `SDKTEST_*` variables.
 - Token lifetime: `Auth` issues a 2-hour token (documented in `README.md`); `Services.get_token()` re-authenticates automatically only when it holds `user`/`password`. A token supplied directly is treated as never expiring (`expiration_date = 9999999999`).
 - `README.md` is the product documentation and mirrors the code closely: when you add or change a public method, the matching README section is expected to change with it. Its `:pushpin:` notes are for prerequisites, roughly one per section — not for describing the shape of the response.
-- `StatusCfdi` calls the SAT SOAP service with `verify=False` and parses XML by string splitting — this is intentional in the current code, not an oversight to be silently refactored. The TLS verification is under review with infrastructure.
+- `StatusCfdi` calls the SOAP service with `verify=False` and parses XML by string splitting — this is intentional in the current code, not an oversight to be silently refactored. The TLS verification is under review with infrastructure.
 - There is no logging framework: diagnostics are `print()` and `traceback.print_exc()`.
 - TLS failures with `CERTIFICATE_VERIFY_FAILED` while running the suite usually come from a local antivirus intercepting TLS, not from the library. Retry before investigating.
 - No Cursor rules found in `.cursor/rules/` or `.cursorrules`. No GitHub Copilot instructions found in `.github/copilot-instructions.md`. There is no `.github/` directory at all.

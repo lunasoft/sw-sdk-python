@@ -4,11 +4,10 @@ Todas las pruebas son de integración: pegan al ambiente de pruebas real de SW, 
 que lo que se define aquí describe una cuenta concreta, no un ambiente cualquiera.
 
 Los UUID están atados a esa cuenta. El datawarehouse está particionado por cuenta, así
-que un comprobante timbrado en otra cuenta no resuelve con este token, y los servicios
-que consultan al SAT lo hacen por RFC. Cuando una prueba necesita un comprobante propio
-y reciente, lo busca en la cuenta durante la corrida en lugar de fijarlo aquí. No
-agregar un UUID a mano a este archivo sin haber comprobado antes que resuelve con las
-credenciales de abajo.
+que un comprobante timbrado en otra cuenta no resuelve con este token. Cuando una prueba
+necesita un comprobante propio y reciente, lo busca en la cuenta durante la corrida en
+lugar de fijarlo aquí. No agregar un UUID a mano a este archivo sin haber comprobado
+antes que resuelve con las credenciales de abajo.
 """
 import os
 
@@ -16,9 +15,9 @@ import os
 URL = "https://services.test.sw.com.mx"
 URL_API = "https://api.test.sw.com.mx"
 
-#La consulta de estatus es un servicio del SAT y se consume en producción: no existe un
-#ambiente de pruebas equivalente.
-URL_SAT = "https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc"
+#El ambiente de pruebas expone el mismo servicio SOAP del SAT y resuelve los comprobantes
+#timbrados en la cuenta, de modo que la consulta de estatus no necesita pegar a producción.
+URL_SAT = "https://api.test.sw.com.mx/ConsultaCFDIService.svc"
 SOAP_ACTION = "http://tempuri.org/IConsultaCFDIService/Consulta"
 
 #Credenciales de la cuenta de pruebas.
@@ -59,13 +58,6 @@ UUID_CANCELACION = "3dda215e-4c77-4923-94a1-627e0a04378c"
 UUID_CANCELACION_RETENCION = "578052ce-710f-4d0b-9ffc-6ca73daf92a5"
 UUID_ACEPTA_RECHAZA = "baf029f3-93ea-4267-a76c-1958d69bd4d8"
 UUID_RELACIONES = "316dff4d-6a5a-40d5-8558-c8f45244aa90"
-
-#Comprobante vigente de terceros con el que se consulta el servicio del SAT. No es de la
-#cuenta de pruebas: la consulta va por RFC y total, no por token.
-RFC_EMISOR_SAT = "CAU180123GEA"
-RFC_RECEPTOR_SAT = "GACM650215GH9"
-TOTAL_SAT = "398.39"
-UUID_SAT = "699628be-2f06-4bc9-adc2-860b51eecbca"
 
 #El buscador del datawarehouse acepta rangos de hasta 30 días y responde vacío con rangos
 #más largos, así que se recorre hacia atrás en tramos de 28.

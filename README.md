@@ -1433,14 +1433,14 @@ rfc_emisor = "LAN8507268IA"
 rfc_receptor = "LAN7008173R5"
 total = "5800.00"
 uuid = "eb978000-95c7-4513-8d97-4b59434da45f"
-status = StatusCfdi.status(rfc_emisor, rfc_receptor, total, uuid, "https://pruebacfdiconsultaqr.cloudapp.net/ConsultaCFDIService.svc", "http://tempuri.org/IConsultaCFDIService/Consulta")
+status = StatusCfdi.status(rfc_emisor, rfc_receptor, total, uuid, "https://api.test.sw.com.mx/ConsultaCFDIService.svc", "http://tempuri.org/IConsultaCFDIService/Consulta")
 
 print(status.get_response())
 #Datos de respuesta
-print(status.get_codigoEstatus())
-print(status.get_estado())
-print(status.get_esCancelable())
-print(status.get_estatusCancelacion())
+print(status.get_status_code_sat())
+print(status.get_state())
+print(status.get_is_cancelable())
+print(status.get_cancelation_status())
 print(status.get_status_code())
 ```
 

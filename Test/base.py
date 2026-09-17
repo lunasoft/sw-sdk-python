@@ -4,9 +4,6 @@ Todas las pruebas son de integración contra el ambiente real y necesitan lo mis
 URL, las credenciales de la cuenta, una forma de leer los fixtures y, en varios casos,
 un comprobante o una cuenta hija de la propia cuenta de pruebas. Heredar de SdkTestCase
 evita repetirlo en cada archivo.
-
-La consulta de estatus es la excepción: va directo al SAT, no usa credenciales, y por eso
-sigue extendiendo unittest.TestCase.
 """
 import unittest
 from datetime import datetime, timedelta
@@ -37,6 +34,7 @@ class SdkTestCase(unittest.TestCase):
     #Lo que se encuentra en la cuenta se guarda para no repetir la consulta en cada prueba.
     _uuidTimbrado = None
     _firstUser = None
+    _comprobantes = {}
 
     @classmethod
     def setUpClass(cls):
@@ -54,31 +52,47 @@ class SdkTestCase(unittest.TestCase):
         return out
 
     @classmethod
+    def search_cfdi(cls, filtro):
+        #El buscador por fechas acepta rangos de hasta 30 días y responde vacío con rangos
+        #más largos, así que se recorre hacia atrás por tramos.
+        for tramo in range(config.TRAMOS_BUSQUEDA):
+            hasta = datetime.now() - timedelta(days=28 * tramo)
+            desde = hasta - timedelta(days=28)
+            endpoint = (f"{cls.url_api}/datawarehouse/v1/live/"
+                        f"?startDate={desde.strftime('%Y-%m-%d')}&endDate={hasta.strftime('%Y-%m-%d')}")
+            registros = RequestHelper.get_json_request(endpoint, cls.token).json()
+            registros = [r for r in registros.get("data", {}).get("records", []) if filtro(r)]
+            if registros:
+                return registros[0]
+        return None
+
+    @classmethod
     def stamped_uuid(cls):
         #El UUID se toma de un CFDI timbrado en la propia cuenta, nunca se hardcodea: el
         #datawarehouse está particionado por cuenta, de modo que un UUID fijo sólo resuelve
         #con el token de la cuenta que timbró el comprobante.
         if cls._uuidTimbrado is None:
-            #El buscador por fechas acepta rangos de hasta 30 días y responde vacío con
-            #rangos más largos, así que se recorre hacia atrás por tramos.
-            for tramo in range(config.TRAMOS_BUSQUEDA):
-                hasta = datetime.now() - timedelta(days=28 * tramo)
-                desde = hasta - timedelta(days=28)
-                endpoint = (f"{cls.url_api}/datawarehouse/v1/live/"
-                            f"?startDate={desde.strftime('%Y-%m-%d')}&endDate={hasta.strftime('%Y-%m-%d')}")
-                registros = RequestHelper.get_json_request(endpoint, cls.token).json()
-                registros = registros.get("data", {}).get("records", [])
-                if cls.exigePdf:
-                    registros = [r for r in registros if r.get("urlPDF") or r.get("urlPdf")]
-                if registros:
-                    cls._uuidTimbrado = registros[0]["uuid"]
-                    break
-            if cls._uuidTimbrado is None:
+            registro = cls.search_cfdi(lambda r: not cls.exigePdf or r.get("urlPDF") or r.get("urlPdf"))
+            if registro is None:
                 mensaje = "La cuenta de pruebas no tiene CFDI timbrados"
                 if cls.exigePdf:
                     mensaje += " con PDF"
                 raise unittest.SkipTest(mensaje)
+            cls._uuidTimbrado = registro["uuid"]
         return cls._uuidTimbrado
+
+    @classmethod
+    def stamped_cfdi(cls, cancelado=False):
+        #La consulta de estatus se hace con la expresión impresa completa, de modo que aquí
+        #se devuelve el registro entero y no sólo el UUID. El comprobante cancelado se
+        #distingue por el código de cancelación que guarda el datawarehouse.
+        clave = "cancelado" if cancelado else "vigente"
+        if clave not in cls._comprobantes:
+            registro = cls.search_cfdi(lambda r: bool(r.get("codigoCancelacion")) == cancelado)
+            if registro is None:
+                raise unittest.SkipTest(f"La cuenta de pruebas no tiene un CFDI {clave}")
+            cls._comprobantes[clave] = registro
+        return cls._comprobantes[clave]
 
     @classmethod
     def first_user(cls):
