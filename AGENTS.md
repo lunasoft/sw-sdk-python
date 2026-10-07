@@ -3,7 +3,7 @@
 This repository contains a pure-Python SDK for the SW sapien® (SmarterWeb) web services and a `unittest`-based test suite that hits the live test environment. Use the guidance below when acting as an automated coding agent.
 
 ## Repository Overview
-- Package name: `sw-sdk-python`, version declared in `setup.py` (`0.0.14.1`).
+- Package name: `sw-sdk-python`, version declared in `setup.py` (`1.0.0`).
 - The repository root **is** the importable source tree: every service is a top-level package directory (`Stamp/`, `Issue/`, `Cancelation/`, ...). There is no `src/` layout.
 - Shared infrastructure lives in `Utils/`:
   - `Utils/Services.py` — `Services` base class (URL + credential/token handling, lazy token retrieval).
