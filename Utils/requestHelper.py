@@ -74,7 +74,7 @@ class RequestHelper:
             'SOAPAction': action
         }
         session = RequestHelper._get_session()
-        return session.post(endpoint, data=body.encode('utf-8'), headers=headers, verify=False, timeout=300)
+        return session.post(endpoint, data=body.encode('utf-8'), headers=headers, verify=True, timeout=300)
 
     @staticmethod
     def post_multipart_request(endpoint, token, xml_data):
