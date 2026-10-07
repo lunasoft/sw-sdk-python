@@ -11,7 +11,8 @@ class CancelationResponse(Response):
                     self.status = self.response["status"]
                     self.data = self.response["data"]
                 else:
-                    self.message = self.response["message"]
+                    self.status = self.response.get("status", "error")
+                    self.message = self.response.get("message")
                     if "messageDetail" in self.response: 
                         self.message_detail = self.response["messageDetail"]
             else:

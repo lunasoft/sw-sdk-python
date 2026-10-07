@@ -46,12 +46,18 @@ class TestCancelationRetentions(SdkTestCase):
 
     #UT de Error
     def testCancelRetentions_invalidToken(self):
-        #CancelationRetentionsResponse tampoco asigna status cuando el servicio no
-        #responde 200, así que la prueba afirma el código y el mensaje.
         cancel = CancelationRetentions(self.url, "token-invalido")
         response = cancel.cancel_xml(TestCancelationRetentions.open_file("Test/resources/cancelRetByXml.xml"))
+        self.assertTrue(self.expectedError == response.get_status())
         self.assertTrue(401 == response.get_status_code())
         self.assertIsNotNone(response.get_message())
+
+    def testCancelCsd_withoutPassword(self):
+        cancel = CancelationRetentions(self.url, self.token)
+        response = cancel.cancel_csd(self.uuidCfdi, self.rfc, TestCancelationRetentions.open_file("Test/resources/b64CSD.txt"), TestCancelationRetentions.open_file("Test/resources/b64Key.txt"), "", "02", "")
+        self.assertTrue(self.expectedError == response.get_status())
+        self.assertTrue(400 == response.get_status_code())
+        self.assertIsNotNone(response.get_message_detail())
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestCancelationRetentions)

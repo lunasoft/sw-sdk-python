@@ -57,12 +57,18 @@ class TestCancelation(SdkTestCase):
 
     #UT de Error
     def testCancelUuid_invalidToken(self):
-        #CancelationResponse no asigna status cuando el servicio no responde 200, así que
-        #la prueba afirma el código y el mensaje.
         cancel = Cancelation(self.url, "token-invalido")
         response = cancel.cancel_uuid(self.uuidCfdi, self.rfc, "02", "")
+        self.assertTrue(self.expectedError == response.get_status())
         self.assertTrue(401 == response.get_status_code())
         self.assertIsNotNone(response.get_message())
+
+    def testCancelCsd_withoutPassword(self):
+        cancel = Cancelation(self.url, self.token)
+        response = cancel.cancel_csd(self.uuidCfdi, self.rfc, TestCancelation.open_file("Test/resources/b64CSD.txt"), TestCancelation.open_file("Test/resources/b64Key.txt"), "", "02", "")
+        self.assertTrue(self.expectedError == response.get_status())
+        self.assertTrue(400 == response.get_status_code())
+        self.assertIsNotNone(response.get_message_detail())
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestCancelation)
