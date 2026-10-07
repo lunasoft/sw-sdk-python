@@ -2,7 +2,6 @@ import unittest
 import os
 import sys
 import uuid
-import requests
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
@@ -73,12 +72,10 @@ class TestStorage(SdkTestCase):
         self.assertTrue("error" == response.get_status())
         self.assertIsNotNone(response.get_message(), "El valor de message esta vacio")
 
+    #UT de Configuración
     def test_get_by_uuid_withoutUrlApi(self):
-        #Con url_api vacía la librería avisa por consola igual que Pdf y AccountUser, y la
-        #petición no se puede armar. Se documenta el comportamiento actual del repositorio.
-        storage_obj = Storage(TestStorage.url, "", self.token)
-        with self.assertRaises(requests.exceptions.RequestException):
-            storage_obj.get_by_uuid(TestStorage.uuidNotFound)
+        with self.assertRaises(ValueError):
+            Storage(TestStorage.url, "", self.token)
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestStorage)

@@ -70,6 +70,11 @@ class TestCancelation(SdkTestCase):
         self.assertTrue(400 == response.get_status_code())
         self.assertIsNotNone(response.get_message_detail())
 
+    #UT de Configuración
+    def testCancel_withoutCredentials(self):
+        with self.assertRaises(ValueError):
+            Cancelation(self.url)
+
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestCancelation)
     result = unittest.TextTestRunner(verbosity=2).run(suite)

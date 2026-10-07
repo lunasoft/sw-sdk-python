@@ -38,11 +38,23 @@ class TestAuth(SdkTestCase):
         self.assertTrue(self.expectedError == response.get_status())
         self.assertIsNotNone(response.get_message(),"El valor de message esta vacio")
 
+    #UT de Configuración
     def testAuth_emptyCredentials(self):
-        auth = Auth(self.url, None , "", "")
-        response = auth.authentication()
-        self.assertTrue(self.expectedError == response.get_status())
-        self.assertIsNotNone(response.get_message(),"El valor de message esta vacio")
+        with self.assertRaises(ValueError):
+            Auth(self.url, None , "", "")
+
+    def testAuth_withoutPassword(self):
+        with self.assertRaises(ValueError):
+            Auth(self.url, None , self.user)
+
+    def testAuth_withoutUrl(self):
+        with self.assertRaises(ValueError):
+            Auth("", None , self.user, self.password)
+
+    def testAuth_onlyToken(self):
+        #La autenticación necesita usuario y contraseña: el token no la sustituye.
+        with self.assertRaises(ValueError):
+            Auth(self.url, "token")
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestAuth)

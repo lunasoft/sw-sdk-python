@@ -254,12 +254,8 @@ class TestV4Basic(SdkTestCase):
             "customid": self.generate_custom_id("ISS")
         }
 
-        response = issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
-
-        self.assertEqual("error", response.get_status())
-        self.assertNotEqual(200, response.status_code)
-        self.assertIsNone(response.data)
-        self.assertIn("AU4101", response.get_message())
+        with self.assertRaisesRegex(ValueError, "autentificación"):
+            issue.issue_xml(xml_content, headers=headers, version=ResponseVersion.V4)
 
     def test_issue_xml_invalid_xml(self):
         issue = IssueV4(self.url, self.token)

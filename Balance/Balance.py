@@ -5,10 +5,9 @@ class Balance(Services):
     url_api = None
     def __init__(self, url, url_api, token=None, user=None, password=None):
         super(Balance, self).__init__(url, token, user, password)
-        if url_api:
-            self.url_api = url_api
-        else: 
-            print("Debe especificar la url_api")
+        if not url_api:
+            raise ValueError("Debe especificar la url_api")
+        self.url_api = url_api
     
     def get_balance(self):
         return BalanceRequest.account_balance(self.url_api, self.get_token())
