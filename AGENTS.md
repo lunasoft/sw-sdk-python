@@ -35,32 +35,32 @@ Responsibilities are strictly separated:
 Variants of the same service live in the same package as extra files rather than new directories — e.g. `Stamp/StampV4.py` + `Stamp/StampRequestV4.py` reuse `Stamp/StampResponse.py`, and `Issue/IssueV4.py` + `Issue/IssueRequestV4.py` reuse `Issue/IssueResponse.py`.
 
 Documented deviations that exist today (do not "fix" them as a side effect of another change):
-- `StatusCfdi/StatusCfdi.py` does **not** extend `Services` (no auth token needed; the URL of the SOAP service is a parameter, and the test environment exposes it at `https://api.test.sw.com.mx/ConsultaCFDIService.svc`) and `StatusCfdiResponse` does **not** extend `Response`; it parses the SAT SOAP envelope by string splitting and exposes `status_code_sat`, `is_cancelable`, `state`, `cancelation_status`.
-- `StatusCfdi/StatusCfdiRequest.py` builds its own `requests.Session` instead of using `RequestHelper`, and calls with `verify=False`.
+- `StatusCfdi/StatusCfdi.py` does **not** extend `Services`: the query takes no credentials, and `Services` raises without them. It is built with the URL of the SOAP service (`StatusCfdi(url).status(rfc_emisor, rfc_receptor, total, uuid)`); the test environment exposes it at `https://api.test.sw.com.mx/ConsultaCFDIService.svc`. `StatusCfdiResponse` does extend `Response`, parses the SOAP envelope by string search and exposes `status_code_sat`, `is_cancelable`, `state`, `cancelation_status`; an element that comes empty or with `i:nil="true"` is `None`.
 - `Balance/BalanceResponse.py` declares two response classes (`BalanceResponse`, `AccountBalanceResponse`) in one file, plus the `Data` / `LastTransaction` payload DTOs.
 - `Pdf/RegeneratePdfResponse.py` adds no attributes or getters of its own: it only sets the inherited
   `status` / `message` / `message_detail`, unlike `PdfResponse`, which exposes uuid, content and dates.
-  Filling that gap is pending confirmation that the service actually returns those fields.
+  The service answers the regeneration with a message only, without uuid or content.
 
 ### Base classes
 
 `Utils.Services.Services` — every service class extends it:
 - Constructor signature: `__init__(self, url, token=None, user=None, password=None)`. The four services that also take the API host (`AccountUser`, `Balance`, `Pdf`, `Storage`) take `url_api` as the second parameter, before `token`.
-- Precedence: if `user` **and** `password` are given they win and `token` is ignored; otherwise `token` is stored with `expiration_date = 9999999999`. If neither is supplied it only `print`s `"Se debe definir user y password o token"` — it does not raise.
-- `get_token()` lazily authenticates via `AuthRequest.authenticate(url, user, password)` when there is no token or the stored `expiration_date` has passed, then caches `token` and `expiration_date`.
+- Precedence: if `user` **and** `password` are given they win and `token` is ignored; otherwise `token` is stored with `expiration_date = 9999999999`. A missing `url`, or neither `user`+`password` nor `token`, raises `ValueError`. `Auth` passes `None` as token to `Services`, so it always needs `user` and `password`.
+- `get_token()` lazily authenticates via `AuthRequest.authenticate(url, user, password)` when there is no token or the stored `expiration_date` has passed, then caches `token` and `expiration_date`. If authentication does not answer `success` it raises `ValueError` with the service message, instead of letting the request go out with `bearer None`.
 - Accessors: `get_url()`, `get_user()`, `get_password()`, `get_token()`.
 - Attributes are declared as class-level attributes (`url = None`, `token = None`, ...) and assigned on the instance in `__init__`.
 
-`Utils.response.Response` — every response class extends it (except `StatusCfdiResponse`):
+`Utils.response.Response` — every response class extends it:
 - Attributes: `status`, `status_code`, `message`, `message_detail`, `data`, `response`.
 - Getters: `get_status()`, `get_status_code()`, `get_message()`, `get_message_detail()`, `get_data()`, `get_response()`.
+- `set_unreadable(response, error)` is what every response calls from its `except`: see Error Handling.
 - Subclasses add their own attributes and getters when the payload deserves them (`AuthResponse.get_token()` / `get_time_expire()`, `PdfResponse.get_uuid()` / `get_content_b64()` / ..., `PendingsResponse.get_uuids()`).
 
 ### Services that take two URLs
-`AccountUser`, `Balance`, `Pdf` and `Storage` take `(url, url_api, token=None, user=None, password=None)`. `url` (the services host) is passed to `Services` and is used only to obtain the token; the actual requests are issued against `self.url_api`. Their `__init__` stores `url_api` and `print`s `"Debe especificar la url_api"` when it is missing.
+`AccountUser`, `Balance`, `Pdf` and `Storage` take `(url, url_api, token=None, user=None, password=None)`. `url` (the services host) is passed to `Services` and is used only to obtain the token; the actual requests are issued against `self.url_api`. Their `__init__` raises `ValueError("Debe especificar la url_api")` when it is missing.
 
 ### RequestHelper (`Utils/requestHelper.py`)
-All helpers are `@staticmethod`, use `RequestHelper._get_session()` (a `requests.Session` with an `HTTPAdapter` mounted on `https://`), and pass `verify=True, timeout=300` — except the two V4 helpers, which call `requests.post` directly with no session, no explicit `verify` and no timeout.
+All helpers are `@staticmethod`, use `RequestHelper._get_session()` (a `requests.Session` with an `HTTPAdapter` mounted on `https://`), and pass `verify=True, timeout=300`.
 
 | Helper | Verb | Content-Type | Notes |
 | --- | --- | --- | --- |
@@ -70,6 +70,7 @@ All helpers are `@staticmethod`, use `RequestHelper._get_session()` (a `requests
 | `get_json_request(endpoint, token, payload=None)` | GET | `application/json` | |
 | `delete_json_request(endpoint, token, payload=None)` | DELETE | `application/json` | |
 | `put_json_request(endpoint, token, payload=None)` | PUT | `application/json` | |
+| `post_soap_request(endpoint, action, body)` | POST | `text/xml; charset=utf-8` | Used by `StatusCfdiRequest`; sends `action` as the `SOAPAction` header, with no token. |
 | `post_multipart_request(endpoint, token, xml_data)` | POST | `multipart/form-data; boundary=<30 random chars>` | Standard path for XML stamping/cancelling/validating. Uses `Authorization: Bearer <token>`. |
 | `post_v4(endpoint, content, token=None, headers=None)` | POST | multipart, boundary generated | V4 XML services; merges caller `headers` over the defaults. |
 | `post_v4_json(endpoint, content, token=None, headers=None)` | POST | `application/jsontoxml; charset=utf-8` | V4 JSON services; `dict` content is `json.dumps(..., ensure_ascii=False)`-ed. |
@@ -178,11 +179,11 @@ A full run takes roughly 5–10 minutes and depends on the load of the test envi
   from Utils.Services import Services
   ```
   Newer V4 files put `Utils` first; either is acceptable, match the file.
-- Standard-library imports (`json`, `traceback`, `typing`) go at the top of response/helper modules.
+- Standard-library imports (`json`, `re`, `typing`) go at the top of response/helper modules.
 - Test modules import `from Test import config` and `from Test.base import SdkTestCase` after the `sys.path` bootstrap, before the SDK imports.
 
 ### Error Handling
-- **Responses never raise.** Every `<Servicio>Response.__init__` wraps its whole body in `try: ... except: traceback.print_exc()`. Parsing failures are printed, not propagated, so the caller may receive a response object with `None` attributes.
+- **Responses never raise.** Every `<Servicio>Response.__init__` wraps its whole body in `try: ... except Exception as error: self.set_unreadable(response, error)`. A response that cannot be interpreted (a non-JSON body, a missing key) ends with `status = "error"`, a generic `message`, the exception in `message_detail` and the raw body in `response`. If the service `status` was already read it is kept: a successful stamp must not be reported as an error and retried.
 - The standard response-parsing shape, replicated in nearly every response class:
   ```python
   self.status_code = response.status_code
@@ -203,13 +204,13 @@ A full run takes roughly 5–10 minutes and depends on the load of the test envi
   ```
   `messageDetail` is always read defensively with `if "messageDetail" in self.response`.
 - Special cases: `AccountUserResponse` handles `204 No Content` by setting `status = "success"`, `status_code = 200`, `data = "Usuario Eliminado con exito"`; `PdfResponse` and `ValidateResponse` use an inner `try/except` around the success branch and fall back to just setting `status`.
-- Configuration problems in `Services` / `AccountUser` / `Balance` / `Pdf` / `Storage` constructors are reported with `print(...)` in Spanish, not exceptions. This is a known defect scheduled for the next PR — do not rely on it, and do not extend the pattern to new code.
-- `HeaderValidator` is the only component that raises (`ValueError`) as its documented contract.
-- Callers therefore check `response.get_status() == "success" | "error"` rather than catching exceptions.
+- **Configuration raises.** A missing `url`, credentials or `url_api` raises `ValueError` in the constructor, and a failed authentication raises `ValueError` from `get_token()`. Messages are in Spanish. Never fall back to `print`.
+- `HeaderValidator` also raises `ValueError` as its documented contract.
+- So callers catch `ValueError` for configuration, and check `response.get_status() == "success" | "error"` for everything the service answers.
 
 ### HTTP and Serialization
-- All HTTP goes through `requests`, funnelled through `Utils/requestHelper.py` (the sole exception is `StatusCfdiRequest`).
-- Auth header casing is inconsistent by design of the existing code: `bearer {token}` (lowercase) for the JSON/GET/PUT/DELETE helpers, `Bearer {token}` for multipart and V4 helpers.
+- All HTTP goes through `requests`, funnelled through `Utils/requestHelper.py`.
+- Auth header casing is inconsistent by design of the existing code: `bearer {token}` (lowercase) for the JSON/GET/PUT/DELETE helpers, `Bearer {token}` only for `post_multipart_request`.
 - XML payloads are sent as `multipart/form-data` with a 30-character random boundary and the part named `xml`; the body is encoded to UTF-8 bytes.
 - JSON payloads are passed as plain `dict`s to `requests`' `json=` argument; `json.dumps(..., ensure_ascii=False)` is only used where the API expects `application/jsontoxml`.
 - Responses are deserialized with `json.loads(response.text.encode().decode('utf8'))` — keep this idiom for consistency.
@@ -241,8 +242,7 @@ A full run takes roughly 5–10 minutes and depends on the load of the test envi
 - Credentials are never committed; the only supported way to run the suite is via the `SDKTEST_*` variables.
 - Token lifetime: `Auth` issues a 2-hour token (documented in `README.md`); `Services.get_token()` re-authenticates automatically only when it holds `user`/`password`. A token supplied directly is treated as never expiring (`expiration_date = 9999999999`).
 - `README.md` is the product documentation and mirrors the code closely: when you add or change a public method, the matching README section is expected to change with it. Its `:pushpin:` notes are for prerequisites, roughly one per section — not for describing the shape of the response.
-- `StatusCfdi` calls the SOAP service with `verify=False` and parses XML by string splitting — this is intentional in the current code, not an oversight to be silently refactored. The TLS verification is under review with infrastructure.
-- There is no logging framework: diagnostics are `print()` and `traceback.print_exc()`.
+- There is no logging framework, and the library does not print: errors reach the caller as a `ValueError` or as a response with `status = "error"`.
 - TLS failures with `CERTIFICATE_VERIFY_FAILED` while running the suite usually come from a local antivirus intercepting TLS, not from the library. Retry before investigating.
 - No Cursor rules found in `.cursor/rules/` or `.cursorrules`. No GitHub Copilot instructions found in `.github/copilot-instructions.md`. There is no `.github/` directory at all.
 
@@ -265,7 +265,7 @@ To add a new service:
    ```
    Use `super(<Servicio>, self).__init__(...)` — the old-style form is what the whole repo uses. If the service targets the API host, take `url_api` as the second constructor parameter and mirror `Balance` / `Pdf` / `AccountUser` / `Storage`.
 4. Add `<Servicio>Request.py` with `@staticmethod`s only: build `endpoint`, build `payload`, call the appropriate `RequestHelper` helper, return `<Servicio>Response(response)`. Do not call `requests` directly — add a helper to `RequestHelper` if no existing one fits.
-5. Add `<Servicio>Response.py` extending `Response`, following the standard parsing shape above (including the bare `except: traceback.print_exc()`), and add getters only for the extra attributes you introduce. Name the attributes in `snake_case` even when the JSON key they read is not.
+5. Add `<Servicio>Response.py` extending `Response`, following the standard parsing shape above (including the `except Exception as error: self.set_unreadable(response, error)`), and add getters only for the extra attributes you introduce. Name the attributes in `snake_case` even when the JSON key they read is not.
 6. Add `Test/test_<servicio>.py` with a `Test<Servicio>(SdkTestCase)` class and the `sys.path` bootstrap, one test per auth mode (`_auth` for user/password, plain for token) and at least one error case. Put URLs and test data in `Test/config.py`, not in the module. Put any fixture under `Test/resources/`.
 7. Document the service in `README.md` in the same style as the surrounding sections (description, code snippet, sample response).
 
@@ -285,7 +285,7 @@ To extend an existing service:
 - Two-URL service (services host + API host): `Balance/Balance.py`, `AccountUser/AccountUser.py`, `Pdf/Pdf.py`, `Storage/Storage.py`
 - Nested payload DTOs: `Balance/BalanceResponse.py`, `AccountUser/AccountUserResponse.py`
 - Header validation: `Validate/headers_validator.py`
-- Non-`Services` service (SOAP/SAT): `StatusCfdi/StatusCfdi.py`, `StatusCfdi/StatusCfdiRequest.py`, `StatusCfdi/StatusCfdiResponse.py`
+- Service without credentials (SOAP/SAT): `StatusCfdi/StatusCfdi.py`, `StatusCfdi/StatusCfdiRequest.py`, `StatusCfdi/StatusCfdiResponse.py`
 - Test configuration and shared helpers: `Test/config.py`, `Test/base.py`
 - Test style: `Test/test_stamp.py`, `Test/test_pdf.py`, `Test/test_v4_services.py`
 - Gated destructive tests: `Test/test_accountUser.py`, `Test/test_csd.py`

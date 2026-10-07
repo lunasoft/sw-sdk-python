@@ -90,6 +90,19 @@ stamp = StampRetentions(url, user="user", password="password")
 
 Las llamadas que ya pasaban token siguen funcionando igual.
 
+### `StatusCfdi`
+
+Pasó de método estático a instancia, como el resto de los servicios. La URL va en el
+constructor y el `SOAPAction` dejó de ser parámetro: es una constante del contrato del
+servicio. No lleva credenciales.
+
+```py
+#Antes
+status = StatusCfdi.status(rfc_emisor, rfc_receptor, total, uuid, url, "http://tempuri.org/IConsultaCFDIService/Consulta")
+#Ahora
+status = StatusCfdi(url).status(rfc_emisor, rfc_receptor, total, uuid)
+```
+
 ### `RequestHelper`
 
 | Antes | Ahora |
@@ -188,3 +201,72 @@ quedó corregido.
 
 Si tu código sorteaba el problema leyendo `response.statusCode` directo, ahora tiene que
 leer `response.get_status_code()` o `response.status_code`.
+
+---
+
+## Cambios de comportamiento
+
+Ningún cambio de esta sección renombra nada, pero todos cambian lo que ve el código que
+consume la librería, y por eso van aquí.
+
+### La configuración faltante lanza `ValueError`
+
+Antes, un servicio construido sin URL, sin credenciales o sin `url_api` imprimía un aviso
+en consola y quedaba a medio construir; el error llegaba después, en la primera llamada, y
+era otro (`MissingSchema`, un 401 del servicio). Ahora el constructor lanza `ValueError`
+con el mismo mensaje que antes se imprimía:
+
+| Caso | Mensaje |
+|---|---|
+| `url` vacía o `None` | `Se debe definir URL` |
+| Ni `user` y `password` ni `token` | `Se debe definir user y password o token` |
+| `url_api` vacía en `AccountUser`, `Balance`, `Pdf` o `Storage` | `Debe especificar la url_api` |
+
+Una contraseña vacía cuenta como faltante. También aplica a `Auth`, que nunca usó el token:
+`Auth(url, token)` ahora lanza en lugar de construir un objeto que no puede autenticarse.
+
+### La autenticación fallida lanza `ValueError`
+
+Con usuario y contraseña, el token se pide en la primera llamada. Si la autenticación
+fallaba, la petición salía igual con `bearer None` y el consumidor recibía un 401 del
+servicio que no mencionaba la autenticación. Ahora la llamada lanza
+`ValueError("Error de autentificación: <mensaje del servicio>")`.
+
+```py
+try:
+    response = stamp.stamp_v4(xml)
+except ValueError as error:
+    #Configuración o credenciales: no hubo petición al servicio de timbrado
+    print(error)
+```
+
+### La cancelación marca el error
+
+`CancelationResponse` y `CancelationRetentionsResponse` dejaban `status` en `None` cuando el
+servicio no respondía 200, aunque el servicio sí mandaba `"status": "error"`. Una
+cancelación rechazada no se distinguía de una respuesta vacía. Ahora `status` es `error`,
+igual que en el resto de los servicios.
+
+### Una respuesta que no se puede interpretar queda como error
+
+Si el cuerpo de la respuesta no es JSON (una página HTML de un balanceador, por ejemplo) o
+le falta una llave, la librería imprimía el traceback en consola y entregaba el objeto con
+`status` en `None`. Ahora `status` es `error`, `message` lo dice, `message_detail` trae la
+excepción y `get_response()` el cuerpo crudo. Si el `status` del servicio ya se había
+leído, se respeta: un timbrado exitoso no se reporta como error.
+
+La librería ya no imprime nada en consola.
+
+### La consulta de estatus tiene `status` y `message`
+
+`StatusCfdiResponse` ahora extiende `Response`: `get_status()` responde `success` o
+`error`, y en un error `get_message_detail()` trae el `faultstring` del servicio. Antes
+cualquier consulta válida caía en la rama de error del parseo, porque `EstatusCancelacion`
+llega como elemento vacío; ahora ese campo queda en `None`.
+
+### La consulta de estatus valida el certificado del servidor
+
+La consulta de estatus era la única petición de la librería que no validaba el certificado
+TLS del servidor. Ahora lo valida como el resto de los servicios. Si la red del consumidor
+usa una autoridad certificadora propia, se indica con la variable de entorno
+`REQUESTS_CA_BUNDLE`.
