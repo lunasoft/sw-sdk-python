@@ -68,6 +68,15 @@ class RequestHelper:
         return session.put(endpoint, json=payload, headers=headers, verify=True, timeout=300)
 
     @staticmethod
+    def post_soap_request(endpoint, action, body):
+        headers = {
+            'Content-Type': "text/xml; charset=utf-8",
+            'SOAPAction': action
+        }
+        session = RequestHelper._get_session()
+        return session.post(endpoint, data=body.encode('utf-8'), headers=headers, verify=False, timeout=300)
+
+    @staticmethod
     def post_multipart_request(endpoint, token, xml_data):
         boundary = ''.join(random.choices(string.ascii_letters + string.digits, k=30))
         body = RequestHelper._create_multipart_body(xml_data, boundary)

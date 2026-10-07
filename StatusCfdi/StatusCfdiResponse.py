@@ -1,9 +1,7 @@
-import json
+import re
 from Utils.response import Response
 
-class StatusCfdiResponse:
-    status_code = None
-    response = None
+class StatusCfdiResponse(Response):
     status_code_sat = None
     is_cancelable = None
     state = None
@@ -12,37 +10,42 @@ class StatusCfdiResponse:
         try:
             self.status_code = response.status_code
             self.response = response.text
-            self.status_code_sat = self.search_status_code_sat(self.response)
-            self.is_cancelable = self.search_is_cancelable(self.response)
-            self.state = self.search_state(self.response)
-            self.cancelation_status = self.search_cancelation_status(self.response)
-        except:
-            self.status_code = response.status_code
+            if(self.status_code == 200):
+                self.status_code_sat = self.search_status_code_sat(self.response)
+                if self.status_code_sat is None:
+                    raise ValueError("La respuesta no trae CodigoEstatus")
+                self.is_cancelable = self.search_is_cancelable(self.response)
+                self.state = self.search_state(self.response)
+                self.cancelation_status = self.search_cancelation_status(self.response)
+                self.status = "success"
+            else:
+                self.status = "error"
+                self.message = response.reason
+                fault = re.search(r"<faultstring[^>]*>(.*?)</faultstring>", self.response, re.S)
+                if fault:
+                    self.message_detail = fault.group(1)
+        except Exception as error:
+            self.set_unreadable(response, error)
+
+    @staticmethod
+    def search(response, tag):
+        #Un elemento ausente, vacío o con i:nil="true" queda en None.
+        _, found, rest = response.partition(f"<a:{tag}>")
+        if not found:
+            return None
+        return rest.partition(f"</a:{tag}>")[0] or None
+
     def search_status_code_sat(self, response):
-        string = response.split("<a:CodigoEstatus>", 2)
-        string2 = string[1].split("</a:CodigoEstatus>", 2)
-        return string2[0]
+        return self.search(response, "CodigoEstatus")
 
     def search_is_cancelable(self, response):
-        string = response.split("<a:EsCancelable>", 2)
-        string2 = string[1].split("</a:EsCancelable>", 2)
-        return string2[0]
+        return self.search(response, "EsCancelable")
 
     def search_state(self, response):
-        string = response.split("<a:Estado>", 2)
-        string2 = string[1].split("</a:Estado>", 2)
-        return string2[0]
+        return self.search(response, "Estado")
 
     def search_cancelation_status(self, response):
-        string = response.split("<a:EstatusCancelacion>", 2)
-        string2 = string[1].split("</a:EstatusCancelacion>", 2)
-        return string2[0]
-        
-    def get_status_code(self):
-        return self.status_code
-
-    def get_response(self):
-        return self.response
+        return self.search(response, "EstatusCancelacion")
 
     def get_status_code_sat(self):
         return self.status_code_sat

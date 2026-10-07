@@ -1415,13 +1415,11 @@ Este servicio sirve para consultar el estatus de un CFDI antes y después de env
 
 :pushpin: ***NOTA:*** El servicio de consulta es de tipo SOAP y es proporcionado directamente por parte del SAT.
 
-Este metodo recibe los siguientes parametros:
+La clase se construye con la Url del servicio de consulta y no necesita credenciales. El metodo recibe los siguientes parametros:
 * RFC Emisor
 * RFC Receptor
 * Total declarado en el comprobante
 * UUID del comprobante a consultar
-* Url
-* Acción
 
 **Ejemplo de consumo de la libreria para la consulta del estatus SAT**
 ```py
@@ -1433,8 +1431,10 @@ rfc_emisor = "LAN8507268IA"
 rfc_receptor = "LAN7008173R5"
 total = "5800.00"
 uuid = "eb978000-95c7-4513-8d97-4b59434da45f"
-status = StatusCfdi.status(rfc_emisor, rfc_receptor, total, uuid, "https://api.test.sw.com.mx/ConsultaCFDIService.svc", "http://tempuri.org/IConsultaCFDIService/Consulta")
+statusCfdi = StatusCfdi("https://api.test.sw.com.mx/ConsultaCFDIService.svc")
+status = statusCfdi.status(rfc_emisor, rfc_receptor, total, uuid)
 
+print(status.get_status())
 print(status.get_response())
 #Datos de respuesta
 print(status.get_status_code_sat())
