@@ -18,3 +18,13 @@ class Response:
         return self.response
     def get_status_code(self):
         return self.status_code
+
+    def set_unreadable(self, response, error):
+        #La respuesta no se pudo interpretar. Si ya se leyó el status del servicio se
+        #respeta: un timbrado exitoso no debe reportarse como error y reintentarse.
+        self.status = self.status or "error"
+        if self.message is None:
+            self.message = "No se pudo interpretar la respuesta del servicio"
+            self.message_detail = f"{type(error).__name__}: {error}"
+        if self.response is None:
+            self.response = response.text

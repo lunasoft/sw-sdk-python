@@ -1,5 +1,4 @@
 import json
-import traceback
 from Utils.response import Response
 
 class IssueResponse(Response):
@@ -21,5 +20,6 @@ class IssueResponse(Response):
                 self.message = response.reason
                 self.message_detail = response.request
 
-        except:
-            traceback.print_exc()
+        except Exception as error:
+
+            self.set_unreadable(response, error)

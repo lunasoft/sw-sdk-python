@@ -1,5 +1,4 @@
 import json
-import traceback
 from Utils.response import Response
 class CsdResponse(Response):
     def __init__(self, response):
@@ -20,5 +19,5 @@ class CsdResponse(Response):
                 self.status = "error"
                 self.message = response.reason
                 self.message_detail = response.request
-        except:
-            traceback.print_exc()
+        except Exception as error:
+            self.set_unreadable(response, error)

@@ -1,5 +1,4 @@
 import json
-import traceback
 from Utils.response import Response
 
 class RegeneratePdfResponse(Response):
@@ -18,5 +17,5 @@ class RegeneratePdfResponse(Response):
                     self.message = response.text
             else:
                 self.message = response.reason
-        except:
-            traceback.print_exc()
+        except Exception as error:
+            self.set_unreadable(response, error)

@@ -1,5 +1,4 @@
 import json
-import traceback
 from Utils.response import Response
 
 class ValidateResponse(Response):
@@ -23,5 +22,5 @@ class ValidateResponse(Response):
                 self.status = "error"
                 self.message = response.reason
                 self.message_detail = response.request
-        except:
-            traceback.print_exc()
+        except Exception as error:
+            self.set_unreadable(response, error)
