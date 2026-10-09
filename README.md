@@ -1413,7 +1413,7 @@ Consulta Estatus SAT
 </summary>
 Este servicio sirve para consultar el estatus de un CFDI antes y después de enviarlo a cancelar, con él sabremos sí puede ser cancelado de forma directa, o en caso de que se necesite consultar los CFDI relacionados para poder generar la cancelación.
 
-:pushpin: ***NOTA:*** El servicio de consulta es de tipo SOAP y es proporcionado directamente por parte del SAT.
+:pushpin: ***NOTA:*** El servicio de consulta es de tipo SOAP. En el ambiente de pruebas es emulado por SW en `https://api.test.sw.com.mx/ConsultaCFDIService.svc`; en productivo se consume directamente del SAT en `https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc`.
 
 La clase se construye con la Url del servicio de consulta y no necesita credenciales. El metodo recibe los siguientes parametros:
 * RFC Emisor
