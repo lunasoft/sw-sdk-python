@@ -25,6 +25,7 @@ class Response:
         self.status = self.status or "error"
         if self.message is None:
             self.message = "No se pudo interpretar la respuesta del servicio"
+        if self.message_detail is None:
             self.message_detail = f"{type(error).__name__}: {error}"
         if self.response is None:
             self.response = response.text
