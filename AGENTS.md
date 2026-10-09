@@ -13,7 +13,7 @@ This repository contains a pure-Python SDK for the SW sapien® (SmarterWeb) web 
 - Service packages (one directory each):
   `AcceptReject`, `AccountUser`, `Auth`, `Balance`, `Cancelation`, `CancelationRetentions`, `Csd`, `Issue`, `Pdf`, `Pendings`, `Relations`, `Stamp`, `StampRetentions`, `StatusCfdi`, `Storage`, `Validate`.
 - Tests: `Test/` (one `test_<service>.py` per service) plus `Test/config.py`, `Test/base.py` and fixtures in `Test/resources/`.
-- Docs: `README.md` is the user-facing manual, organized per service with runnable snippets. It is large (~2600 lines) and is the de-facto API reference. `MIGRACION.md` lists every rename the 1.0 introduced.
+- Docs: `README.md` is the user-facing manual, organized per service with runnable snippets. It is large (~2600 lines) and is the de-facto API reference.
 - No `requirements.txt`, no lockfile, no CI workflow, no linter/formatter config. The only third-party runtime dependency is `requests` (declared in `setup.py` as `install_requires`), plus `setuptools` for packaging.
 
 ### The 3-files-per-service pattern (mandatory)
@@ -166,7 +166,7 @@ A full run takes roughly 5–10 minutes and depends on the load of the test envi
 ### Naming
 - Classes: `PascalCase` (`Stamp`, `StampRequest`, `StampResponse`, `RequestHelper`, `HeaderValidator`).
 - Modules mirror class names, so module names are `PascalCase` too — except `Utils/requestHelper.py`, `Utils/response.py`, `Utils/response_version.py`, `Validate/headers_validator.py`, `Test/config.py` and `Test/base.py`, which are lowercase/snake_case.
-- **Methods and attributes of the public API are `snake_case`, in English, with no exceptions.** The 1.0 removed every `PascalCase`, `camelCase` and Spanish name from the public surface, without keeping aliases. `MIGRACION.md` has the full old → new table; consult it before assuming a name.
+- **Methods and attributes of the public API are `snake_case`, in English, with no exceptions.** The 1.0 removed every `PascalCase`, `camelCase` and Spanish name from the public surface, without keeping aliases.
 - Payload-facing values follow the API's JSON casing where they mirror the wire (`b64Cer`, `b64Key`, `b64Pfx`, `idUser`, `taxId`, `notificationEmail`, `isUnlimited`, `foliosustitucion`). **The JSON keys themselves are never renamed**: `self.response["messageDetail"]` and `data['contentB64']` keep the service's spelling even though the attributes they feed are `message_detail` and `content_b64`.
 - Private helpers are prefixed with a single underscore (`RequestHelper._get_session`, `RequestHelper._create_multipart_body`, `AccountUserRequest._pathBase`).
 - Test classes: `Test<Service>` (`TestStamp`, `TestAuth`, `TestAccountUser`, `TestV4Basic`). Test methods: `test<Service>_<scenario>` or `test_<scenario>`; the service part is the method name in `PascalCase` (`testAcceptRejectCsd_auth` tests `accept_reject_csd`). Suffix `_auth` marks the user/password variant, no suffix marks the token variant.
@@ -238,7 +238,7 @@ A full run takes roughly 5–10 minutes and depends on the load of the test envi
 - `Test/resources/fileRelations.xml` is not used by any test today; it is pending a decision to wire it up or delete it.
 
 ## Repository-Specific Notes
-- The repository root doubles as the package root, so imports are `from <Servicio>.<Servicio> import <Servicio>`. Anything that changes directory names is a breaking change for consumers and belongs in `MIGRACION.md`.
+- The repository root doubles as the package root, so imports are `from <Servicio>.<Servicio> import <Servicio>`. Anything that changes directory names is a breaking change for consumers.
 - Credentials are never committed; the only supported way to run the suite is via the `SDKTEST_*` variables.
 - Token lifetime: `Auth` issues a 2-hour token (documented in `README.md`); `Services.get_token()` re-authenticates automatically only when it holds `user`/`password`. A token supplied directly is treated as never expiring (`expiration_date = 9999999999`).
 - `README.md` is the product documentation and mirrors the code closely: when you add or change a public method, the matching README section is expected to change with it. Its `:pushpin:` notes are for prerequisites, roughly one per section — not for describing the shape of the response.
@@ -273,7 +273,6 @@ To extend an existing service:
 - Add the public method to `<Servicio>.py` and the matching `@staticmethod` to `<Servicio>Request.py`; reuse the existing `<Servicio>Response`.
 - For a whole new API version, add `<Servicio>V4.py` + `<Servicio>RequestV4.py` inside the existing package and reuse the existing response class, following `Stamp/StampV4.py` and `Issue/IssueV4.py`.
 - Do not add dependencies: `requests` and the standard library are the whole toolbox today.
-- If you rename anything on the public surface, add the old → new row to `MIGRACION.md` in the same change.
 
 ## Example Paths to Reference
 - Canonical 3-file service: `Stamp/Stamp.py`, `Stamp/StampRequest.py`, `Stamp/StampResponse.py`
@@ -289,4 +288,3 @@ To extend an existing service:
 - Test configuration and shared helpers: `Test/config.py`, `Test/base.py`
 - Test style: `Test/test_stamp.py`, `Test/test_pdf.py`, `Test/test_v4_services.py`
 - Gated destructive tests: `Test/test_accountUser.py`, `Test/test_csd.py`
-- Rename log: `MIGRACION.md`
