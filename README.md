@@ -23,7 +23,6 @@ Librería *Python* para el consumo de los servicios de SW sapien®.
 ### Documentación :open_file_folder:
 * [Inicio Rápido](https://developers.sw.com.mx/knowledge-base/conoce-el-proceso-de-integracion-en-solo-7-pasos/)
 * [Documentacion Oficial Servicios](http://developers.sw.com.mx)
-* [Guía de migración a la 1.0](MIGRACION.md) — la 1.0 renombra la API pública sin conservar los nombres anteriores.
 
 
 ### Instalación :hammer_and_wrench:
@@ -1413,15 +1412,13 @@ Consulta Estatus SAT
 </summary>
 Este servicio sirve para consultar el estatus de un CFDI antes y después de enviarlo a cancelar, con él sabremos sí puede ser cancelado de forma directa, o en caso de que se necesite consultar los CFDI relacionados para poder generar la cancelación.
 
-:pushpin: ***NOTA:*** El servicio de consulta es de tipo SOAP y es proporcionado directamente por parte del SAT.
+:pushpin: ***NOTA:*** El servicio de consulta es de tipo SOAP. En el ambiente de pruebas es emulado por SW en `https://api.test.sw.com.mx/ConsultaCFDIService.svc`; en productivo se consume directamente del SAT en `https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc`.
 
-Este metodo recibe los siguientes parametros:
+La clase se construye con la Url del servicio de consulta y no necesita credenciales. El metodo recibe los siguientes parametros:
 * RFC Emisor
 * RFC Receptor
 * Total declarado en el comprobante
 * UUID del comprobante a consultar
-* Url
-* Acción
 
 **Ejemplo de consumo de la libreria para la consulta del estatus SAT**
 ```py
@@ -1433,8 +1430,10 @@ rfc_emisor = "LAN8507268IA"
 rfc_receptor = "LAN7008173R5"
 total = "5800.00"
 uuid = "eb978000-95c7-4513-8d97-4b59434da45f"
-status = StatusCfdi.status(rfc_emisor, rfc_receptor, total, uuid, "https://api.test.sw.com.mx/ConsultaCFDIService.svc", "http://tempuri.org/IConsultaCFDIService/Consulta")
+statusCfdi = StatusCfdi("https://api.test.sw.com.mx/ConsultaCFDIService.svc")
+status = statusCfdi.status(rfc_emisor, rfc_receptor, total, uuid)
 
+print(status.get_status())
 print(status.get_response())
 #Datos de respuesta
 print(status.get_status_code_sat())

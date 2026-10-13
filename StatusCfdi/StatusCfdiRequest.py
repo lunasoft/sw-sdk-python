@@ -1,14 +1,12 @@
-import requests
 from xml.sax.saxutils import escape
 from StatusCfdi.StatusCfdiResponse import StatusCfdiResponse
+from Utils.requestHelper import RequestHelper
 
 class StatusCfdiRequest:
+    action = "http://tempuri.org/IConsultaCFDIService/Consulta"
+
     @staticmethod
-    def status(rfc_emisor, rfc_receptor, total, uuid, url, action):
-        headers = {
-            'Content-Type': "text/xml; charset=utf-8",
-            'SOAPAction': action
-        }
+    def status(url, rfc_emisor, rfc_receptor, total, uuid):
         body = """<?xml version="1.0" encoding="UTF-8"?>
          <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
         <soapenv:Header/>
@@ -19,8 +17,5 @@ class StatusCfdiRequest:
            </tem:Consulta>
         </soapenv:Body>
      </soapenv:Envelope>"""
-        session = requests.Session()
-        adapter = requests.adapters.HTTPAdapter()
-        session.mount("https://", adapter)
-        response = session.post(url, data = body.encode('utf-8'), headers = headers, verify = False, timeout = 300)
+        response = RequestHelper.post_soap_request(url, StatusCfdiRequest.action, body)
         return StatusCfdiResponse(response)

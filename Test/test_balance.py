@@ -197,6 +197,11 @@ class TestBalance(SdkTestCase):
         self.assertEqual(401, response.get_status_code())
         self.assertIsNotNone(response.get_message())
 
+    #UT de Configuración
+    def testBalance_withoutUrlApi(self):
+        with self.assertRaises(ValueError):
+            Balance(self.url, "", self.token)
+
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestBalance)
     result = unittest.TextTestRunner(verbosity=2).run(suite)

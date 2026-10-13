@@ -152,6 +152,11 @@ class TestPdf(SdkTestCase):
         self.assertTrue(response.get_status() == "error")
         self.assertIsNotNone(response.get_message(), "El valor de message esta vacio")
 
+    #UT de Configuración
+    def test_pdf_withoutUrlApi(self):
+        with self.assertRaises(ValueError):
+            Pdf(self.url, "", self.token)
+
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestPdf)
     result = unittest.TextTestRunner(verbosity=2).run(suite)

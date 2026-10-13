@@ -18,7 +18,6 @@ URL_API = "https://api.test.sw.com.mx"
 #El ambiente de pruebas expone el mismo servicio SOAP del SAT y resuelve los comprobantes
 #timbrados en la cuenta, de modo que la consulta de estatus no necesita pegar a producción.
 URL_SAT = "https://api.test.sw.com.mx/ConsultaCFDIService.svc"
-SOAP_ACTION = "http://tempuri.org/IConsultaCFDIService/Consulta"
 
 #Credenciales de la cuenta de pruebas.
 USER = os.environ.get("SDKTEST_USER")

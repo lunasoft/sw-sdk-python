@@ -1,5 +1,4 @@
 import json
-import traceback
 from Utils.response import Response
 
 class CancelationRetentionsResponse(Response):
@@ -12,12 +11,13 @@ class CancelationRetentionsResponse(Response):
                     self.status = self.response["status"]
                     self.data = self.response["data"]
                 else:
-                    self.message = self.response["message"]
+                    self.status = self.response.get("status", "error")
+                    self.message = self.response.get("message")
                     if "messageDetail" in self.response: 
                         self.message_detail = self.response["messageDetail"]
             else:
                 self.status = "error"
                 self.message = response.reason
                 self.message_detail = response.request
-        except:
-            traceback.print_exc()
+        except Exception as error:
+            self.set_unreadable(response, error)

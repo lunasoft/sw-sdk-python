@@ -254,6 +254,11 @@ class TestAccountUser(SdkTestCase):
         self.assertEqual(401, response.get_status_code())
         self.assertIsNotNone(response.get_message())
 
+    #UT de Configuración
+    def testAccountUser_withoutUrlApi(self):
+        with self.assertRaises(ValueError):
+            AccountUser(self.url, "", self.token)
+
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestAccountUser)
     result = unittest.TextTestRunner(verbosity=2).run(suite)

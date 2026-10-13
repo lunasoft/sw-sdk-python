@@ -64,9 +64,8 @@ class TestStampRetentions(SdkTestCase):
             self.password
         )
         xml_content = TestStampRetentions.open_file("Test/resources/retenciones20.xml")
-        response = stamp.stamp_retentions_v3(xml_content)
-        self.assertEqual(self.expectedError, response.get_status())
-        self.assertIsNotNone(response.get_message())
+        with self.assertRaisesRegex(ValueError, "autentificación"):
+            stamp.stamp_retentions_v3(xml_content)
 
     def testStampRetentions_invalidToken(self):
         """Prueba error con un token invalido"""

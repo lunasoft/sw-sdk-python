@@ -9,3 +9,4 @@ unittest_cache/
 .idea/
 sw_sdk_python.egg-info/
 Test/resources/filePdf.pdf
+MIGRACION.md
