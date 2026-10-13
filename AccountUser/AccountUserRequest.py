@@ -28,17 +28,17 @@ class AccountUserRequest():
         return path
 
     @staticmethod
-    def get_users(urlApi,token,filter,idUser=None,email=None,taxId=None, isActive=None, name=None, page=None, perPage=None):
+    def get_users(url_api,token,filter,idUser=None,email=None,taxId=None, isActive=None, name=None, page=None, perPage=None):
         """Consulta los usuarios asociados al token, con el filtro y la página indicados."""
         path = AccountUserRequest.get_path(filter,idUser,email,taxId, isActive, name, page, perPage)
-        endpoint = urlApi + path
+        endpoint = url_api + path
         response = RequestHelper.get_json_request(endpoint,token)
         return AccountUserResponse(response)
 
     @staticmethod
-    def create_user(urlApi,token,name,taxId,email,stamps,isUnlimited,password,notificationEmail,phone):
+    def create_user(url_api,token,name,taxId,email,stamps,isUnlimited,password,notificationEmail,phone):
         """Da de alta un usuario en la cuenta distribuidora."""
-        endpoint = urlApi + AccountUserRequest._pathBase
+        endpoint = url_api + AccountUserRequest._pathBase
         payload = {
             "name": name,
             "taxId":taxId,
@@ -53,16 +53,16 @@ class AccountUserRequest():
         return AccountUserResponse(response)
 
     @staticmethod
-    def delete_user(urlApi,token,idUser):
+    def delete_user(url_api,token,idUser):
         """Elimina un usuario de la cuenta distribuidora."""
-        endpoint = urlApi + AccountUserRequest._pathBase + f"/{idUser}"
+        endpoint = url_api + AccountUserRequest._pathBase + f"/{idUser}"
         response = RequestHelper.delete_json_request(endpoint,token)
         return AccountUserResponse(response)
 
     @staticmethod
-    def update_user(urlApi,token,idUser,name,taxId,notificationEmail,phone,isUnlimited):
+    def update_user(url_api,token,idUser,name,taxId,notificationEmail,phone,isUnlimited):
         """Actualiza los datos de un usuario previamente registrado."""
-        endpoint = urlApi + AccountUserRequest._pathBase + f"/{idUser}"
+        endpoint = url_api + AccountUserRequest._pathBase + f"/{idUser}"
         payload = {
             "idUser": idUser,
             "name": name,

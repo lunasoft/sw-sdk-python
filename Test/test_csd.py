@@ -1,38 +1,18 @@
 import unittest
 import os
-import json
 import sys
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
+from Test import config
+from Test.base import SdkTestCase
 from Csd.Csd import Csd
 
-class TestCsd(unittest.TestCase):
-    expected = "success"
-    url = "https://services.test.sw.com.mx"
-    #Certificado de pruebas Test/resources/b64CSD.txt
-    noCertificado = "30001000000500003416"
-    #Contraseña del CSD público de pruebas del SAT, se sobrescribe con SDKTEST_CSD_PASSWORD.
-    passwordCsd = os.environ.get("SDKTEST_CSD_PASSWORD", "12345678a")
-    user = os.environ.get("SDKTEST_USER")
-    password = os.environ.get("SDKTEST_PASSWORD")
-    token = os.environ.get("SDKTEST_TOKEN")
+class TestCsd(SdkTestCase):
+    noCertificado = config.NO_CERTIFICADO
+    passwordCsd = config.PASSWORD_CSD
 
-    @classmethod
-    def setUpClass(cls):
-        for nombre, valor in (("SDKTEST_USER", cls.user),
-                              ("SDKTEST_PASSWORD", cls.password),
-                              ("SDKTEST_TOKEN", cls.token)):
-            if not valor:
-                raise ValueError(f"Falta la variable de entorno {nombre}")
-
-    @staticmethod
-    def open_file(pathFile):
-        with open(pathFile, "r", encoding='utf-8') as file:
-            out = file.read()
-        return out
-    
     def testUploadCsd_auth(self):
         csd_obj = Csd(self.url, None, self.user, self.password)
         response = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"),TestCsd.passwordCsd)
@@ -67,7 +47,7 @@ class TestCsd(unittest.TestCase):
         csd_obj = Csd(TestCsd.url, self.token)
         response = csd_obj.get_csd("00000000000000000000")
         self.assertTrue("error" == response.get_status())
-        self.assertIsNotNone(response.get_messageDetail(), "El valor de messageDetail esta vacio")
+        self.assertIsNotNone(response.get_message_detail(), "El valor de messageDetail esta vacio")
 
     def testGetListCsdByRfc(self):
         rfc = self.first_certificate()["issuer_rfc"]
@@ -116,7 +96,7 @@ class TestCsd(unittest.TestCase):
 
     #UT de eliminación, destructiva: desactiva el CSD de pruebas recién cargado,
     #no el primero de la lista. Para rehabilitarlo basta con ejecutar testUploadCsd.
-    @unittest.skipUnless(os.environ.get("SDKTEST_CSD_DELETE"), "Prueba destructiva, definir SDKTEST_CSD_DELETE para ejecutarla")
+    @unittest.skipUnless(config.CSD_DELETE, "Prueba destructiva, definir SDKTEST_CSD_DELETE para ejecutarla")
     def testDisableCsd(self):
         csd_obj = Csd(TestCsd.url, self.token)
         upload = csd_obj.upload_csd("stamp", TestCsd.open_file("Test/resources/b64CSD.txt"), TestCsd.open_file("Test/resources/b64Key.txt"), TestCsd.passwordCsd)

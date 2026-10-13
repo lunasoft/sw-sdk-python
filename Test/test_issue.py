@@ -2,42 +2,22 @@ import unittest
 import os
 import json
 import sys
-from datetime import datetime, timedelta, UTC
+from datetime import datetime, timedelta
 import xml.etree.ElementTree as ET
 from io import BytesIO
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 sys.path.append(PROJECT_ROOT)
 
+from Test import config
+from Test.base import SdkTestCase
 from base64 import b64encode
 
 from Issue.Issue import Issue
 
-class TestIssue(unittest.TestCase):
-    expected = "success"
-    expectedError = "error"
-    url = "https://services.test.sw.com.mx"
-    #El servicio contesta este código cuando el comprobante ya tiene un timbre.
-    codeStamped = "307"
-    
-    user = os.environ.get("SDKTEST_USER")
-    password = os.environ.get("SDKTEST_PASSWORD")
-    token = os.environ.get("SDKTEST_TOKEN")
+class TestIssue(SdkTestCase):
+    codeStamped = config.CODE_STAMPED
 
-    @classmethod
-    def setUpClass(cls):
-        for nombre, valor in (("SDKTEST_USER", cls.user),
-                              ("SDKTEST_PASSWORD", cls.password),
-                              ("SDKTEST_TOKEN", cls.token)):
-            if not valor:
-                raise ValueError(f"Falta la variable de entorno {nombre}")
-
-    @staticmethod
-    def open_file(pathFile):
-        with open(pathFile, "r", encoding='utf-8') as file:
-            out = file.read()
-        return out
-    
     @staticmethod
     def update_date_xml(path_xml):
         ns = {"cfdi": "http://www.sat.gob.mx/cfd/4"}

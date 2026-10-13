@@ -1,5 +1,4 @@
 import json
-import traceback
 from Utils.response import Response
 
 class AccountUserResponse(Response):
@@ -24,7 +23,7 @@ class AccountUserResponse(Response):
                     self.status = self.response["status"]
                     self.message = self.response["message"]
                     if "messageDetail" in self.response:
-                        self.messageDetail = self.response["messageDetail"]
+                        self.message_detail = self.response["messageDetail"]
             elif self.status_code == 204:
                     self.status = "success"
                     self.status_code = 200
@@ -32,9 +31,9 @@ class AccountUserResponse(Response):
             else:
                 self.status = "error"
                 self.message = response.reason
-                self.messageDetail = response.request
-        except Exception:
-            traceback.print_exc()
+                self.message_detail = response.request
+        except Exception as error:
+            self.set_unreadable(response, error)
 
     def get_meta(self):
         return self.meta

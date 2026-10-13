@@ -1,5 +1,4 @@
 import json
-import traceback
 from Utils.response import Response
 class StorageResponse(Response):
     def __init__(self, response):
@@ -15,13 +14,13 @@ class StorageResponse(Response):
                         self.status = self.response["status"]
                     self.message = self.response["message"]
                     if "messageDetail" in self.response:
-                        self.messageDetail = self.response["messageDetail"]
+                        self.message_detail = self.response["messageDetail"]
             else:
                 self.status = "error"
                 self.message = response.reason
-                self.messageDetail = response.request
-        except:
-            traceback.print_exc()
+                self.message_detail = response.request
+        except Exception as error:
+            self.set_unreadable(response, error)
 
     #Un UUID sin coincidencias regresa una lista vacía, no es un error.
     def get_records(self):

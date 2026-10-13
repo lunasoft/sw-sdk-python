@@ -13,7 +13,7 @@ class RequestHelper:
         return session
 
     @staticmethod
-    def post_json_request_Without_Headers(endpoint, payload, headers=None):
+    def post_json_request_without_headers(endpoint, payload, headers=None):
         session = RequestHelper._get_session()
         return session.post(endpoint, json=payload, headers=headers, verify=True, timeout=300)
 
@@ -66,6 +66,15 @@ class RequestHelper:
         }
         session = RequestHelper._get_session()
         return session.put(endpoint, json=payload, headers=headers, verify=True, timeout=300)
+
+    @staticmethod
+    def post_soap_request(endpoint, action, body):
+        headers = {
+            'Content-Type': "text/xml; charset=utf-8",
+            'SOAPAction': action
+        }
+        session = RequestHelper._get_session()
+        return session.post(endpoint, data=body.encode('utf-8'), headers=headers, verify=True, timeout=300)
 
     @staticmethod
     def post_multipart_request(endpoint, token, xml_data):

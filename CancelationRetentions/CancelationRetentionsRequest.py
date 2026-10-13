@@ -1,4 +1,4 @@
-from Cancelation_Retentions.CancelationRetentionsResponse import CancelationRetentionsResponse
+from CancelationRetentions.CancelationRetentionsResponse import CancelationRetentionsResponse
 from Utils.requestHelper import RequestHelper
 
 class CancelationRetentionsRequest:    
