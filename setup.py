@@ -7,7 +7,7 @@ setuptools.setup(
     name='sw-sdk-python',
     version='1.0.0.0',
     description="SDK para Timbrado en SmarterWeb",
-    url="https://github.com/lunasoft/sw-sdk-python",
+    url="https://github.com/swsapiendev/sw-sdk-python",
     packages=setuptools.find_packages(exclude=["Test"]),
     license="MIT",
     long_description_content_type="text/markdown",
